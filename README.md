@@ -1,5 +1,7 @@
 # Supply Chain Map
 
+**This is not an officially supported Google product.**
+
 This project is to enable end-to-end interactive geographical visualization and
 customized dashboards for risk analysis of the given supply chain entities.
 
