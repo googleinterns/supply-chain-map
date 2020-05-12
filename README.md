@@ -3,6 +3,8 @@
 This project is to enable end-to-end interactive geographical visualization and
 customized dashboards for risk analysis of the given supply chain entities.
 
+TBD for details.
+
 ## Source Code Headers
 
 Every file containing source code must include copyright and license
