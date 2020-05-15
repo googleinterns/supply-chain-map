@@ -11,3 +11,7 @@ steps:
   # Deploy to google cloud app egnine
   - name: 'gcr.io/cloud-builders/gcloud'
     args: ['app', 'deploy', '--version=prod']
+    
+  - name: Setup gcloud environment
+    uses: GoogleCloudPlatform/github-actions@0.1.2
+
