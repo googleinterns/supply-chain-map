@@ -26,10 +26,10 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('scm');
   });
 
-  it('should render title', () => {
+  it('should render para', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('scm app is running!');
+    expect(compiled.querySelector('p').textContent).toContain('Hello');
   });
 });
