@@ -28,6 +28,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
       - name: npm ci and npm run build
+        working-directory: ./web/scm 
         run: |
           npm ci
           npm run build:ci
