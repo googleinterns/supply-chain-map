@@ -7,7 +7,7 @@ on:
 jobs: 
   build:
     env:
-      working-direcory: .web/scm 
+      working-direcory: ./web/scm 
     runs-on: ubuntu-latest
     strategy:
       matrix:
