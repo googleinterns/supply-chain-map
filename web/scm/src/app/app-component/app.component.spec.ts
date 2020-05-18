@@ -26,7 +26,7 @@ describe('AppComponent', () => {
     expect(app.title).toEqual('scm');
   });
 
-  it('should render para', () => {
+  it('should display hello message', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
