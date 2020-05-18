@@ -31,4 +31,4 @@ jobs:
         working-directory: ./web/scm 
         run: |
           npm ci --no-optional
-          npm run build:ci
+          npm run build:prod
