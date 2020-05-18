@@ -19,13 +19,13 @@
     "directive-selector": [
       true,
       "attribute",
-      "app",
+      "scm",
       "camelCase"
     ],
     "component-selector": [
       true,
       "element",
-      "app",
+      "scm",
       "kebab-case"
     ],
     "eofline": true,
