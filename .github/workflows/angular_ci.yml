@@ -35,3 +35,7 @@ jobs:
         working-directory: ./web/scm 
         run: |
           npm test
+      - name: npm build
+        working-directory: ./web/scm 
+        run: |
+          npm run-script build
