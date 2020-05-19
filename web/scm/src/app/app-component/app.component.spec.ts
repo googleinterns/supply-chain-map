@@ -51,10 +51,10 @@ describe('AppComponent', () => {
     expect(compiled.querySelector('h1.product-name').textContent).toContain('Supply Chain Map');
   });
 
-  it('sidenav should display \'Side nav bar\'', () => {
+  it('should display side panel', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('mat-sidenav p').textContent).toContain('Side nav bar');
+    expect(compiled.querySelector('scm-side-panel')).toBeTruthy();
   });
 });
