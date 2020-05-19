@@ -1,3 +1,10 @@
-body {
-    margin: 0;
-}
+@import '~@angular/material/theming';
+@include mat-core();
+$scm-primary: mat-palette($mat-indigo);
+$scm-accent: mat-palette($mat-pink, A200, A100, A400);
+$scm-warn: mat-palette($mat-red);
+$scm-theme: mat-light-theme($scm-primary, $scm-accent, $scm-warn);
+@include angular-material-theme($scm-theme);
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }

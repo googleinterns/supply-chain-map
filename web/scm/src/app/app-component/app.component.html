@@ -1,1 +1,17 @@
-<p>Hello</p>
+<div class="app-container">
+    <mat-toolbar class="scm-toolbar">
+        <button mat-icon-button (click)="snav.toggle()">
+            <mat-icon>menu</mat-icon>
+        </button>
+        <h1 class="product-name">Supply Chain Map</h1>
+    </mat-toolbar>
+
+    <mat-sidenav-container class="scm-sidenav-container">
+        <mat-sidenav #snav [mode]="'side'">
+            <p>Side nav bar</p>
+        </mat-sidenav>
+        <mat-sidenav-content>
+            <agm-map></agm-map>
+        </mat-sidenav-content>
+    </mat-sidenav-container>
+</div>
