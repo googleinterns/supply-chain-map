@@ -27,8 +27,15 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      - name: npm ci and npm run build
+      - name: npm ci
         working-directory: ./web/scm 
         run: |
           npm ci --no-optional
-          npm run build:prod
+      - name: ng test
+        working-directory: ./web/scm 
+        run: |
+          ng test
+      - name: ng build
+        working-directory: ./web/scm 
+        run: |
+          ng build
