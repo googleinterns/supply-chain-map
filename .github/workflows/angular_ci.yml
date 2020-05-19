@@ -31,11 +31,7 @@ jobs:
         working-directory: ./web/scm 
         run: |
           npm ci --no-optional
-      - name: ng test
+      - name: npm test
         working-directory: ./web/scm 
         run: |
-          ng test
-      - name: ng build
-        working-directory: ./web/scm 
-        run: |
-          ng build
+          npm test
