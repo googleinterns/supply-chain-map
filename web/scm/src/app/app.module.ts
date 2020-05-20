@@ -10,10 +10,14 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app-component/app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { environment } from '../environments/environment';
+import { MapComponent } from './map/map.component';
+import { SidePanelComponent } from './side-panel/side-panel.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    MapComponent,
+    SidePanelComponent
   ],
   imports: [
     AgmCoreModule.forRoot({
