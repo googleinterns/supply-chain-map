@@ -1,2 +1,5 @@
 web/.DS_Store
 .DS_Store
+web/scm/src/environments/environment.prod.ts
+web/scm/src/environments/environment.ts
+*.ts
