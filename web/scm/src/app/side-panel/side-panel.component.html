@@ -7,21 +7,24 @@
             <mat-form-field appearance="outline">
                 <mat-label>Product</mat-label>
                 <mat-select formControlName="productSelect">
-                    <mat-option *ngFor="let product of productSelectOptions" [value]="product.gpn">{{ product.name }}</mat-option>
+                    <mat-option *ngFor="let product of productSelectOptions" [value]="product.gpn">{{ product.name }}
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label>Category</mat-label>
                 <mat-select formControlName="categorySelect">
-                    <mat-option *ngFor="let category of categorySelectOptions" [value]="category.code">{{ category.name }}</mat-option>
+                    <mat-option *ngFor="let category of categorySelectOptions" [value]="category.code">
+                        {{ category.name }}</mat-option>
                 </mat-select>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label>Supplier</mat-label>
                 <mat-select formControlName="supplierSelect">
-                    <mat-option *ngFor="let supplier of supplierSelectOptions" [value]="supplier.code">{{ supplier.name }}</mat-option>
+                    <mat-option *ngFor="let supplier of supplierSelectOptions" [value]="supplier.code">
+                        {{ supplier.name }}</mat-option>
                 </mat-select>
             </mat-form-field>
 
@@ -33,14 +36,16 @@
             <mat-form-field appearance="outline">
                 <mat-label>Country</mat-label>
                 <mat-select formControlName="countrySelect">
-                    <mat-option *ngFor="let country of countrySelectOptions" [value]="country.code">{{ country.name }}</mat-option>
+                    <mat-option *ngFor="let country of countrySelectOptions" [value]="country.code">{{ country.name }}
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label>State/Region</mat-label>
                 <mat-select formControlName="regionSelect">
-                    <mat-option *ngFor="let region of regionSelectOptions" [value]="region.code">{{ region.name }}</mat-option>
+                    <mat-option *ngFor="let region of regionSelectOptions" [value]="region.code">{{ region.name }}
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
 
