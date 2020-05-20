@@ -1,5 +1,7 @@
 # Supply Chain Map
 
+![SupplyChainMap Logo](https://github.com/googleinterns/supply-chain-map/blob/master/web/scm/src/assets/scm_logo.png?raw=true)
+
 **This is not an officially supported Google product.**
 
 This project is to enable end-to-end interactive geographical visualization and
