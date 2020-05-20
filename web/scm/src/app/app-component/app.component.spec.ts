@@ -9,6 +9,8 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
 import { AppComponent } from './app.component';
+import { MapComponent } from '../map/map.component';
+import { SidePanelComponent } from '../side-panel/side-panel.component';
 import { environment } from 'src/environments/environment';
 import { MapComponent } from '../map/map.component';
 import { SidePanelComponent } from '../side-panel/side-panel.component';
