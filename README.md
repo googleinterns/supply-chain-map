@@ -9,6 +9,31 @@ customized dashboards for risk analysis of the given supply chain entities.
 
 TBD for details.
 
+## To start Application
+
+You need to create 2 files 
+
+```
+web/scm/src/environment.prod.ts
+```
+```typescript
+export const environment = {
+  production: true,
+  googleMapApi: AND_PUT_GOOGLE_API_KEY_HERE
+};
+```
+
+```
+web/scm/src/environment.prod.ts
+```
+
+```typescript
+export const environment = {
+  production: true,
+  googleMapApi: AND_PUT_GOOGLE_API_KEY_HERE
+};
+```
+
 ## Source Code Headers
 
 Every file containing source code must include copyright and license
