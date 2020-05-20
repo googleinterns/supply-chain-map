@@ -22,4 +22,9 @@ describe('SidePanelComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+  it('should create the form', () => {
+    const compiled = fixture.nativeElement;
+    expect(compiled.querySelector('form')).toBeTruthy();
+  });
 });
