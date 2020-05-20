@@ -29,9 +29,14 @@ web/scm/src/environment.prod.ts
 
 ```typescript
 export const environment = {
-  production: true,
+  production: false,
   googleMapApi: AND_PUT_GOOGLE_API_KEY_HERE
 };
+```
+
+```
+npm install
+ng serve
 ```
 
 ## Source Code Headers
