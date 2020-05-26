@@ -29,11 +29,10 @@
 .scm-sidenav-container {
     flex: 1 0 auto;
 }
-agm-map {
-    height: 100%;
-}
-
 .logo {
     padding: 0 10px 0 5px;
     width: 24px;
+}
+scm-side-panel {
+    max-width: 30%;
 }
