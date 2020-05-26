@@ -7,7 +7,7 @@ import { FormGroup, FormControl } from '@angular/forms';
   styleUrls: ['./side-panel.component.scss']
 })
 export class SidePanelComponent implements OnInit {
-  form: FormGroup;
+  basicForm: FormGroup;
 
   productSelectOptions: any[];
   categorySelectOptions: any[];
@@ -18,7 +18,7 @@ export class SidePanelComponent implements OnInit {
   citySelectOptions: any[];
 
   constructor() {
-    this.form = new FormGroup({
+    this.basicForm = new FormGroup({
       productFilterGroup: new FormGroup({
         productSelect: new FormControl(),
         categorySelect: new FormControl(),
@@ -88,8 +88,11 @@ export class SidePanelComponent implements OnInit {
     ];
   }
 
-  onFormSubmit() {
-    console.log(this.form.value);
+  /**
+   * This function is called when the form is submitted
+   */
+  onBasicFormSubmit() {
+    console.log(this.basicForm.value);
   }
 
 }
