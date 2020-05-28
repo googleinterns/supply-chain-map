@@ -14,17 +14,21 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 
-import { AppComponent } from 'src/app/app-component/app.component';
+import { AppComponent } from 'src/app/app.component';
 import { AppRoutingModule } from 'src/app/app-routing.module';
 import { environment } from 'src/environments/environment';
 import { MapComponent } from 'src/app/map/map.component';
 import { SidePanelComponent } from 'src/app/side-panel/side-panel.component';
+import { HomeComponent } from './home/home.component';
+import { HeaderComponent } from './header/header.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     MapComponent,
-    SidePanelComponent
+    SidePanelComponent,
+    HomeComponent,
+    HeaderComponent
   ],
   imports: [
     AgmCoreModule.forRoot({
