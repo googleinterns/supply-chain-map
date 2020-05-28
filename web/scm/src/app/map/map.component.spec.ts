@@ -3,6 +3,9 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 import { MapComponent } from './map.component';
 import { AgmCoreModule } from '@agm/core';
 import { environment } from 'src/environments/environment';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { BrowserModule } from '@angular/platform-browser';
+import { RouterTestingModule } from '@angular/router/testing';
 
 describe('MapComponent', () => {
   let component: MapComponent;
@@ -15,6 +18,9 @@ describe('MapComponent', () => {
         AgmCoreModule.forRoot({
           apiKey: environment.googleMapApi
         }),
+        BrowserAnimationsModule,
+        BrowserModule,
+        RouterTestingModule
       ]
     })
     .compileComponents();
