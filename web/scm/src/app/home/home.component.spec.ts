@@ -8,19 +8,19 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 
-import { AppComponent } from './app.component';
+import { HomeComponent } from './home.component';
 import { environment } from 'src/environments/environment';
 import { MapComponent } from '../map/map.component';
 import { SidePanelComponent } from '../side-panel/side-panel.component';
 
 describe('AppComponent', () => {
-  let component: AppComponent;
-  let fixture: ComponentFixture<AppComponent>;
+  let component: HomeComponent;
+  let fixture: ComponentFixture<HomeComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        AppComponent,
+        HomeComponent,
         MapComponent,
         SidePanelComponent
       ],
@@ -38,17 +38,13 @@ describe('AppComponent', () => {
       ]
     }).compileComponents();
 
-    fixture = TestBed.createComponent(AppComponent);
+    fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
 
-  it('should create the app', () => {
+  it('should create the home component', () => {
     expect(component).toBeTruthy();
-  });
-
-  it(`should have as title 'scm'`, () => {
-    expect(component.title).toEqual('scm');
   });
 
   it('toolbar should display \'Supply Chain Map\'', () => {

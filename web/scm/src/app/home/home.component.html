@@ -1,11 +1,5 @@
 <div class="app-container">
-    <mat-toolbar class="scm-toolbar">
-        <button mat-icon-button (click)="snav.toggle()">
-            <mat-icon>menu</mat-icon>
-        </button>
-        <img class="logo" src="assets/scm_logo.png"><h1 class="product-name">Supply Chain Map</h1>
-    </mat-toolbar>
-
+    <scm-header (menuClick)="snav.toggle()"></scm-header>
     <mat-sidenav-container class="scm-sidenav-container">
         <mat-sidenav #snav [mode]="'side'">
             <scm-side-panel></scm-side-panel>
