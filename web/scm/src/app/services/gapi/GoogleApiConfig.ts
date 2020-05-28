@@ -1,17 +1,17 @@
 import ClientConfig = gapi.auth2.ClientConfig;
 
-export interface NgGapiClientConfig extends ClientConfig {
+export interface GapiClientConfig extends ClientConfig {
     discoveryDocs: string[];
 }
 
 export class GoogleApiConfig {
-    protected clientConfig: NgGapiClientConfig;
+    protected clientConfig: GapiClientConfig;
 
-    constructor(clientConfig: NgGapiClientConfig) {
+    constructor(clientConfig: GapiClientConfig) {
         this.clientConfig = clientConfig;
     }
 
-    public getClientConfig(): NgGapiClientConfig {
+    public getClientConfig(): GapiClientConfig {
         return this.clientConfig;
     }
 }

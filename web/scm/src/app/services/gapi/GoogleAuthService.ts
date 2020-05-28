@@ -1,31 +1,35 @@
 import { Injectable } from '@angular/core';
-import { GoogleApiService } from './GoogleApiService';
 import GoogleAuth = gapi.auth2.GoogleAuth;
 import GoogleUser = gapi.auth2.GoogleUser;
 import { Observable, Observer, of } from 'rxjs';
-import { mergeMap } from 'rxjs/operators';
-import { Router } from '@angular/router';
+import { GoogleApiConfig } from './GoogleApiConfig';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class GoogleAuthService {
 
-    constructor(private googleApi: GoogleApiService, private router: Router) {
-        this.googleApi.onLoad().subscribe(() => {
-            this.loadGapiAuth().subscribe();
-        });
+    constructor() {
+        this.loadGapiAuth().subscribe();
     }
 
     private static readonly OAUTH_TOKEN_STORAGE_KEY = 'scmOauthToken';
     private static readonly OAUTH_EXPIRY_STORAGE_KEY = 'scmOauthExpiry';
     private googleAuth: GoogleAuth = undefined;
     private googleUser: GoogleUser = undefined;
+    private googleApiConfig = new GoogleApiConfig({
+        client_id: environment.clientId,
+        discoveryDocs: [environment.bigQuery.discoveryDocument],
+        scope: [
+            environment.bigQuery.scope
+        ].join(' ')
+    });
 
     private loadGapiAuth(): Observable<GoogleAuth> {
         return new Observable((observer: Observer<GoogleAuth>) => {
             gapi.load('auth2', () => {
-                gapi.auth2.init(this.googleApi.getConfig().getClientConfig()).then((auth: GoogleAuth) => {
+                gapi.auth2.init(this.googleApiConfig.getClientConfig()).then((auth: GoogleAuth) => {
                     this.googleAuth = auth;
                     observer.next(auth);
                     observer.complete();
@@ -36,8 +40,7 @@ export class GoogleAuthService {
 
     private getAuth(newInstance = false): Observable<GoogleAuth> {
         if (!this.googleAuth || newInstance) {
-            return this.googleApi.onLoad()
-                .pipe(mergeMap(() => this.loadGapiAuth()));
+            return this.loadGapiAuth();
         }
         return of(this.googleAuth);
     }
@@ -64,7 +67,7 @@ export class GoogleAuthService {
             );
             return true;
         })
-        .catch(err => {
+        .catch(() => {
             return false;
         });
     }
