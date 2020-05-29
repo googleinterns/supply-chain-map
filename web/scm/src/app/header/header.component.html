@@ -1,10 +1,13 @@
 <mat-toolbar class="scm-toolbar">
-    <button mat-icon-button (click)="menuClicked()">
-        <mat-icon *ngIf="isNavOpen; else navHamburgerIcon">keyboard_backspace</mat-icon>
-        <ng-template #navHamburgerIcon>
-            <mat-icon>menu</mat-icon>
-        </ng-template>
-    </button>
-    <img class="logo" src="assets/scm_logo.png">
-    <h1 class="product-name">Supply Chain Map</h1>
+    <div class="left">
+        <button mat-icon-button (click)="menuClicked()">
+            <mat-icon *ngIf="isNavOpen; else navHamburgerIcon">keyboard_backspace</mat-icon>
+            <ng-template #navHamburgerIcon>
+                <mat-icon>menu</mat-icon>
+            </ng-template>
+        </button>
+        <img class="logo" src="assets/scm_logo.png">
+        <h1 class="product-name">Supply Chain Map</h1>
+    </div>
+    <img class="profile-img" [src]="this.profileData.imageUrl">
 </mat-toolbar>

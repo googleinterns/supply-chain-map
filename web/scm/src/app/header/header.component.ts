@@ -1,5 +1,6 @@
 import { Component, OnInit, Output } from '@angular/core';
 import { EventEmitter } from '@angular/core';
+import { GoogleAuthService, ScmBasicProfile } from '../services/gapi/GoogleAuthService';
 
 @Component({
   selector: 'scm-header',
@@ -11,8 +12,11 @@ export class HeaderComponent implements OnInit {
   menuClick = new EventEmitter();
 
   isNavOpen = false;
+  profileData: ScmBasicProfile;
 
-  constructor() { }
+  constructor(private googleAuth: GoogleAuthService) {
+    this.profileData = googleAuth.getProfileData();
+  }
 
   ngOnInit(): void {
   }

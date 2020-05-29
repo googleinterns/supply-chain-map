@@ -16,6 +16,9 @@ export class GoogleAuthService {
 
     private static readonly OAUTH_TOKEN_STORAGE_KEY = 'scmOauthToken';
     private static readonly OAUTH_EXPIRY_STORAGE_KEY = 'scmOauthExpiry';
+    private static readonly PROFILE_NAME_STORAGE_KEY = 'scmProfileName';
+    private static readonly PROFILE_EMAIL_STORAGE_KEY = 'scmProfileEmail';
+    private static readonly PROFILE_IMAGE_URL_STORAGE_KEY = 'scmProfileImageUrl';
     private googleAuth: GoogleAuth = undefined;
     private googleUser: GoogleUser = undefined;
     private googleApiConfig = new GoogleApiConfig({
@@ -58,12 +61,24 @@ export class GoogleAuthService {
         .then(auth => auth.signIn())
         .then(gUser => {
             this.googleUser = gUser;
+
             const authResponse = this.googleUser.getAuthResponse();
             sessionStorage.setItem(
                 GoogleAuthService.OAUTH_TOKEN_STORAGE_KEY, authResponse.access_token
             );
             sessionStorage.setItem(
                 GoogleAuthService.OAUTH_EXPIRY_STORAGE_KEY, authResponse.expires_at.toString()
+            );
+
+            const basicProfile = this.googleUser.getBasicProfile();
+            sessionStorage.setItem(
+                GoogleAuthService.PROFILE_NAME_STORAGE_KEY, basicProfile.getName()
+            );
+            sessionStorage.setItem(
+                GoogleAuthService.PROFILE_EMAIL_STORAGE_KEY, basicProfile.getEmail()
+            );
+            sessionStorage.setItem(
+                GoogleAuthService.PROFILE_IMAGE_URL_STORAGE_KEY, basicProfile.getImageUrl()
             );
             return true;
         })
@@ -80,4 +95,21 @@ export class GoogleAuthService {
         }
         return token;
     }
+
+    /**
+     * getProfileData returns an object containing basic data about the logged in user
+     */
+    public getProfileData(): ScmBasicProfile {
+        return {
+            name: sessionStorage.getItem(GoogleAuthService.PROFILE_NAME_STORAGE_KEY),
+            email: sessionStorage.getItem(GoogleAuthService.PROFILE_EMAIL_STORAGE_KEY),
+            imageUrl: sessionStorage.getItem(GoogleAuthService.PROFILE_IMAGE_URL_STORAGE_KEY)
+        };
+    }
+}
+
+export interface ScmBasicProfile {
+    name: string;
+    email: string;
+    imageUrl: string;
 }
