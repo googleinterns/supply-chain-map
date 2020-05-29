@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 
 import { BigQueryService } from './big-query-service.service';
-import { environment } from 'src/environments/environment';
+import { environment } from 'src/environments/environment.sample';
 
 describe('BigQueryService', () => {
   let service: BigQueryService;

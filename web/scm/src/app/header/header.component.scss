@@ -16,8 +16,14 @@
     font-size: 22px;
     font-style: normal;
     font-weight: 400;
+    cursor: pointer;
 }
 .logo {
     padding: 0 10px 0 5px;
     width: 24px;
+    cursor: pointer;
+}
+
+.filler {
+    flex: auto;
 }

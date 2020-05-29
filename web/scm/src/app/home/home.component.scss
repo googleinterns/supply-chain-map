@@ -1,17 +1,15 @@
-.app-container {
-    display: flex;
-    flex-direction: column;
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-}
-
-.scm-sidenav-container {
-    flex: 1 0 auto;
-}
 
 scm-side-panel {
     max-width: 30%;
+}
+
+.container {
+    height: calc(100vh - 64px);
+}
+
+.filter {
+    margin-left: 1em;
+    margin-top: 1em;
+    position: fixed;
+    z-index: 10;
 }

@@ -22,4 +22,9 @@ describe('HeaderComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
+
+    it('should display toolbar', () => {
+    const compiled = fixture.nativeElement;
+    expect(compiled.querySelector('.scm-toolbar')).toBeTruthy();
+  });
 });

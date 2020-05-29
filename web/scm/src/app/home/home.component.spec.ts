@@ -1,11 +1,9 @@
 import { TestBed, async, ComponentFixture } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AgmCoreModule } from '@agm/core';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { HomeComponent } from './home.component';
-import { environment } from 'src/environments/environment';
 import { MapComponent } from '../map/map.component';
 import { SidePanelComponent } from '../side-panel/side-panel.component';
 
@@ -36,11 +34,6 @@ describe('HomeComponent', () => {
     expect(component).toBeTruthy();
   });
 
-  it('should display toolbar', () => {
-    const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('scm-header')).toBeTruthy();
-  });
-
   it('should display side panel', () => {
     const compiled = fixture.nativeElement;
     expect(compiled.querySelector('scm-side-panel')).toBeTruthy();
@@ -48,6 +41,6 @@ describe('HomeComponent', () => {
 
   it('should display map', () => {
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('agm-map')).toBeTruthy();
+    expect(compiled.querySelector('scm-map')).toBeTruthy();
   });
 });
