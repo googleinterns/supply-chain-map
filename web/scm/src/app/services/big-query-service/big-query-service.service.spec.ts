@@ -26,25 +26,4 @@ describe('BigQueryService', () => {
     expect(service).toBeTruthy();
   });
 
-  it('returned Observable should match the right data', () => {
-    const testQuery = 'SELECT 1';
-    const mockResponse = {
-      result: true,
-      data: [{ f0_: 1 }]
-    };
-
-    service
-      .runQuery(testQuery)
-      .subscribe(response => {
-        expect(response.result).toBeTrue();
-        expect(response.data).toBeInstanceOf(Array);
-      });
-
-    const req = httpMock.expectOne(environment.cloudFunctionUrl);
-
-    expect(req.request.method).toEqual('POST');
-
-    req.flush(mockResponse);
-  });
-
 });
