@@ -25,10 +25,29 @@
     width: 32px;
     object-fit: contain;
 }
-.profile-img {
+.profile-img-toolbar {
     height: 32px;
     width: 32px;
     object-fit: contain;
     border-radius: 16px;
     cursor: pointer;
+}
+.profile-img-menu {
+    height: 80px;
+    width: 80px;
+    object-fit: contain;
+    border-radius: 40px;
+    margin-bottom: 15px;
+}
+.profile-name {
+    margin-bottom: 0;
+}
+.sign-out-btn {
+    margin-top: 10px;
+}
+.profile-menu-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px 40px;
 }

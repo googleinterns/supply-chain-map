@@ -87,6 +87,18 @@ export class GoogleAuthService {
         });
     }
 
+    /**
+     * signOut
+     */
+    public signOut() {
+        this.googleAuth
+        .signOut()
+        .then(() => {
+            sessionStorage.clear();
+            window.location.reload();
+        });
+    }
+
     public getOauthToken(): string | void {
         const token = sessionStorage.getItem(GoogleAuthService.OAUTH_TOKEN_STORAGE_KEY);
         const expiry = parseInt(sessionStorage.getItem(GoogleAuthService.OAUTH_EXPIRY_STORAGE_KEY), 10);

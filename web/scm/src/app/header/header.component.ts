@@ -26,4 +26,8 @@ export class HeaderComponent implements OnInit {
     this.menuClick.emit(this.isNavOpen ? 'open' : 'close');
   }
 
+  public signOut() {
+    this.googleAuth.signOut();
+  }
+
 }
