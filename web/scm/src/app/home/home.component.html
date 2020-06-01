@@ -1,11 +1,11 @@
 <mat-drawer-container class="container">
-    <mat-drawer #drawer [mode]="'side'">
-        <scm-side-panel></scm-side-panel>
-    </mat-drawer>
-    <mat-drawer-content>
-        <button mat-fab  class="filter" (click)="drawer.toggle()">
-            <mat-icon>settings</mat-icon>
-          </button>
-      <scm-map></scm-map>
-    </mat-drawer-content>
-  </mat-drawer-container>
+  <mat-drawer #drawer [mode]="'side'">
+    <scm-side-panel></scm-side-panel>
+  </mat-drawer>
+  <mat-drawer-content>
+    <button mat-fab class="filter" (click)="drawer.toggle()">
+      <mat-icon>settings</mat-icon>
+    </button>
+    <scm-map></scm-map>
+  </mat-drawer-content>
+</mat-drawer-container>

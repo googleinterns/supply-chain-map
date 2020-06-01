@@ -1,6 +1,5 @@
-import { Component, OnInit, Output } from '@angular/core';
-import { EventEmitter } from '@angular/core';
-import { GoogleAuthService, ScmBasicProfile } from '../services/gapi/GoogleAuthService';
+import { Component, OnInit } from '@angular/core';
+import { GoogleAuthService, ScmBasicProfile } from '../services/google-auth/google-auth.service';
 
 @Component({
   selector: 'scm-header',
@@ -8,25 +7,24 @@ import { GoogleAuthService, ScmBasicProfile } from '../services/gapi/GoogleAuthS
   styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent implements OnInit {
-  @Output()
-  menuClick = new EventEmitter();
 
-  isNavOpen = false;
+  /**
+   * Holds basic information of the logged in user.
+   * Provided by GoogleAuthService
+   */
   profileData: ScmBasicProfile;
 
   constructor(private googleAuth: GoogleAuthService) {
-    this.profileData = googleAuth.getProfileData();
   }
 
   ngOnInit(): void {
+    this.profileData = this.googleAuth.getProfileData();
   }
 
-  public menuClicked() {
-    this.isNavOpen = !this.isNavOpen;
-    this.menuClick.emit(this.isNavOpen ? 'open' : 'close');
-  }
-
-  public signOut() {
+  /**
+   * Encapsulate private property using this method.
+   */
+  signOut() {
     this.googleAuth.signOut();
   }
 

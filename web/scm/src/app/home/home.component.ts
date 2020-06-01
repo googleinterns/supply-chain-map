@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'scm-root',
@@ -6,9 +6,4 @@ import { Component, Output, EventEmitter } from '@angular/core';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent {
-  isNavOpen = false;
-
-  menuClicked() {
-    this.isNavOpen = !this.isNavOpen;
-  }
 }

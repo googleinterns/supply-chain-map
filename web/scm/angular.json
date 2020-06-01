@@ -96,7 +96,9 @@
             "styles": [
               "src/styles.scss"
             ],
-            "scripts": []
+            "scripts": [
+              "src/assets/gapi.js"
+            ]
           }
         },
         "lint": {

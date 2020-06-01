@@ -7,6 +7,7 @@ import { FormGroup, FormControl } from '@angular/forms';
   styleUrls: ['./side-panel.component.scss']
 })
 export class SidePanelComponent implements OnInit {
+
   basicForm: FormGroup;
 
   productSelectOptions: any[];
