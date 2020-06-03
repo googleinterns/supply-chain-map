@@ -6,7 +6,8 @@
       "jasmine",
       "node",
       "gapi",
-      "gapi.auth2"
+      "gapi.auth2",
+      "gapi.client.bigquery"
     ]
   },
   "files": [
