@@ -26,6 +26,10 @@ describe('DashboardComponent', () => {
     fixture.detectChanges();
   }));
 
+  afterAll(() => {
+    TestBed.resetTestingModule();
+  });
+
   it('should create the dashboard component', () => {
     expect(component).toBeTruthy();
   });
