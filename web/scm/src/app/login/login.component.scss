@@ -1,0 +1,24 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    height: calc(100vh - 64px);
+    width: auto;
+    justify-content: center;
+}
+
+.login-logo {
+    height: 200px;
+    width: auto;
+    object-fit: contain;
+    margin-bottom: 24px;
+}
+
+h1 {
+    display: flex;
+    align-self: center;
+}
+
+button {
+    display: flex;
+    align-self: center;
+}

@@ -4,7 +4,7 @@ import { CanActivate, Router } from '@angular/router';
 import { GoogleAuthService } from 'src/app/services/google-auth/google-auth.service';
 
 @Injectable({ providedIn: 'root' })
-export class AuthGuard implements CanActivate {
+export class NoAuthGuard implements CanActivate {
     constructor(
         private authenticationService: GoogleAuthService,
         private router: Router
@@ -12,10 +12,10 @@ export class AuthGuard implements CanActivate {
 
     async canActivate() {
         if (await this.authenticationService.isSignedIn()) {
-            return true;
-        } else {
-            this.router.navigate(['login']);
+            this.router.navigate(['']);
             return false;
+        } else {
+            return true;
         }
     }
 }

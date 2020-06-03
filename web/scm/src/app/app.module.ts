@@ -27,6 +27,7 @@ import { UpstreamFilterComponent } from './side-panel/upstream-filter/upstream-f
 import { CmFilterComponent } from './side-panel/cm-filter/cm-filter.component';
 import { DownstreamFilterComponent } from './side-panel/downstream-filter/downstream-filter.component';
 import { BasicFilterComponent } from './side-panel/basic-filter/basic-filter.component';
+import { LoginComponent } from './login/login.component';
 
 @NgModule({
   declarations: [
@@ -38,7 +39,8 @@ import { BasicFilterComponent } from './side-panel/basic-filter/basic-filter.com
     UpstreamFilterComponent,
     CmFilterComponent,
     DownstreamFilterComponent,
-    BasicFilterComponent
+    BasicFilterComponent,
+    LoginComponent
   ],
   imports: [
     AgmCoreModule.forRoot({

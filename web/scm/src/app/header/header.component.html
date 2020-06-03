@@ -5,10 +5,7 @@
     <button class="toolbar-icon" mat-icon-button routerLink="/dashboard">
         <mat-icon>dashboard</mat-icon>
     </button>
-    <img class="profile-img-toolbar" *ngIf="this.profileData; else signin" [src]="this.profileData.imageUrl" [matMenuTriggerFor]="profileDialog">
-    <ng-template #signin>
-        <button mat-raised-button color="primary">Sign in</button>
-    </ng-template>
+    <img class="profile-img-toolbar" *ngIf="this.profileData" [src]="this.profileData.imageUrl" [matMenuTriggerFor]="profileDialog">
 </mat-toolbar>
 <mat-menu #profileDialog="matMenu">
     <div *ngIf="this.profileData" class="profile-menu-container">
