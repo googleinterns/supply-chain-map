@@ -6,6 +6,10 @@ import { BrowserModule } from '@angular/platform-browser';
 import { HomeComponent } from './home.component';
 import { MapComponent } from '../map/map.component';
 import { SidePanelComponent } from '../side-panel/side-panel.component';
+import { BasicFilterComponent } from '../side-panel/basic-filter/basic-filter.component';
+import { UpstreamFilterComponent } from '../side-panel/upstream-filter/upstream-filter.component';
+import { CmFilterComponent } from '../side-panel/cm-filter/cm-filter.component';
+import { DownstreamFilterComponent } from '../side-panel/downstream-filter/downstream-filter.component';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
@@ -16,7 +20,11 @@ describe('HomeComponent', () => {
       declarations: [
         HomeComponent,
         MapComponent,
-        SidePanelComponent
+        SidePanelComponent,
+        BasicFilterComponent,
+        UpstreamFilterComponent,
+        CmFilterComponent,
+        DownstreamFilterComponent
       ],
       imports: [
         BrowserAnimationsModule,
@@ -29,6 +37,10 @@ describe('HomeComponent', () => {
     component = fixture.componentInstance;
     fixture.detectChanges();
   }));
+
+  afterAll(() => {
+    TestBed.resetTestingModule();
+  });
 
   it('should create the home component', () => {
     expect(component).toBeTruthy();

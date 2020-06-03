@@ -2,18 +2,19 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SidePanelComponent } from './side-panel.component';
 import { MatButtonModule } from '@angular/material/button';
-import { MatIconModule } from '@angular/material/icon';
-import { MatSidenavModule } from '@angular/material/sidenav';
-import { MatToolbarModule } from '@angular/material/toolbar';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
-import { MatMenuModule } from '@angular/material/menu';
-import { MatOptionModule } from '@angular/material/core';
-import { MatSelectModule } from '@angular/material/select';
 import { ReactiveFormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
+import { BasicFilterComponent } from './basic-filter/basic-filter.component';
+import { UpstreamFilterComponent } from './upstream-filter/upstream-filter.component';
+import { CmFilterComponent } from './cm-filter/cm-filter.component';
+import { DownstreamFilterComponent } from './downstream-filter/downstream-filter.component';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatIconModule } from '@angular/material/icon';
+import { MatInputModule } from '@angular/material/input';
+import { MatOptionModule } from '@angular/material/core';
+import { MatSelectModule } from '@angular/material/select';
 
 describe('SidePanelComponent', () => {
   let component: SidePanelComponent;
@@ -21,7 +22,13 @@ describe('SidePanelComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ SidePanelComponent ],
+      declarations: [
+        SidePanelComponent,
+        BasicFilterComponent,
+        UpstreamFilterComponent,
+        CmFilterComponent,
+        DownstreamFilterComponent
+      ],
       imports: [
         BrowserAnimationsModule,
         BrowserModule,
@@ -30,16 +37,17 @@ describe('SidePanelComponent', () => {
         MatFormFieldModule,
         MatIconModule,
         MatInputModule,
-        MatMenuModule,
         MatOptionModule,
         MatSelectModule,
-        MatSidenavModule,
-        MatToolbarModule,
         ReactiveFormsModule
       ]
     })
     .compileComponents();
   }));
+
+  afterAll(() => {
+    TestBed.resetTestingModule();
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(SidePanelComponent);
@@ -49,10 +57,5 @@ describe('SidePanelComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should create the form', () => {
-    const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('form')).toBeTruthy();
   });
 });

@@ -26,6 +26,10 @@ describe('MapComponent', () => {
     .compileComponents();
   }));
 
+afterAll(() => {
+    TestBed.resetTestingModule();
+  });
+
   beforeEach(() => {
     fixture = TestBed.createComponent(MapComponent);
     component = fixture.componentInstance;

@@ -21,6 +21,10 @@ describe('BigQueryService', () => {
     httpMock.verify();
   });
 
+  afterAll(() => {
+    TestBed.resetTestingModule();
+  });
+
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
