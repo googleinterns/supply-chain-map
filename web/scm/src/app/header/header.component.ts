@@ -17,8 +17,8 @@ export class HeaderComponent implements OnInit {
   constructor(private googleAuth: GoogleAuthService) {
   }
 
-  ngOnInit(): void {
-    this.profileData = this.googleAuth.getProfileData();
+  async ngOnInit() {
+    this.profileData = await this.googleAuth.getProfileData();
   }
 
   /**

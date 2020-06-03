@@ -5,10 +5,13 @@
     <button class="toolbar-icon" mat-icon-button routerLink="/dashboard">
         <mat-icon>dashboard</mat-icon>
     </button>
-    <img class="profile-img-toolbar" [src]="this.profileData.imageUrl" [matMenuTriggerFor]="profileDialog">
+    <img class="profile-img-toolbar" *ngIf="this.profileData; else signin" [src]="this.profileData.imageUrl" [matMenuTriggerFor]="profileDialog">
+    <ng-template #signin>
+        <button mat-raised-button color="primary">Sign in</button>
+    </ng-template>
 </mat-toolbar>
 <mat-menu #profileDialog="matMenu">
-    <div class="profile-menu-container">
+    <div *ngIf="this.profileData" class="profile-menu-container">
         <img class="profile-img-menu" [src]="this.profileData.imageUrl">
         <h2 class="profile-name">{{ this.profileData.name }}</h2>
         <p class="profile-email">{{ this.profileData.email }}</p>

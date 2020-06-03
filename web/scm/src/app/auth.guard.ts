@@ -9,11 +9,12 @@ export class AuthGuard implements CanActivate {
         private authenticationService: GoogleAuthService
     ) { }
 
-    canActivate() {
-        if (!this.authenticationService.isSignedIn()) {
-            return this.authenticationService.signIn();
+    async canActivate() {
+        if (await this.authenticationService.isSignedIn()) {
+            return true;
+        } else {
+            this.authenticationService.signIn();
+            return false;
         }
-
-        return true;
     }
 }
