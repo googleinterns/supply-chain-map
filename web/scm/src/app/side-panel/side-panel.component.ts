@@ -67,7 +67,7 @@ export class SidePanelComponent implements OnInit, AfterViewInit {
   }
 
   sidePanelFormSubmit() {
-    this.filterFormService.submitForm(this.sidePanelFormGroup);
+    const generatedSQL = this.filterFormService.convertFormToQuery(this.sidePanelFormGroup.value);
   }
 
 }

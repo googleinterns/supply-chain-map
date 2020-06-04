@@ -1,12 +1,61 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { BigQueryService } from '../big-query/big-query.service';
-import { FormGroup } from '@angular/forms';
-import { data } from './data';
 
 /**
- * This service provides data to the various form
- * fields on SidePanelComponent.
+ * The structure that a submitted form must follow
+ */
+export interface FormStructure {
+  basicFilterGroup: {
+    productFilterGroup: {
+      productSelect: string[];
+    }
+  };
+  upstreamFilterGroup: {
+    componentFilterGroup: {
+      categorySelect: string[];
+      supplierSelect: string[];
+    };
+    locationFilterGroup: {
+      countrySelect: string[];
+      regionSelect: string[];
+      citySelect: string[];
+    };
+    additionalFilterGroup: {
+      minLeadTimeInput: number,
+      maxLeadTimeInput: number
+     };
+  };
+  cmFilterGroup: {
+    locationFilterGroup: {
+      countrySelect: string[];
+      regionSelect: string[];
+      citySelect: string[];
+    };
+    additionalFilterGroup: {
+      minLeadTimeInput: number;
+      maxLeadTimeInput: number;
+    };
+  };
+  downstreamFilterGroup: {
+    locationFilterGroup: {
+      countrySelect: string[];
+      regionSelect: string[];
+      citySelect: string[];
+    };
+    additionalFilterGroup: {
+      minLeadTimeInput: number;
+      maxLeadTimeInput: number;
+    };
+  };
+}
+
+/**
+ * This service provides methods that retrieves data
+ * for the various form fields on SidePanelComponent.
+ *
+ * Also provides methods to query the BigQuery dataset
+ * based on form selection
  */
 @Injectable({
   providedIn: 'root'
@@ -116,9 +165,9 @@ export class FilterFormService {
     };
 
     try {
-      /* const request = await this.bigQueryService.runQuery(FilterFormService.SQL_UNIQUE_PRODUCT_SUPPLIER_CATEGORY);
-      const result = request.result; */
-      const result = data;
+      const request = await this.bigQueryService.runQuery(FilterFormService.SQL_UNIQUE_PRODUCT_SUPPLIER_CATEGORY);
+      const result = request.result;
+
       filterData = {
         products: result.rows[0].f[0].v.map(e => e.v),
         upstream_suppliers: result.rows[0].f[1].v.map(e => e.v),
@@ -143,14 +192,11 @@ export class FilterFormService {
   }
 
   /**
-   * submitForm
+   * The passed in form is converted to a SQL query
+   * @param filterSelection The form value to be converted. Must abide
+   * by the @interface FormStructure
    */
-  public submitForm(filterForm: FormGroup) {
-    const filterSelection = filterForm.value;
-    console.log(this.convertFormToQuery(filterSelection));
-  }
-
-  private convertFormToQuery(filterSelection) {
+  public convertFormToQuery(filterSelection: FormStructure) {
 
     /**
      * Selected products subquery
@@ -254,12 +300,22 @@ export class FilterFormService {
     `;
   }
 
+  /**
+   * Convert the basic filter form group
+   * @param basicFilterGroup The child form group.
+   * Must be of type @var FormStructure.basicFilterGroup
+   */
   private getBasicFormSubquery(basicFilterGroup): string[] {
     const conditions = [];
 
     return conditions;
   }
 
+  /**
+   * Convert the upstream filter form group
+   * @param upstreamFilterGroup The child form group.
+   * Must be of type @var FormStructure.upstreamFilterGroup
+   */
   private getUpstreamFormSubquery(upstreamFilterGroup): string[] {
     const conditions = [];
 
@@ -327,6 +383,11 @@ export class FilterFormService {
     return conditions;
   }
 
+  /**
+   * Convert the CM filter form group
+   * @param cmFilterGroup The child form group.
+   * Must be of type @var FormStructure.cmFilterGroup
+   */
   private getCmFormSubquery(cmFilterGroup): string[] {
     const conditions = [];
 
@@ -374,6 +435,11 @@ export class FilterFormService {
     return conditions;
   }
 
+  /**
+   * Convert the downstream filter form group
+   * @param downstreamFilterGroup The child form group.
+   * Must be of type @var FormStructure.downstreamFilterGroup
+   */
   private getDownstreamFormSubquery(downstreamFilterGroup): string[] {
     const conditions = [];
 
@@ -421,6 +487,13 @@ export class FilterFormService {
     return conditions;
   }
 
+  /**
+   * Helper function to convert additional filters in each 
+   * child form group into a SQL condition
+   * @param field The field name that is being referenced
+   * @param min The minimum lead time set by user
+   * @param max The maximum lead time set by user
+   */
   private getLeadTimeSubquery(field: string, min: number | null, max: number | null): string {
     if (min != null && max != null) {
       return `${field} BETWEEN ${min} AND ${max}`;
