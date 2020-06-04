@@ -7,7 +7,7 @@
             <mat-form-field appearance="outline">
                 <mat-label>Product</mat-label>
                 <mat-select formControlName="productSelect" multiple>
-                    <mat-option *ngFor="let product of productSelectOptions" [value]="product.gpn">{{ product.name }}
+                    <mat-option *ngFor="let product of productSelectOptions" [value]="product">{{ product }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>

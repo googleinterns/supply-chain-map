@@ -12,6 +12,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatOptionModule } from '@angular/material/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -60,6 +61,7 @@ import { LoginComponent } from './login/login.component';
     MatOptionModule,
     MatSelectModule,
     MatSidenavModule,
+    MatProgressSpinnerModule,
     MatToolbarModule,
     ReactiveFormsModule
   ],

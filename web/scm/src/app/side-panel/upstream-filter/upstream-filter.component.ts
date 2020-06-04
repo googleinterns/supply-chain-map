@@ -10,12 +10,12 @@ export class UpstreamFilterComponent implements OnInit {
 
   upstreamForm: FormGroup;
 
-  categorySelectOptions: any[];
-  supplierSelectOptions: any[];
+  categorySelectOptions: string[];
+  supplierSelectOptions: string[];
 
-  countrySelectOptions: any[];
-  regionSelectOptions: any[];
-  citySelectOptions: any[];
+  countrySelectOptions: string[];
+  regionSelectOptions: string[];
+  citySelectOptions: string[];
 
   constructor() {
     this.upstreamForm = new FormGroup({
@@ -41,39 +41,11 @@ export class UpstreamFilterComponent implements OnInit {
 
 
   initializeOptions() {
-    this.countrySelectOptions = [
-      { name: 'United States of America', code: 'USA' },
-      { name: 'Canada', code: 'CA' },
-      { name: 'China', code: 'CHN' },
-      { name: 'India', code: 'IND' }
-    ];
-    this.regionSelectOptions = [
-      { name: 'New York', code: 'NY' },
-      { name: 'California', code: 'CA' },
-      { name: 'Ontario', code: 'OTR' },
-      { name: 'Sichuan', code: 'SCN' },
-      { name: 'Hubei', code: 'HBI' }
-    ];
-    this.citySelectOptions = [
-      { name: 'Wuhan', code: 'WHN' },
-      { name: 'Yichang', code: 'YCG' },
-      { name: 'Rochester', code: 'ROC' },
-      { name: 'Sunnyvale', code: 'SVL' },
-      { name: 'Bombay', code: 'BOM' },
-      { name: 'Toronto', code: 'TOR' }
-    ];
-    this.categorySelectOptions = [
-      { name: 'IC', code: 'IC' },
-      { name: 'LED', code: 'LED' },
-      { name: 'Printed Material', code: 'PM' },
-      { name: 'Plastic', code: 'MANU' }
-    ];
-    this.supplierSelectOptions = [
-      { name: 'RR Donnelley', code: 'RRD' },
-      { name: 'Greendoer', code: 'GDR' },
-      { name: 'Paishing', code: 'PSG' },
-      { name: 'Avary', code: 'AVR' }
-    ];
+    this.countrySelectOptions = [ ];
+    this.regionSelectOptions = [ ];
+    this.citySelectOptions = [ ];
+    this.categorySelectOptions = [ ];
+    this.supplierSelectOptions = [ ];
   }
 
 }

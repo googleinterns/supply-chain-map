@@ -47,7 +47,15 @@ export class BigQueryService {
      */
     return this.loadBigQuery().toPromise()
     .then(
-      () => gapi.client['bigquery'].jobs.query({ projectId: environment.projectId, query: query, useLegacySql: false })
+      () => gapi.client['bigquery'].jobs.query({
+        projectId: environment.projectId,
+        query: query,
+        useLegacySql: false,
+        defaultDataset: {
+          datasetId: environment.bigQuery.dataset,
+          projectId: environment.projectId
+        }
+      })
     );
   }
 }
