@@ -219,6 +219,7 @@ export class FilterFormService {
     const SQL_UPSTREAM_SUBQUERY = `
       SELECT AS STRUCT
           ${UPSTREAM_COLUMNS.PRODUCT},
+          ${UPSTREAM_COLUMNS.PARENT_SKU},
           ${UPSTREAM_COLUMNS.PART_NUMBER},
           ${UPSTREAM_COLUMNS.DESCRIPTION},
           ${UPSTREAM_COLUMNS.CATEGORY},
@@ -247,6 +248,7 @@ export class FilterFormService {
     const SQL_CM_SUBQUERY = `
       SELECT AS STRUCT
           ${CM_COLUMNS.PRODUCT},
+          ${CM_COLUMNS.SKU},
           ${CM_COLUMNS.DESCRIPTION},
           ${CM_COLUMNS.CM_NAME},
           ${CM_COLUMNS.LEAD_TIME},
@@ -273,6 +275,7 @@ export class FilterFormService {
     const SQL_DOWNSTREAM_SUBQUERY = `
       SELECT AS STRUCT
           ${DOWNSTREAM_COLUMNS.PRODUCT},
+          ${DOWNSTREAM_COLUMNS.SKU},
           ${DOWNSTREAM_COLUMNS.GDC_CODE},
           ${DOWNSTREAM_COLUMNS.LEAD_TIME},
           ${DOWNSTREAM_COLUMNS.GDC_CITY},
