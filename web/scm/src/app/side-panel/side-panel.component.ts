@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit, Output, EventEmitter } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { BasicFilterComponent } from './basic-filter/basic-filter.component';
 import { UpstreamFilterComponent } from './upstream-filter/upstream-filter.component';
@@ -17,6 +17,8 @@ export class SidePanelComponent implements OnInit, AfterViewInit {
   @ViewChild(UpstreamFilterComponent) upstreamFilterComponent: UpstreamFilterComponent;
   @ViewChild(DownstreamFilterComponent) downstreamFilterComponent: DownstreamFilterComponent;
   @ViewChild(CmFilterComponent) cmFilterComponent: CmFilterComponent;
+
+  @Output() queryGenerated = new EventEmitter<string>();
 
   sidePanelFormGroup: FormGroup;
 
@@ -68,6 +70,7 @@ export class SidePanelComponent implements OnInit, AfterViewInit {
 
   sidePanelFormSubmit() {
     const generatedSQL = this.filterFormService.convertFormToQuery(this.sidePanelFormGroup.value);
+    this.queryGenerated.emit(generatedSQL);
   }
 
 }
