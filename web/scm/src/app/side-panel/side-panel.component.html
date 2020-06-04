@@ -1,4 +1,4 @@
-<div class="pd-10">
+<div class="container">
     <form [formGroup]="sidePanelFormGroup" (submit)="sidePanelFormSubmit()">
         <mat-accordion multi togglePosition="before">
             <mat-expansion-panel>
@@ -40,6 +40,10 @@
                 <scm-downstream-filter></scm-downstream-filter>
             </mat-expansion-panel>
         </mat-accordion>
-        <button mat-raised-button color="primary" class="submit-button">Submit</button>
+        <button mat-raised-button color="primary" class="submit-button" [disabled]="loading">Submit</button>
     </form>
+    <div class="loading" *ngIf="loading">
+        <mat-spinner></mat-spinner>
+        <h3>Loading data...</h3>
+    </div>
 </div>

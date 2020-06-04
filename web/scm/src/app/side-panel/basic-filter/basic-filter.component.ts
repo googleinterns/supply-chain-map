@@ -10,7 +10,7 @@ export class BasicFilterComponent implements OnInit {
 
   basicForm: FormGroup;
 
-  productSelectOptions: any[];
+  productSelectOptions: string[];
 
   constructor() {
     this.basicForm = new FormGroup({
@@ -30,12 +30,7 @@ export class BasicFilterComponent implements OnInit {
   }
 
   private initializeOptions() {
-    this.productSelectOptions = [
-      { name: 'Google Nest Mini, US, Chalk', gpn: 'GA00638' },
-      { name: 'Google Nest Mini, US, White', gpn: 'GA00639' },
-      { name: 'Google Pixel 5, US, Just Black', gpn: 'GA00643' },
-      { name: 'Google Pixel 5, US, White', gpn: 'GA00756' }
-    ];
+    this.productSelectOptions = [ ];
   }
 
 }

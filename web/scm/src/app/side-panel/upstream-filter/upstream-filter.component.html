@@ -7,16 +7,16 @@
             <mat-form-field appearance="outline">
                 <mat-label>Category</mat-label>
                 <mat-select formControlName="categorySelect" multiple>
-                    <mat-option *ngFor="let category of categorySelectOptions" [value]="category.code">
-                        {{ category.name }}</mat-option>
+                    <mat-option *ngFor="let category of categorySelectOptions" [value]="category">
+                        {{ category }}</mat-option>
                 </mat-select>
             </mat-form-field>
 
             <mat-form-field appearance="outline">
                 <mat-label>Supplier</mat-label>
                 <mat-select formControlName="supplierSelect" multiple>
-                    <mat-option *ngFor="let supplier of supplierSelectOptions" [value]="supplier.code">
-                        {{ supplier.name }}</mat-option>
+                    <mat-option *ngFor="let supplier of supplierSelectOptions" [value]="supplier">
+                        {{ supplier }}</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>
@@ -27,7 +27,7 @@
             <mat-form-field appearance="outline">
                 <mat-label>Country</mat-label>
                 <mat-select formControlName="countrySelect" multiple>
-                    <mat-option *ngFor="let country of countrySelectOptions" [value]="country.code">{{ country.name }}
+                    <mat-option *ngFor="let country of countrySelectOptions" [value]="country">{{ country }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -35,7 +35,7 @@
             <mat-form-field appearance="outline">
                 <mat-label>State/Region</mat-label>
                 <mat-select formControlName="regionSelect" multiple>
-                    <mat-option *ngFor="let region of regionSelectOptions" [value]="region.code">{{ region.name }}
+                    <mat-option *ngFor="let region of regionSelectOptions" [value]="region">{{ region }}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
@@ -43,7 +43,7 @@
             <mat-form-field appearance="outline">
                 <mat-label>City</mat-label>
                 <mat-select formControlName="citySelect" multiple>
-                    <mat-option *ngFor="let city of citySelectOptions" [value]="city.code">{{ city.name }}</mat-option>
+                    <mat-option *ngFor="let city of citySelectOptions" [value]="city">{{ city }}</mat-option>
                 </mat-select>
             </mat-form-field>
 

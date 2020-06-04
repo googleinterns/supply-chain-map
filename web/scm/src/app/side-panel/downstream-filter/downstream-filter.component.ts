@@ -10,9 +10,9 @@ export class DownstreamFilterComponent implements OnInit {
 
   downstreamForm: FormGroup;
 
-  countrySelectOptions: any[];
-  regionSelectOptions: any[];
-  citySelectOptions: any[];
+  countrySelectOptions: string[];
+  regionSelectOptions: string[];
+  citySelectOptions: string[];
 
   constructor() {
     this.downstreamForm = new FormGroup({
@@ -34,26 +34,8 @@ export class DownstreamFilterComponent implements OnInit {
 
 
   initializeOptions() {
-    this.countrySelectOptions = [
-      { name: 'United States of America', code: 'USA' },
-      { name: 'Canada', code: 'CA' },
-      { name: 'China', code: 'CHN' },
-      { name: 'India', code: 'IND' }
-    ];
-    this.regionSelectOptions = [
-      { name: 'New York', code: 'NY' },
-      { name: 'California', code: 'CA' },
-      { name: 'Ontario', code: 'OTR' },
-      { name: 'Sichuan', code: 'SCN' },
-      { name: 'Hubei', code: 'HBI' }
-    ];
-    this.citySelectOptions = [
-      { name: 'Wuhan', code: 'WHN' },
-      { name: 'Yichang', code: 'YCG' },
-      { name: 'Rochester', code: 'ROC' },
-      { name: 'Sunnyvale', code: 'SVL' },
-      { name: 'Bombay', code: 'BOM' },
-      { name: 'Toronto', code: 'TOR' }
-    ];
+    this.countrySelectOptions = [ ];
+    this.regionSelectOptions = [ ];
+    this.citySelectOptions = [ ];
   }
 }
