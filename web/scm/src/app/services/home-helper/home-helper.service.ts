@@ -2,6 +2,10 @@ import { Injectable } from '@angular/core';
 import { BigQueryService } from '../big-query/big-query.service';
 import { environment } from 'src/environments/environment';
 
+/**
+ * The return type expected after running the query
+ * obtained from side panel form.
+ */
 export interface FormQueryResult {
   upstream: {
     product: string,
@@ -49,7 +53,12 @@ export class HomeHelperService {
 
   constructor(private bigQueryService: BigQueryService) { }
 
-  public async runFormQuery(query: string): Promise<any> {
+  /**
+   * Runs the query using the bigquery service and reformats
+   * the response into understandable format
+   * @param query The query obtained from side panel form
+   */
+  public async runFormQuery(query: string): Promise<FormQueryResult> {
 
     try {
       const request = await this.bigQueryService.runQuery(query);
@@ -60,7 +69,7 @@ export class HomeHelperService {
       }
 
       const formQueryResult = this.convertQueryResultFormat(result);
-      console.log(formQueryResult);
+      return formQueryResult;
     } catch (err) {
       if (!environment.production) {
         console.error(err);

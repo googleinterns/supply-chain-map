@@ -20,7 +20,6 @@ export class BigQueryService {
    */
   private loadBigQuery(): Observable<void>{
     if (gapi.client && gapi.client['bigquery']) {
-      console.log('already loaded');
       return of();
     }
     return new Observable((observer: Observer<void>) => {
