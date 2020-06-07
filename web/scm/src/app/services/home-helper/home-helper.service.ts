@@ -18,8 +18,8 @@ export interface FormQueryResult {
     mfg_city: string,
     mfg_state: string,
     mfg_country: string,
-    mfg_lat: string,
-    mfg_long: string
+    mfg_lat: number,
+    mfg_long: number
   }[];
   cm: {
     product: string,
@@ -30,8 +30,8 @@ export interface FormQueryResult {
     cm_city: string,
     cm_state: string,
     cm_country: string,
-    cm_lat: string,
-    cm_long: string
+    cm_lat: number,
+    cm_long: number
   }[];
   downstream: {
     product: string,
@@ -41,8 +41,8 @@ export interface FormQueryResult {
     gdc_city: string,
     gdc_state: string,
     gdc_country: string,
-    gdc_lat: string,
-    gdc_long: string
+    gdc_lat: number,
+    gdc_long: number
   }[];
 }
 
@@ -69,6 +69,7 @@ export class HomeHelperService {
       }
 
       const formQueryResult = this.convertQueryResultFormat(result);
+      console.log(formQueryResult);
       return formQueryResult;
     } catch (err) {
       if (!environment.production) {
@@ -140,8 +141,8 @@ export class HomeHelperService {
         mfg_city: upstreamRowInCol.v.f[7].v,
         mfg_state: upstreamRowInCol.v.f[8].v,
         mfg_country: upstreamRowInCol.v.f[9].v,
-        mfg_lat: upstreamRowInCol.v.f[10].v,
-        mfg_long: upstreamRowInCol.v.f[11].v
+        mfg_lat: parseInt(upstreamRowInCol.v.f[10].v, 10),
+        mfg_long: parseInt(upstreamRowInCol.v.f[11].v, 10)
       });
     }
 
@@ -159,8 +160,8 @@ export class HomeHelperService {
         cm_city: cmRowInCol.v.f[5].v,
         cm_state: cmRowInCol.v.f[6].v,
         cm_country: cmRowInCol.v.f[7].v,
-        cm_lat: cmRowInCol.v.f[8].v,
-        cm_long: cmRowInCol.v.f[9].v
+        cm_lat: parseInt(cmRowInCol.v.f[8].v, 10),
+        cm_long: parseInt(cmRowInCol.v.f[9].v, 10)
       });
     }
 
@@ -177,8 +178,8 @@ export class HomeHelperService {
         gdc_city: downstreamRowInCol.v.f[4].v,
         gdc_state: downstreamRowInCol.v.f[5].v,
         gdc_country: downstreamRowInCol.v.f[6].v,
-        gdc_lat: downstreamRowInCol.v.f[7].v,
-        gdc_long: downstreamRowInCol.v.f[8].v
+        gdc_lat: parseInt(downstreamRowInCol.v.f[7].v, 10),
+        gdc_long: parseInt(downstreamRowInCol.v.f[8].v, 10)
       });
     }
 

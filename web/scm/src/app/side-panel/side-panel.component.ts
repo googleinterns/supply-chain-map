@@ -62,7 +62,8 @@ export class SidePanelComponent implements OnInit, AfterViewInit {
       cmFilterGroup: this.cmFilterComponent.cmForm,
       downstreamFilterGroup: this.downstreamFilterComponent.downstreamForm
     });
-    this.fetchFormData();
+    //this.fetchFormData();
+    this.loading = false;
   }
 
   ngOnInit(): void {
