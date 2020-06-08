@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { BigQueryService } from '../big-query/big-query.service';
+import { BigQueryService } from '../../services/big-query/big-query.service';
 
 /**
  * The structure that a submitted form must follow

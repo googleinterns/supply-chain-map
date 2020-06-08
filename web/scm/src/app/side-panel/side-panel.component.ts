@@ -4,7 +4,7 @@ import { BasicFilterComponent } from './basic-filter/basic-filter.component';
 import { UpstreamFilterComponent } from './upstream-filter/upstream-filter.component';
 import { DownstreamFilterComponent } from './downstream-filter/downstream-filter.component';
 import { CmFilterComponent } from './cm-filter/cm-filter.component';
-import { FilterFormService } from '../services/filter-form/filter-form.service';
+import { FilterFormService } from './services/filter-form.service';
 
 @Component({
   selector: 'scm-side-panel',
