@@ -1,0 +1,31 @@
+<form [formGroup]="basicForm">
+    <div class="form-input-container">
+        <div formGroupName="productFilterGroup">
+
+            <h2>Filter Products</h2>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Product</mat-label>
+                <mat-select formControlName="productSelect" multiple>
+                    <mat-option *ngFor="let product of basicData.products" [value]="product">{{ product }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+        </div>
+        <div formGroupName="mapPropFilterGroup">
+
+            <h2>Map Properties</h2>
+
+            <div class="mat-checkbox-field">
+                <mat-checkbox formControlName="uniqueCheckbox">Unique</mat-checkbox>
+            </div>
+            <div class="mat-checkbox-field">
+                <mat-checkbox formControlName="drawPathCheckbox">Draw Path</mat-checkbox>
+            </div>
+            <div class="mat-checkbox-field">
+                <mat-checkbox formControlName="singleSrcCheckbox">Single Source</mat-checkbox>
+            </div>
+        </div>
+    </div>
+</form>

@@ -1,5 +1,6 @@
 .container {
-    height: calc(100vh - 64px);
+    height: 100%;
+    width: 100%;
 }
 
 .filter {
@@ -8,6 +9,6 @@
     z-index: 10;
 }
 
-scm-side-panel {
-    max-width: 30%;
+mat-drawer-container {
+    height: 100%;
 }

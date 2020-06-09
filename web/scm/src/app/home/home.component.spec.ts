@@ -4,35 +4,29 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { HomeComponent } from './home.component';
-import { MapComponent } from '../map/map.component';
-import { SidePanelComponent } from '../side-panel/side-panel.component';
-import { BasicFilterComponent } from '../side-panel/basic-filter/basic-filter.component';
-import { UpstreamFilterComponent } from '../side-panel/upstream-filter/upstream-filter.component';
-import { CmFilterComponent } from '../side-panel/cm-filter/cm-filter.component';
-import { DownstreamFilterComponent } from '../side-panel/downstream-filter/downstream-filter.component';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
+  let store: MockStore;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        HomeComponent,
-        MapComponent,
-        SidePanelComponent,
-        BasicFilterComponent,
-        UpstreamFilterComponent,
-        CmFilterComponent,
-        DownstreamFilterComponent
+        HomeComponent
       ],
       imports: [
         BrowserAnimationsModule,
         BrowserModule,
         RouterTestingModule
+      ],
+      providers: [
+        provideMockStore()
       ]
     }).compileComponents();
 
+    store = TestBed.inject(MockStore);
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
@@ -42,17 +36,7 @@ describe('HomeComponent', () => {
     TestBed.resetTestingModule();
   });
 
-  it('should create the home component', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
-  });
-
-  it('should display side panel', () => {
-    const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('scm-side-panel')).toBeTruthy();
-  });
-
-  it('should display map', () => {
-    const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('scm-map')).toBeTruthy();
   });
 });
