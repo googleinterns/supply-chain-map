@@ -7,7 +7,28 @@ export interface SidePanelState {
 }
 
 export const initialState: SidePanelState = {
-    sidePanelData: null,
+    sidePanelData: {
+        basic: {
+            products: []
+        },
+        upstream: {
+            categories: [],
+            suppliers: [],
+            countries: [],
+            states: [],
+            cities: []
+        },
+        cm: {
+            countries: [],
+            states: [],
+            cities: []
+        },
+        downstream: {
+            countries: [],
+            states: [],
+            cities: []
+        }
+    },
     error: null,
     isLoading: false
 };

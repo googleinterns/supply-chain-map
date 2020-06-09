@@ -11,6 +11,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { StoreModule } from '@ngrx/store';
 import * as fromHome from './store/reducers';
+import { HomeStoreEffects } from './store/effects';
+import { EffectsModule } from '@ngrx/effects';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,8 @@ import * as fromHome from './store/reducers';
     MatToolbarModule,
     SidePanelModule,
     MapModule,
-    StoreModule.forFeature('home', fromHome.reducer)
+    StoreModule.forFeature('home', fromHome.reducer),
+    EffectsModule.forFeature([HomeStoreEffects])
   ],
   exports: [
     HomeComponent

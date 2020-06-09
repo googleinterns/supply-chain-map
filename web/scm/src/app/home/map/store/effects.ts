@@ -10,7 +10,7 @@ import { of } from 'rxjs';
 export class MapStoreEffects {
     constructor(private mapHelperService: MapHelperService, private actions$: Actions) { }
 
-    initDataLoadEffect$ = createEffect(
+    initRouteLayerDataEffect$ = createEffect(
         () => this.actions$.pipe(
             ofType(HomeFeatureActions.formQueryFetchSuccess),
             switchMap(

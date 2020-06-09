@@ -28,10 +28,10 @@ export class SidePanelComponent {
    * These are the children form groups that the side panel
    * form (@var sidePanelFormGroup) contains.
    */
-  @ViewChild(BasicFilterComponent) private basicFilterComponent: BasicFilterComponent;
-  @ViewChild(UpstreamFilterComponent) private upstreamFilterComponent: UpstreamFilterComponent;
-  @ViewChild(DownstreamFilterComponent) private downstreamFilterComponent: DownstreamFilterComponent;
-  @ViewChild(CmFilterComponent) private cmFilterComponent: CmFilterComponent;
+  @ViewChild(BasicFilterComponent) basicFilterComponent: BasicFilterComponent;
+  @ViewChild(UpstreamFilterComponent) upstreamFilterComponent: UpstreamFilterComponent;
+  @ViewChild(DownstreamFilterComponent) downstreamFilterComponent: DownstreamFilterComponent;
+  @ViewChild(CmFilterComponent) cmFilterComponent: CmFilterComponent;
   @ViewChild('sidePanelForm') set content(content: ElementRef) {
     /**
      * Once the form is initialized, we have access
@@ -61,15 +61,12 @@ export class SidePanelComponent {
    */
   constructor(private filterFormService: FilterFormService, private store: Store<SidePanelState>) {
     this.sidePanelFormGroup = new FormGroup({});
-    this.store.dispatch(sidePanelInitDataRequest());
 
     this.isLoading$ = this.store.select(selectSidePanelIsLoading);
     this.error$ = this.store.select(selectSidePanelError);
     this.sidePanelData$ = this.store.select(selectSidePanelData);
 
-    this.sidePanelData$.subscribe(console.log);
-    this.isLoading$.subscribe(console.log);
-    this.error$.subscribe(console.log);
+    this.store.dispatch(sidePanelInitDataRequest());
   }
   /**
    * After the form is submitted, convert the selection to

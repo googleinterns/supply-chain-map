@@ -15,7 +15,7 @@ export class LineComponent implements OnInit {
       lat: number,
       long: number
     },
-    color: string | undefined
+    color?: string
   };
   infoWindowData: {
     latitude: number,

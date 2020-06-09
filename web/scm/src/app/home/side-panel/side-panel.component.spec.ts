@@ -2,47 +2,58 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { SidePanelComponent } from './side-panel.component';
 import { MatButtonModule } from '@angular/material/button';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormGroup } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
-import { BasicFilterComponent } from './filters/basic-filter/basic-filter.component';
-import { UpstreamFilterComponent } from './filters/upstream-filter/upstream-filter.component';
-import { CmFilterComponent } from './filters/cm-filter/cm-filter.component';
-import { DownstreamFilterComponent } from './filters/downstream-filter/downstream-filter.component';
-import { MatCheckboxModule } from '@angular/material/checkbox';
-import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
-import { MatInputModule } from '@angular/material/input';
-import { MatOptionModule } from '@angular/material/core';
-import { MatSelectModule } from '@angular/material/select';
+import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MemoizedSelector } from '@ngrx/store';
+import { SidePanelState } from './store/state';
+import { SidePanel } from './side-panel.models';
+import { selectSidePanelData, selectSidePanelIsLoading, selectSidePanelError } from './store/selectors';
 
 describe('SidePanelComponent', () => {
   let component: SidePanelComponent;
   let fixture: ComponentFixture<SidePanelComponent>;
+  let mockStore: MockStore;
+  let mockSidePanelDataSelector: MemoizedSelector<SidePanelState, SidePanel>;
+  let mockIsLoadingSelector: MemoizedSelector<SidePanelState, boolean>;
+  let mockErrorSelector: MemoizedSelector<SidePanelState, Error>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
       declarations: [
-        SidePanelComponent,
-        BasicFilterComponent,
-        UpstreamFilterComponent,
-        CmFilterComponent,
-        DownstreamFilterComponent
+        SidePanelComponent
       ],
       imports: [
         BrowserAnimationsModule,
         BrowserModule,
         MatButtonModule,
-        MatCheckboxModule,
-        MatFormFieldModule,
+        MatExpansionModule,
         MatIconModule,
-        MatInputModule,
-        MatOptionModule,
-        MatSelectModule,
         ReactiveFormsModule
+      ],
+      providers: [
+        provideMockStore()
       ]
     })
-    .compileComponents();
+      .compileComponents();
+
+    mockStore = TestBed.inject(MockStore);
+    mockSidePanelDataSelector = mockStore.overrideSelector(
+      selectSidePanelData,
+      null
+    );
+    mockIsLoadingSelector = mockStore.overrideSelector(
+      selectSidePanelIsLoading,
+      false
+    );
+    mockErrorSelector = mockStore.overrideSelector(
+      selectSidePanelError,
+      null
+    );
+
   }));
 
   afterAll(() => {

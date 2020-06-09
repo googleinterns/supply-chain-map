@@ -178,18 +178,18 @@ export class MapHelperService {
         for (const upstreamRow of formQueryResult.upstream) {
             const id = upstreamRow.mfg_lat + ' ' + upstreamRow.mfg_long;
             if (markerMap.has(id)) {
-                markerMap.get(id).push(Object.assign(upstreamRow, additionalProps));
+                markerMap.get(id).push({ ...upstreamRow, ...additionalProps });
             } else {
-                markerMap.set(id, [Object.assign(upstreamRow, additionalProps)]);
+                markerMap.set(id, [{ ...upstreamRow, ...additionalProps }]);
             }
         }
         additionalProps = { type: 'CM' };
         for (const cmRow of formQueryResult.cm) {
             const id = cmRow.cm_lat + ' ' + cmRow.cm_long;
             if (markerMap.has(id)) {
-                markerMap.get(id).push(Object.assign(cmRow, additionalProps));
+                markerMap.get(id).push({ ...cmRow, ...additionalProps });
             } else {
-                markerMap.set(id, [Object.assign(cmRow, additionalProps)]);
+                markerMap.set(id, [{ ...cmRow, ...additionalProps }]);
             }
         }
 
@@ -197,9 +197,9 @@ export class MapHelperService {
         for (const downstreamRow of formQueryResult.downstream) {
             const id = downstreamRow.gdc_lat + ' ' + downstreamRow.gdc_long;
             if (markerMap.has(id)) {
-                markerMap.get(id).push(Object.assign(downstreamRow, additionalProps));
+                markerMap.get(id).push({ ...downstreamRow, ...additionalProps });
             } else {
-                markerMap.set(id, [Object.assign(downstreamRow, additionalProps)]);
+                markerMap.set(id, [{ ...downstreamRow, ...additionalProps }]);
             }
         }
 

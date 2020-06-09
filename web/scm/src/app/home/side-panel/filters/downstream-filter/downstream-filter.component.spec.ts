@@ -40,6 +40,7 @@ describe('DownstreamFilterComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(DownstreamFilterComponent);
     component = fixture.componentInstance;
+    component.downstreamData = { countries: [], states: [], cities: [] };
     fixture.detectChanges();
   });
 

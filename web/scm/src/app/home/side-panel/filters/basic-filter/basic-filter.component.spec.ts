@@ -40,6 +40,7 @@ describe('BasicFilterComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(BasicFilterComponent);
     component = fixture.componentInstance;
+    component.basicData = { products: [] };
     fixture.detectChanges();
   });
 

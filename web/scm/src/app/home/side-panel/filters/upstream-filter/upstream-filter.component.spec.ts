@@ -40,6 +40,7 @@ describe('UpstreamFilterComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(UpstreamFilterComponent);
     component = fixture.componentInstance;
+    component.upstreamData = { categories: [], suppliers: [], countries: [], states: [], cities: [] };
     fixture.detectChanges();
   });
 

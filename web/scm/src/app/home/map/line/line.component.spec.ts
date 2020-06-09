@@ -16,6 +16,7 @@ describe('LineComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(LineComponent);
     component = fixture.componentInstance;
+    component.route = { from: { lat: 0, long: 0 }, to: { lat: 0, long: 0 } };
     fixture.detectChanges();
   });
 

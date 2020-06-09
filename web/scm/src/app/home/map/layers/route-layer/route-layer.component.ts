@@ -1,9 +1,7 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component } from '@angular/core';
 import { RouteLayerMarker, RouteLayerLine } from '../../map.models';
-import { FormQueryResult } from 'src/app/home/home.models';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { selectHomeFormQueryResult } from 'src/app/home/store/selectors';
 import { MapState } from '../../store/state';
 import { selectMapRouteLayerMarkers, selectMapRouteLayerLines } from '../../store/selectors';
 
@@ -14,13 +12,12 @@ import { selectMapRouteLayerMarkers, selectMapRouteLayerLines } from '../../stor
 })
 export class RouteLayerComponent {
 
-  routeLayerMarkers$ = this.store.select(selectMapRouteLayerMarkers);
-  routeLayerLines$ = this.store.select(selectMapRouteLayerLines);
+  routeLayerMarkers$: Observable<RouteLayerMarker[]>;
+  routeLayerLines$: Observable<RouteLayerLine[]>;
 
   constructor(private store: Store<MapState>) {
+    this.routeLayerMarkers$ = this.store.select(selectMapRouteLayerMarkers);
+    this.routeLayerLines$ = this.store.select(selectMapRouteLayerLines);
   }
-
-  markers: RouteLayerMarker[] = [];
-  lines: RouteLayerLine[] = [];
 
 }

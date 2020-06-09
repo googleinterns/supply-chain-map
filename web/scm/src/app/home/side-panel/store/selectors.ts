@@ -4,7 +4,7 @@ import {
     MemoizedSelector
 } from '@ngrx/store';
 import { SidePanelState } from './state';
-import { SidePanel, Basic, Upstream, Cm, Downstream } from '../side-panel.models';
+import { SidePanel } from '../side-panel.models';
 
 const isLoading = (state: SidePanelState) => state.isLoading;
 const getError = (state: SidePanelState) => state.error;

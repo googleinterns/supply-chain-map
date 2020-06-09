@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { BigQueryService } from '../big-query/big-query.service';
 import { FormQueryResult } from '../../home.models';
+import { data } from './data';
 
 @Injectable({
   providedIn: 'root'
@@ -16,17 +17,16 @@ export class HomeHelperService {
    * @param query The query obtained from side panel form
    */
   public async runFormQuery(query: string): Promise<FormQueryResult> {
-
     try {
-      const request = await this.bigQueryService.runQuery(query);
-      const result = request.result;
+      /* const request = await this.bigQueryService.runQuery(query);
+      const result = request.result; */
+      const result = data;
 
       if (!this.validateQueryResponse(result)) {
         throw new Error('Invalid query');
       }
 
       const formQueryResult = this.convertQueryResultFormat(result);
-      console.log(formQueryResult);
       return formQueryResult;
     } catch (err) {
       if (!environment.production) {

@@ -40,6 +40,7 @@ describe('CmFilterComponent', () => {
   beforeEach(() => {
     fixture = TestBed.createComponent(CmFilterComponent);
     component = fixture.componentInstance;
+    component.cmData = { countries: [], states: [], cities: [] };
     fixture.detectChanges();
   });
 
