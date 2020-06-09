@@ -47,3 +47,6 @@ Thumbs.db
 
 # environment file
 /src/environments/environment.ts
+
+# dev mock data file
+mock_data.ts

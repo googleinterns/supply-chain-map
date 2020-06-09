@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { BigQueryService } from '../../services/big-query/big-query.service';
 import { SidePanel } from '../side-panel.models';
-import { data } from './data';
 
 /**
  * The structure that a submitted form must follow
@@ -153,9 +152,8 @@ export class FilterFormService {
   async getFilterData(): Promise<SidePanel> {
 
     try {
-      /* const request = await this.bigQueryService.runQuery(FilterFormService.SQL_UNIQUE_PRODUCT_SUPPLIER_CATEGORY);
-      const result = request.result; */
-      const result = data;
+      const request = await this.bigQueryService.runQuery(FilterFormService.SQL_UNIQUE_PRODUCT_SUPPLIER_CATEGORY);
+      const result = request.result;
 
       const filterData = {
         basic: {
