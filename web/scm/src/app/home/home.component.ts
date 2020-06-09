@@ -1,6 +1,9 @@
 import { Component, ViewChild } from '@angular/core';
-import { HomeHelperService, FormQueryResult } from '../services/home-helper/home-helper.service';
-import { MapComponent } from '../map/map.component';
+import { MapComponent } from './map/map.component';
+import { HomeHelperService } from './services/home-helper/home-helper.service';
+import { Store } from '@ngrx/store';
+import { HomeState } from './store/state';
+import { formQueryFetchSuccess, formQueryFetchFailure } from './store/actions';
 
 @Component({
   selector: 'scm-root',
@@ -11,12 +14,14 @@ export class HomeComponent {
 
   @ViewChild(MapComponent) mapComponent: MapComponent;
 
-  constructor(private homeHelper: HomeHelperService) { }
+  constructor(private homeHelper: HomeHelperService, private store: Store<HomeState>) { }
 
-  public queryGenerated(query: string) {
-    this.homeHelper.runFormQuery(query)
-    .then(
-      formQueryResult => this.mapComponent.createRouteLayer(formQueryResult)
-    );
+  public async queryGenerated(query: string) {
+    try {
+    const formQueryResult = await this.homeHelper.runFormQuery(query);
+    this.store.dispatch(formQueryFetchSuccess({ formQueryResult: formQueryResult }));
+    } catch (ex) {
+      this.store.dispatch(formQueryFetchFailure({ error: ex }));
+    }
   }
 }

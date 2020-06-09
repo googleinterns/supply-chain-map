@@ -131,6 +131,7 @@
   },
   "defaultProject": "scm",
   "cli": {
-    "analytics": "b5395dca-305b-4cac-87d1-5e7642ad0a36"
+    "analytics": "b5395dca-305b-4cac-87d1-5e7642ad0a36",
+    "defaultCollection": "@ngrx/schematics"
   }
 }

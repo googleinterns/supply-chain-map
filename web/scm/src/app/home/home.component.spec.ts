@@ -4,12 +4,12 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 
 import { HomeComponent } from './home.component';
-import { MapComponent } from '../map/map.component';
-import { SidePanelComponent } from '../side-panel/side-panel.component';
-import { BasicFilterComponent } from '../side-panel/basic-filter/basic-filter.component';
-import { UpstreamFilterComponent } from '../side-panel/upstream-filter/upstream-filter.component';
-import { CmFilterComponent } from '../side-panel/cm-filter/cm-filter.component';
-import { DownstreamFilterComponent } from '../side-panel/downstream-filter/downstream-filter.component';
+import { MapComponent } from './map/map.component';
+import { SidePanelComponent } from './side-panel/side-panel.component';
+import { BasicFilterComponent } from './side-panel/filters/basic-filter/basic-filter.component';
+import { UpstreamFilterComponent } from './side-panel/filters/upstream-filter/upstream-filter.component';
+import { CmFilterComponent } from './side-panel/filters/cm-filter/cm-filter.component';
+import { DownstreamFilterComponent } from './side-panel/filters/downstream-filter/downstream-filter.component';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
