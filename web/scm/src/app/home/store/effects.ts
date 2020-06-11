@@ -17,7 +17,7 @@ export class HomeStoreEffects {
                     return from(this.homeHelperService.runFormQuery(formQuery))
                         .pipe(
                             map(
-                                formQueryResult => HomeFeatureActions.formQueryFetchSuccess({ formQueryResult: formQueryResult })
+                                formQueryResponse => HomeFeatureActions.formQueryFetchSuccess({ formQueryResponse: formQueryResponse })
                             ),
                             catchError(error => of(HomeFeatureActions.formQueryFetchFailure({ error: error })))
                         );

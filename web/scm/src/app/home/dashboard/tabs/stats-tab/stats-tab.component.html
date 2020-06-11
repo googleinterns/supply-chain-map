@@ -1,0 +1,31 @@
+<div class="code-container">
+    <h2>Query</h2>
+    <div class="code-snippet">
+        <code>
+            {{ formQuery$ | async }}
+        </code>
+    </div>
+</div>
+<div class="stats-container" *ngIf="formQueryResultStats$ | async as formQueryResultStats">
+    <h2>Job stats</h2>
+    <div class="schema-row">
+        <div class="schema-field-name">Project ID</div>
+        <div class="schema-field-type">{{ formQueryResultStats.projectId }}</div>
+    </div>
+    <div class="schema-row">
+        <div class="schema-field-name">Job ID</div>
+        <div class="schema-field-type">{{ formQueryResultStats.jobId }}</div>
+    </div>
+    <div class="schema-row">
+        <div class="schema-field-name">Job Complete</div>
+        <div class="schema-field-type">{{ formQueryResultStats.jobComplete ? 'Yes' : 'No' }}</div>
+    </div>
+    <div class="schema-row">
+        <div class="schema-field-name">Total Bytes Processed</div>
+        <div class="schema-field-type">{{ formQueryResultStats.totalBytesProcessed }}</div>
+    </div>
+    <div class="schema-row">
+        <div class="schema-field-name">Cache Hit</div>
+        <div class="schema-field-type">{{ formQueryResultStats.cacheHit ? 'Yes' : 'No' }}</div>
+    </div>
+</div>

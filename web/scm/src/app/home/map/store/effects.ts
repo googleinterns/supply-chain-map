@@ -14,10 +14,10 @@ export class MapStoreEffects {
         () => this.actions$.pipe(
             ofType(HomeFeatureActions.formQueryFetchSuccess),
             switchMap(
-                ({ formQueryResult: formQueryResult }) => {
+                ({ formQueryResponse }) => {
                     try {
-                        const markers = this.mapHelperService.createMarkerPoints(formQueryResult);
-                        const lines = this.mapHelperService.createLines(formQueryResult);
+                        const markers = this.mapHelperService.createMarkerPoints(formQueryResponse.formQueryResult);
+                        const lines = this.mapHelperService.createLines(formQueryResponse.formQueryResult);
                         return of(MapFeatureActions.routeLayerLoadSuccess({ markers, lines }));
                     } catch (ex) {
                         return of(MapFeatureActions.routeLayerLoadFailure({ error: ex }));

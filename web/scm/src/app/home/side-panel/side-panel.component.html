@@ -1,51 +1,56 @@
 <div class="container">
-    <form *ngIf="(sidePanelData$ | async) as sidePanelData" [formGroup]="sidePanelFormGroup"
-        (submit)="sidePanelFormSubmit()" #sidePanelForm>
-        <mat-accordion multi togglePosition="before">
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Basic
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <scm-basic-filter [basicData]="sidePanelData.basic"></scm-basic-filter>
-            </mat-expansion-panel>
-
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Upstream
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <scm-upstream-filter [upstreamData]="sidePanelData.upstream"></scm-upstream-filter>
-            </mat-expansion-panel>
-
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Contract Manufacturers
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <scm-cm-filter [cmData]="sidePanelData.cm"></scm-cm-filter>
-            </mat-expansion-panel>
-
-            <mat-expansion-panel>
-                <mat-expansion-panel-header>
-                    <mat-panel-title>
-                        Downstream
-                    </mat-panel-title>
-                </mat-expansion-panel-header>
-                <scm-downstream-filter [downstreamData]="sidePanelData.downstream"></scm-downstream-filter>
-            </mat-expansion-panel>
-        </mat-accordion>
-        <button mat-raised-button color="primary" class="submit-button">Submit</button>
-    </form>
-    <div class="form-overlay" *ngIf="isLoading$ | async">
-        <mat-spinner></mat-spinner>
-        <h3>Loading data...</h3>
+    <div class="header-container">
+        <h1 class="side-panel-header">Filters</h1>
     </div>
-    <div class="form-overlay" *ngIf="error$ | async as error">
-        <mat-icon class="error-icon">error</mat-icon>
-        <h3>{{ error.message }}</h3>
+    <div class="body-container">
+        <form *ngIf="(sidePanelData$ | async) as sidePanelData" [formGroup]="sidePanelFormGroup"
+            (submit)="sidePanelFormSubmit()" #sidePanelForm>
+            <mat-accordion multi togglePosition="before">
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Basic
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <scm-basic-filter [basicData]="sidePanelData.basic"></scm-basic-filter>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Upstream
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <scm-upstream-filter [upstreamData]="sidePanelData.upstream"></scm-upstream-filter>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Contract Manufacturers
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <scm-cm-filter [cmData]="sidePanelData.cm"></scm-cm-filter>
+                </mat-expansion-panel>
+
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            Downstream
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <scm-downstream-filter [downstreamData]="sidePanelData.downstream"></scm-downstream-filter>
+                </mat-expansion-panel>
+            </mat-accordion>
+            <button mat-raised-button color="primary" class="submit-button">Submit</button>
+        </form>
+        <div class="form-overlay" *ngIf="isLoading$ | async">
+            <mat-spinner></mat-spinner>
+            <h3>Loading data...</h3>
+        </div>
+        <div class="form-overlay" *ngIf="error$ | async as error">
+            <mat-icon class="error-icon">error</mat-icon>
+            <h3>{{ error.message }}</h3>
+        </div>
     </div>
 </div>

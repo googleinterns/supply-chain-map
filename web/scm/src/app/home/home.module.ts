@@ -15,11 +15,10 @@ import { HomeStoreEffects } from './store/effects';
 import { EffectsModule } from '@ngrx/effects';
 import { RightResizableDirective } from './directives/right-resizable.directive';
 import { TopResizableDirective } from './directives/top-resizable.directive';
-import { DashboardComponent } from './dashboard/dashboard.component';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @NgModule({
   declarations: [
-    DashboardComponent,
     HeaderComponent,
     HomeComponent,
     TopResizableDirective,
@@ -27,6 +26,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
   ],
   imports: [
     CommonModule,
+    DashboardModule,
     MatIconModule,
     MatMenuModule,
     MatSidenavModule,

@@ -1,5 +1,34 @@
-.container {
+.body-container {
+    box-sizing: border-box;
     background-color: white;
     height: 100%;
     width: 100%;
+    padding: 10px;
+    overflow: auto;
+}
+
+.header-container {
+    border-bottom: 1px solid lightgray;
+    padding:10px
+}
+
+.tab-container {
+    padding: 10px 0;
+}
+
+.dashboard-header {
+    font-size: 1.8em;
+    margin: 0;
+}
+
+::ng-deep .mat-tab-label {
+    min-width: 0px !important;
+    height: auto !important;
+    padding-bottom: 12px !important;
+}
+
+::ng-deep .mat-tab-label-content {
+    font-size: 1.4em;
+    color: black;
+    font-weight: 400;
 }
