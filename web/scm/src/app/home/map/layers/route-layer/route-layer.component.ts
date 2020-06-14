@@ -1,23 +1,20 @@
 import { Component } from '@angular/core';
-import { RouteLayerMarker, RouteLayerLine } from '../../map.models';
+import { RouteLayerMarker, RouteLayerLine, Layer } from '../../map.models';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { MapState } from '../../store/state';
-import { selectMapRouteLayerMarkers, selectMapRouteLayerLines } from '../../store/selectors';
+import { selectMapLayer  } from '../../store/selectors';
 
 @Component({
   selector: 'scm-route-layer',
-  templateUrl: './route-layer.component.html',
-  styleUrls: ['./route-layer.component.scss']
+  templateUrl: './route-layer.component.html'
 })
 export class RouteLayerComponent {
 
-  routeLayerMarkers$: Observable<RouteLayerMarker[]>;
-  routeLayerLines$: Observable<RouteLayerLine[]>;
+  layer$: Observable<Layer>;
 
   constructor(private store: Store<MapState>) {
-    this.routeLayerMarkers$ = this.store.select(selectMapRouteLayerMarkers);
-    this.routeLayerLines$ = this.store.select(selectMapRouteLayerLines);
+    this.layer$ = this.store.select(selectMapLayer('Route Layer'));
   }
 
 }

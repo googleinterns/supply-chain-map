@@ -3,15 +3,14 @@ import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { RouteLayerComponent } from './route-layer.component';
 import { MemoizedSelector } from '@ngrx/store';
 import { MapState } from '../../store/state';
-import { RouteLayerMarker, RouteLayerLine } from '../../map.models';
-import { selectMapRouteLayerMarkers, selectMapRouteLayerLines } from '../../store/selectors';
+import { RouteLayerLine, Layer } from '../../map.models';
+import { selectMapLayer } from '../../store/selectors';
 
 describe('RouteLayerComponent', () => {
   let component: RouteLayerComponent;
   let fixture: ComponentFixture<RouteLayerComponent>;
   let mockStore: MockStore;
-  let mockRouteLayerMarkersSelector: MemoizedSelector<MapState, RouteLayerMarker[]>;
-  let mockRouteLayerLinesSelector: MemoizedSelector<MapState, RouteLayerLine[]>;
+  let mockLayerSelector: MemoizedSelector<MapState, Layer>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -24,13 +23,16 @@ describe('RouteLayerComponent', () => {
     .compileComponents();
 
     mockStore = TestBed.inject(MockStore);
-    mockRouteLayerMarkersSelector = mockStore.overrideSelector(
-      selectMapRouteLayerMarkers,
-      []
-    );
-    mockRouteLayerLinesSelector = mockStore.overrideSelector(
-      selectMapRouteLayerLines,
-      []
+    mockLayerSelector = mockStore.overrideSelector(
+      selectMapLayer('Route Layer'),
+      {
+        name: 'Route Layer',
+        deletable: true,
+        data: {
+          routeLayerMarkers: [],
+          routeLayerLines: []
+        }
+      }
     );
   }));
 

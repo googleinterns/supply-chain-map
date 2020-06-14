@@ -18,9 +18,16 @@ export class MapStoreEffects {
                     try {
                         const markers = this.mapHelperService.createMarkerPoints(formQueryResponse.formQueryResult);
                         const lines = this.mapHelperService.createLines(formQueryResponse.formQueryResult);
-                        return of(MapFeatureActions.routeLayerLoadSuccess({ markers, lines }));
+                        return of(MapFeatureActions.layerLoadSuccess({ layer: {
+                            name: 'Route Layer',
+                            data: {
+                                routeLayerMarkers: markers,
+                                routeLayerLines: lines
+                            },
+                            deletable: true
+                        } }));
                     } catch (ex) {
-                        return of(MapFeatureActions.routeLayerLoadFailure({ error: ex }));
+                        return of(MapFeatureActions.layerLoadFailure({ error: ex }));
                     }
                 }
             )

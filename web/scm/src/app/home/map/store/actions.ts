@@ -1,12 +1,12 @@
 import { createAction, props } from '@ngrx/store';
-import { RouteLayerMarker, RouteLayerLine } from '../map.models';
+import { Layer } from '../map.models';
 
-export const routeLayerLoadSuccess = createAction(
-  '[Map] Load Route Layer Success',
-  props<{ markers: RouteLayerMarker[], lines: RouteLayerLine[] }>()
+export const layerLoadSuccess = createAction(
+  '[Map] Load Layer Success',
+  props<{ layer: Layer }>()
 );
 
-export const routeLayerLoadFailure = createAction(
-  '[Map] Load Route Layer Failure',
+export const layerLoadFailure = createAction(
+  '[Map] Load Layer Failure',
   props<{ error: Error }>()
 );

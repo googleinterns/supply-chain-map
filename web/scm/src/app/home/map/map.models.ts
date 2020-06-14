@@ -34,3 +34,13 @@ export interface RouteLayerLine {
     type: 'UPSTREAM' | 'DOWNSTREAM';
     color?: string;
 }
+
+export interface Layer {
+    name: string;
+    data?: any;
+    legend?: {
+        name: string,
+        icon: string
+    }[];
+    deletable: boolean;
+}

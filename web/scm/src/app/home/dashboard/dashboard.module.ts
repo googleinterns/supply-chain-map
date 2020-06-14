@@ -6,12 +6,14 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { DashboardComponent } from './dashboard.component';
 import { DataTabComponent } from './tabs/data-tab/data-tab.component';
 import { StatsTabComponent } from './tabs/stats-tab/stats-tab.component';
+import { MapTabComponent } from './tabs/map-tab/map-tab.component';
 
 @NgModule({
   declarations: [
     DashboardComponent,
     DataTabComponent,
-    StatsTabComponent
+    StatsTabComponent,
+    MapTabComponent
   ],
   imports: [
     CommonModule,
