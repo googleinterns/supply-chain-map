@@ -2,7 +2,6 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { BigQueryService } from '../big-query/big-query.service';
 import { FormQueryResult, FormQueryResponse, FormQueryResultSchema, FormQueryResultStats } from '../../home.models';
-import { data } from './mock_data';
 
 @Injectable({
   providedIn: 'root'
@@ -20,7 +19,6 @@ export class HomeHelperService {
     try {
       const request = await this.bigQueryService.runQuery(query);
       const result = request.result;
-      // const result = data;
 
       if (!this.validateQueryResponse(result)) {
         throw new Error('Invalid query');
