@@ -9,6 +9,14 @@
       <div class="top-resizable" scmTopResizable>
         <scm-dashboard></scm-dashboard>
       </div>
+      <div class="form-overlay" *ngIf="isLoading$ | async">
+          <mat-spinner></mat-spinner>
+          <h3>Loading data...</h3>
+      </div>
+      <div class="form-overlay" *ngIf="error$ | async as error">
+          <mat-icon class="error-icon">error</mat-icon>
+          <h3>{{ error.message }}</h3>
+      </div>
     </div>
   </div>
 </div>

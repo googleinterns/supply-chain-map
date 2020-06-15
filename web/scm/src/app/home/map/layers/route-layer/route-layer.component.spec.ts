@@ -3,14 +3,14 @@ import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { RouteLayerComponent } from './route-layer.component';
 import { MemoizedSelector } from '@ngrx/store';
 import { MapState } from '../../store/state';
-import { RouteLayerLine, Layer } from '../../map.models';
+import { Layer, AdditionalLayer } from '../../map.models';
 import { selectMapLayer } from '../../store/selectors';
 
 describe('RouteLayerComponent', () => {
   let component: RouteLayerComponent;
   let fixture: ComponentFixture<RouteLayerComponent>;
   let mockStore: MockStore;
-  let mockLayerSelector: MemoizedSelector<MapState, Layer>;
+  let mockLayerSelector: MemoizedSelector<MapState, Layer|AdditionalLayer>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({

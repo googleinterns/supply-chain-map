@@ -4,7 +4,9 @@
 <div class="body-container">
     <mat-tab-group mat-align-tabs="start">
         <mat-tab label="Map">
-            <scm-map-tab></scm-map-tab>
+            <div class="tab-container">
+                <scm-map-tab></scm-map-tab>
+            </div>
         </mat-tab>
         <mat-tab label="Data" *ngIf="receivedData">
             <div class="tab-container">

@@ -1,11 +1,15 @@
 import { Injectable } from '@angular/core';
 import { FormQueryResult } from 'src/app/home/home.models';
-import { RouteLayerLine, RouteLayerMarker } from '../../map.models';
+import { RouteLayerLine, RouteLayerMarker, AdditionalLayer } from '../../map.models';
+import { BigQueryService } from 'src/app/home/services/big-query/big-query.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class MapHelperService {
+
+    constructor(private bigQueryService: BigQueryService) {}
 
     private static readonly ICON_MAP = {
         GDC: 'assets/gdc.svg',
@@ -13,6 +17,38 @@ export class MapHelperService {
         CM: 'assets/cm.svg',
         MFG_CM: 'assets/mfg_cm.svg'
     };
+
+    public async getAdditionalLayer(layerName: string): Promise<AdditionalLayer> {
+        const layerCols = environment.bigQuery.layerTableCols;
+        const SQL_FETCH_ADDITIONAL_LAYER = `
+            SELECT ${layerCols.join(', ')}
+            FROM ${environment.bigQuery.layerDataset}.${layerName}
+        `;
+
+        try {
+            const response = await this.bigQueryService.runQuery(SQL_FETCH_ADDITIONAL_LAYER);
+            const result = response.result;
+            const markers = [];
+
+            for (const row of result.rows) {
+                const marker = {};
+                for (let col = 0; col < layerCols.length; col++) {
+                    marker[layerCols[col]] = row.f[col].v;
+                }
+                markers.push(marker);
+            }
+
+            return {
+                name: layerName,
+                markers: markers
+            };
+        } catch (ex) {
+            if (!environment.production) {
+                console.error(ex);
+            }
+            throw new Error('Cannot load layer ' + layerName);
+        }
+    }
 
     public createLines(formQueryResult: FormQueryResult): RouteLayerLine[] {
         const skuMap = this.createSkuMap(formQueryResult);

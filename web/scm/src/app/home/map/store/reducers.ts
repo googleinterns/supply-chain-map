@@ -1,21 +1,29 @@
 import { createReducer, on, Action } from '@ngrx/store';
 import { MapState, initialState } from './state';
 import * as MapActions from './actions';
-import { Layer } from '../map.models';
+import { RouteLayer, AdditionalLayer } from '../map.models';
 
 const mapReducer = createReducer(
     initialState,
-    on(MapActions.layerLoadSuccess, (state, { layer }) => ({
+    on(MapActions.routeLayerLoadSuccess, (state, { layer }) => ({
         ...state,
-        layers: pushLayerToArray(layer, state.layers)
+        routeLayer: layer
     })),
-    on(MapActions.layerLoadFailure, (state, { error }) => ({
+    on(MapActions.routeLayerLoadFailure, (state, { error }) => ({
+        ...state,
+        error: error
+    })),
+    on(MapActions.additionalLayerLoadSuccess, (state, { layer }) => ({
+        ...state,
+        additionalLayers: pushLayerToArray(layer, state.additionalLayers)
+    })),
+    on(MapActions.additionalLayerLoadFailure, (state, { error }) => ({
         ...state,
         error: error
     }))
 );
 
-function pushLayerToArray(layer: Layer, layers: Layer[]): Layer[] {
+function pushLayerToArray(layer: AdditionalLayer, layers: (AdditionalLayer)[]): (AdditionalLayer)[] {
     layers = layers.filter(l => l.name !== layer.name );
     layers.push(layer);
     return layers;

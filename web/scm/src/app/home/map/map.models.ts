@@ -35,12 +35,25 @@ export interface RouteLayerLine {
     color?: string;
 }
 
-export interface Layer {
+export interface RouteLayer {
     name: string;
     data?: any;
     legend?: {
         name: string,
         icon: string
     }[];
-    deletable: boolean;
+}
+
+export interface AdditionalLayer {
+    name: string;
+    markers: {
+        latitude: number;
+        longitude: number;
+        icon: string;
+        data?: any;
+    }[];
+    legend?: {
+        name: string,
+        icon: string
+    }[];
 }
