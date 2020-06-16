@@ -37,7 +37,10 @@ export class TopResizableDirective implements OnInit {
             if (!this.dragging) {
                 return;
             }
-            newHeight(this.el.nativeElement.clientHeight + el.nativeElement.offsetTop - evt.clientY);
+            newHeight(this.el.nativeElement.clientHeight
+                + this.el.nativeElement.getBoundingClientRect().top
+                + document.documentElement.scrollTop
+                - evt.clientY);
             evt.stopPropagation();
         };
 
@@ -85,7 +88,10 @@ export class TopResizableDirective implements OnInit {
     }
 
     inDragRegion(evt: MouseEvent) {
-        return evt.clientY - this.el.nativeElement.offsetTop < this.resizableGrabHeight;
+        return evt.clientY
+        - this.el.nativeElement.getBoundingClientRect().top
+        + document.documentElement.scrollTop
+        < this.resizableGrabHeight;
     }
 
 }
