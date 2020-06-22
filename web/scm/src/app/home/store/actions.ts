@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { FormQueryResult } from '../home.models';
+import { FormQueryResponse } from '../home.models';
 
 export const formQueryGenerated = createAction(
   '[Home] Form Query Generated',
@@ -8,7 +8,7 @@ export const formQueryGenerated = createAction(
 
 export const formQueryFetchSuccess = createAction(
   '[Home] Fetch Using Form Query Success',
-  props<{ formQueryResult: FormQueryResult }>()
+  props<{ formQueryResponse: FormQueryResponse }>()
 );
 
 export const formQueryFetchFailure = createAction(

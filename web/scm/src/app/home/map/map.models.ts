@@ -34,3 +34,26 @@ export interface RouteLayerLine {
     type: 'UPSTREAM' | 'DOWNSTREAM';
     color?: string;
 }
+
+export interface Layer {
+    name: string;
+    legend?: {
+        name: string,
+        icon: string
+    }[];
+}
+
+export interface RouteLayer extends Layer {
+    markers: RouteLayerMarker[];
+    lines: RouteLayerLine[];
+}
+
+export interface HeatMapLayer extends Layer {
+    hotspots: {
+        latitude: number;
+        longitude: number;
+        weight: number;
+        icon: string;
+        data?: any;
+    }[];
+}

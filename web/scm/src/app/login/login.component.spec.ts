@@ -1,6 +1,11 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LoginComponent } from './login.component';
+import { GoogleAuthService } from '../services/google-auth/google-auth.service';
+
+class MockAuthService {
+  signIn() { }
+}
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
@@ -8,7 +13,10 @@ describe('LoginComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ LoginComponent ]
+      declarations: [ LoginComponent ],
+      providers: [
+        {provide: GoogleAuthService, useClass: MockAuthService}
+      ]
     })
     .compileComponents();
   }));

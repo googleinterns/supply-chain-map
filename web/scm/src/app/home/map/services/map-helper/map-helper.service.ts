@@ -1,12 +1,20 @@
 import { Injectable } from '@angular/core';
 import { FormQueryResult } from 'src/app/home/home.models';
-import { RouteLayerLine, RouteLayerMarker } from '../../map.models';
+import { RouteLayerLine, RouteLayerMarker, Layer, HeatMapLayer } from '../../map.models';
+import { BigQueryService } from 'src/app/home/services/big-query/big-query.service';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class MapHelperService {
 
+    constructor(private bigQueryService: BigQueryService) {}
+
+    /**
+     * Map for the type of marker to the path
+     * to its svg icon
+     */
     private static readonly ICON_MAP = {
         GDC: 'assets/gdc.svg',
         MFG: 'assets/mfg.svg',
@@ -14,6 +22,25 @@ export class MapHelperService {
         MFG_CM: 'assets/mfg_cm.svg'
     };
 
+    /**
+     * This method identifies the type of layer based
+     * on the distinguishing property of the layers'
+     * interface. If no such property is found, should
+     * throw an error.
+     * @param layer The layer to be fetched from the bigquery dataset
+     */
+    public getLayer(layer: Layer){
+        const layerName = layer.name;
+        if ('hotspots' in layer) {
+            return this.getHeatmapLayer(layerName);
+        }
+    }
+
+    /**
+     * Restructures the form query result to create representative
+     * polyline objects.
+     * @param formQueryResult The resut obtained after running the form query
+     */
     public createLines(formQueryResult: FormQueryResult): RouteLayerLine[] {
         const skuMap = this.createSkuMap(formQueryResult);
         const lines: RouteLayerLine[] = [];
@@ -71,6 +98,11 @@ export class MapHelperService {
         return lines;
     }
 
+    /**
+     * Restructures the form query result to create representative
+     * marker objects.
+     * @param formQueryResult The resut obtained after running the form query
+     */
     public createMarkerPoints(formQueryResult: FormQueryResult): RouteLayerMarker[] {
 
         const markers: RouteLayerMarker[] = [];
@@ -169,6 +201,38 @@ export class MapHelperService {
         }
 
         return markers;
+    }
+
+    private async getHeatmapLayer(layerName: string): Promise<HeatMapLayer> {
+        const layerCols = environment.bigQuery.layerDatasets.heatmap.columns;
+        const SQL_FETCH_ADDITIONAL_LAYER = `
+            SELECT ${layerCols.join(', ')}
+            FROM ${environment.bigQuery.layerDatasets.heatmap.dataset}.${layerName}
+        `;
+
+        try {
+            const response = await this.bigQueryService.runQuery(SQL_FETCH_ADDITIONAL_LAYER);
+            const result = response.result;
+            const markers = [];
+
+            for (const row of result.rows) {
+                const marker = {};
+                for (let col = 0; col < layerCols.length; col++) {
+                    marker[layerCols[col]] = row.f[col].v;
+                }
+                markers.push(marker);
+            }
+
+            return {
+                name: layerName,
+                hotspots: markers
+            };
+        } catch (ex) {
+            if (!environment.production) {
+                console.error(ex);
+            }
+            throw new Error('Cannot load layer ' + layerName);
+        }
     }
 
     private createLocationToMarkerMap(formQueryResult: FormQueryResult): Map<string, Array<any>> {

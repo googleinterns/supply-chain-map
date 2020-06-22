@@ -13,14 +13,20 @@ import { StoreModule } from '@ngrx/store';
 import * as fromHome from './store/reducers';
 import { HomeStoreEffects } from './store/effects';
 import { EffectsModule } from '@ngrx/effects';
+import { RightResizableDirective } from './directives/right-resizable.directive';
+import { TopResizableDirective } from './directives/top-resizable.directive';
+import { DashboardModule } from './dashboard/dashboard.module';
 
 @NgModule({
   declarations: [
     HeaderComponent,
-    HomeComponent
+    HomeComponent,
+    TopResizableDirective,
+    RightResizableDirective
   ],
   imports: [
     CommonModule,
+    DashboardModule,
     MatIconModule,
     MatMenuModule,
     MatSidenavModule,

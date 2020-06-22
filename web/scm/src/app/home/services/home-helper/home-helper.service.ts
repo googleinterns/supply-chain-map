@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { BigQueryService } from '../big-query/big-query.service';
-import { FormQueryResult } from '../../home.models';
+import { FormQueryResult, FormQueryResponse, FormQueryResultSchema, FormQueryResultStats } from '../../home.models';
 
 @Injectable({
   providedIn: 'root'
@@ -15,7 +15,7 @@ export class HomeHelperService {
    * the response into understandable format
    * @param query The query obtained from side panel form
    */
-  public async runFormQuery(query: string): Promise<FormQueryResult> {
+  public async runFormQuery(query: string): Promise<FormQueryResponse> {
     try {
       const request = await this.bigQueryService.runQuery(query);
       const result = request.result;
@@ -24,8 +24,64 @@ export class HomeHelperService {
         throw new Error('Invalid query');
       }
 
+      /**
+       * Get result in an understandable format
+       */
       const formQueryResult = this.convertQueryResultFormat(result);
-      return formQueryResult;
+      /**
+       * Get the resultant schema
+       */
+      const formQueryResultSchema: FormQueryResultSchema = {
+        upstream: {
+          fields: []
+        },
+        cm: {
+          fields: []
+        },
+        downstream: {
+          fields: []
+        }
+      };
+      // Upstream
+      for (const field of result.schema.fields[0].fields) {
+        formQueryResultSchema.upstream.fields.push({
+          name: field.name,
+          type: field.type,
+          mode: field.mode
+        });
+      }
+      // Cm
+      for (const field of result.schema.fields[1].fields) {
+        formQueryResultSchema.cm.fields.push({
+          name: field.name,
+          type: field.type,
+          mode: field.mode
+        });
+      }
+      // Downstream
+      for (const field of result.schema.fields[2].fields) {
+        formQueryResultSchema.downstream.fields.push({
+          name: field.name,
+          type: field.type,
+          mode: field.mode
+        });
+      }
+      /**
+       * Get other stats from response
+       */
+      const formQueryResultStats: FormQueryResultStats = {
+        projectId: result.jobReference.projectId,
+        jobId: result.jobReference.jobId,
+        totalBytesProcessed: result.totalBytesProcessed,
+        jobComplete: result.jobComplete,
+        cacheHit: result.cacheHit
+
+      };
+      return {
+        formQueryResult: formQueryResult,
+        formQueryResultSchema: formQueryResultSchema,
+        formQueryResultStats: formQueryResultStats
+      };
     } catch (err) {
       if (!environment.production) {
         console.error(err);
@@ -34,39 +90,31 @@ export class HomeHelperService {
   }
 
   private validateQueryResponse(result): boolean {
-    /** check if one row exists */
-    if (!(result.rows instanceof Array) || result.rows[0] === undefined) {
+
+    /** should return exactly one row */
+    if (parseInt(result.totalRows, 10) !== 1) {
       return false;
     }
 
     /** check if the 3 columns (upstream,cm,downstream) exist */
-    if (!(result.rows[0].f instanceof Array) || result.rows[0].f.length < 3) {
+    if (result.schema.fields.length !== 3) {
       return false;
     }
 
 
     /** check upstream row is valid */
-    const upstreamCol = result.rows[0].f[0].v;
-    if (upstreamCol instanceof Array) {
-      if (!(upstreamCol[0].v.f instanceof Array) || upstreamCol[0].v.f.length !== 12) {
-        return false;
-      }
+    if (result.schema.fields[0].type !== 'RECORD' || result.schema.fields[0].fields.length !== 12) {
+      return false;
     }
 
     /** check cm row is valid */
-    const cmCol = result.rows[0].f[1].v;
-    if (cmCol instanceof Array) {
-      if (!(cmCol[0].v.f instanceof Array) || cmCol[0].v.f.length !== 10) {
-        return false;
-      }
+    if (result.schema.fields[1].type !== 'RECORD' || result.schema.fields[1].fields.length !== 10) {
+      return false;
     }
 
     /** check upstream row is valid */
-    const downstreamCol = result.rows[0].f[2].v;
-    if (downstreamCol instanceof Array) {
-      if (!(downstreamCol[0].v.f instanceof Array) || downstreamCol[0].v.f.length !== 9) {
-        return false;
-      }
+    if (result.schema.fields[2].type !== 'RECORD' || result.schema.fields[2].fields.length !== 9) {
+      return false;
     }
 
     return true;

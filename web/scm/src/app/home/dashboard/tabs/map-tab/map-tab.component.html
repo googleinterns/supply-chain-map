@@ -1,0 +1,19 @@
+<div class="container">
+    <div class="header">
+        <h2 class="header-text">Layers</h2>
+        <button mat-icon-button color="primary" (click)="openDialog()">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    <mat-list *ngIf="layers$ | async as layers">
+        <mat-list-item>
+            Base Map
+        </mat-list-item>
+        <mat-list-item *ngFor="let layer of layers">
+            {{ layer.name }}
+            <button mat-icon-button color="warn">
+                <mat-icon>remove</mat-icon>
+            </button>
+        </mat-list-item>
+    </mat-list>
+</div>

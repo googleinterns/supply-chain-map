@@ -5,11 +5,16 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { HomeComponent } from './home.component';
 import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { HomeState } from './store/state';
+import { MemoizedSelector } from '@ngrx/store';
+import { selectHomeIsLoading, selectHomeError } from './store/selectors';
 
 describe('HomeComponent', () => {
   let component: HomeComponent;
   let fixture: ComponentFixture<HomeComponent>;
-  let store: MockStore;
+  let mockStore: MockStore;
+  let mockLoadingSelector: MemoizedSelector<HomeState, boolean>;
+  let mockErrorSelector: MemoizedSelector<HomeState, Error>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -26,7 +31,15 @@ describe('HomeComponent', () => {
       ]
     }).compileComponents();
 
-    store = TestBed.inject(MockStore);
+    mockStore = TestBed.inject(MockStore);
+    mockLoadingSelector = mockStore.overrideSelector(
+      selectHomeIsLoading,
+      false
+    );
+    mockErrorSelector = mockStore.overrideSelector(
+      selectHomeError,
+      null
+    );
     fixture = TestBed.createComponent(HomeComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

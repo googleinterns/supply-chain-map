@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { BigQueryService } from '../../services/big-query/big-query.service';
 import { SidePanel } from '../side-panel.models';
+import { BigQueryService } from '../../services/big-query/big-query.service';
 
 /**
  * The structure that a submitted form must follow
@@ -63,6 +63,7 @@ export interface FormStructure {
 })
 export class FilterFormService {
 
+  private static readonly environmentRouteTable = environment.bigQuery.layerDatasets.route.tables;
   /**
    * Query to get product, supplier, category details
    * from the BigQuery dataset.
@@ -72,75 +73,75 @@ export class FilterFormService {
       ARRAY(
         SELECT DISTINCT _product
         FROM (
-          SELECT DISTINCT ${ environment.bigQuery.tables.UPSTREAM.columns.PRODUCT} AS _product
-          FROM ${ environment.bigQuery.tables.UPSTREAM.tableName}
+          SELECT DISTINCT ${ FilterFormService.environmentRouteTable.UPSTREAM.columns.PRODUCT} AS _product
+          FROM ${ FilterFormService.environmentRouteTable.UPSTREAM.tableName}
           UNION ALL
-          SELECT DISTINCT ${ environment.bigQuery.tables.CM.columns.PRODUCT} AS _product
-          FROM ${ environment.bigQuery.tables.CM.tableName}
+          SELECT DISTINCT ${ FilterFormService.environmentRouteTable.CM.columns.PRODUCT} AS _product
+          FROM ${ FilterFormService.environmentRouteTable.CM.tableName}
           UNION ALL
-          SELECT DISTINCT ${ environment.bigQuery.tables.DOWNSTREAM.columns.PRODUCT} AS _product
-          FROM ${ environment.bigQuery.tables.DOWNSTREAM.tableName}
+          SELECT DISTINCT ${ FilterFormService.environmentRouteTable.DOWNSTREAM.columns.PRODUCT} AS _product
+          FROM ${ FilterFormService.environmentRouteTable.DOWNSTREAM.tableName}
         )
         WHERE _product IS NOT NULL
       ) AS products,
 
       ARRAY(
-        SELECT DISTINCT ${ environment.bigQuery.tables.UPSTREAM.columns.SUPPLIER_NAME}
-        FROM ${ environment.bigQuery.tables.UPSTREAM.tableName}
-        WHERE ${ environment.bigQuery.tables.UPSTREAM.columns.SUPPLIER_NAME} IS NOT NULL
+        SELECT DISTINCT ${ FilterFormService.environmentRouteTable.UPSTREAM.columns.SUPPLIER_NAME}
+        FROM ${ FilterFormService.environmentRouteTable.UPSTREAM.tableName}
+        WHERE ${ FilterFormService.environmentRouteTable.UPSTREAM.columns.SUPPLIER_NAME} IS NOT NULL
       ) AS upstream_suppliers,
       ARRAY(
-        SELECT DISTINCT ${ environment.bigQuery.tables.UPSTREAM.columns.CATEGORY}
-        FROM ${ environment.bigQuery.tables.UPSTREAM.tableName}
-        WHERE ${ environment.bigQuery.tables.UPSTREAM.columns.CATEGORY} IS NOT NULL
+        SELECT DISTINCT ${ FilterFormService.environmentRouteTable.UPSTREAM.columns.CATEGORY}
+        FROM ${ FilterFormService.environmentRouteTable.UPSTREAM.tableName}
+        WHERE ${ FilterFormService.environmentRouteTable.UPSTREAM.columns.CATEGORY} IS NOT NULL
       ) AS upstream_categories,
 
       ARRAY(
-        SELECT DISTINCT ${ environment.bigQuery.tables.UPSTREAM.columns.MFG_COUNTRY}
-        FROM ${ environment.bigQuery.tables.UPSTREAM.tableName}
-        WHERE ${ environment.bigQuery.tables.UPSTREAM.columns.MFG_COUNTRY} IS NOT NULL
+        SELECT DISTINCT ${ FilterFormService.environmentRouteTable.UPSTREAM.columns.MFG_COUNTRY}
+        FROM ${ FilterFormService.environmentRouteTable.UPSTREAM.tableName}
+        WHERE ${ FilterFormService.environmentRouteTable.UPSTREAM.columns.MFG_COUNTRY} IS NOT NULL
       ) AS upstream_countries,
       ARRAY(
-        SELECT DISTINCT ${ environment.bigQuery.tables.UPSTREAM.columns.MFG_STATE}
-        FROM ${ environment.bigQuery.tables.UPSTREAM.tableName}
-        WHERE ${ environment.bigQuery.tables.UPSTREAM.columns.MFG_STATE} IS NOT NULL
+        SELECT DISTINCT ${ FilterFormService.environmentRouteTable.UPSTREAM.columns.MFG_STATE}
+        FROM ${ FilterFormService.environmentRouteTable.UPSTREAM.tableName}
+        WHERE ${ FilterFormService.environmentRouteTable.UPSTREAM.columns.MFG_STATE} IS NOT NULL
       ) AS upstream_states,
       ARRAY(
-        SELECT DISTINCT ${ environment.bigQuery.tables.UPSTREAM.columns.MFG_CITY}
-        FROM ${ environment.bigQuery.tables.UPSTREAM.tableName}
-        WHERE ${ environment.bigQuery.tables.UPSTREAM.columns.MFG_CITY} IS NOT NULL
+        SELECT DISTINCT ${ FilterFormService.environmentRouteTable.UPSTREAM.columns.MFG_CITY}
+        FROM ${ FilterFormService.environmentRouteTable.UPSTREAM.tableName}
+        WHERE ${ FilterFormService.environmentRouteTable.UPSTREAM.columns.MFG_CITY} IS NOT NULL
       ) AS upstream_cities,
 
       ARRAY(
-        SELECT DISTINCT ${ environment.bigQuery.tables.CM.columns.CM_COUNTRY}
-        FROM ${ environment.bigQuery.tables.CM.tableName}
-        WHERE ${ environment.bigQuery.tables.CM.columns.CM_COUNTRY} IS NOT NULL
+        SELECT DISTINCT ${ FilterFormService.environmentRouteTable.CM.columns.CM_COUNTRY}
+        FROM ${ FilterFormService.environmentRouteTable.CM.tableName}
+        WHERE ${ FilterFormService.environmentRouteTable.CM.columns.CM_COUNTRY} IS NOT NULL
       ) AS cm_countries,
       ARRAY(
-        SELECT DISTINCT ${ environment.bigQuery.tables.CM.columns.CM_STATE}
-        FROM ${ environment.bigQuery.tables.CM.tableName}
-        WHERE ${ environment.bigQuery.tables.CM.columns.CM_STATE} IS NOT NULL
+        SELECT DISTINCT ${ FilterFormService.environmentRouteTable.CM.columns.CM_STATE}
+        FROM ${ FilterFormService.environmentRouteTable.CM.tableName}
+        WHERE ${ FilterFormService.environmentRouteTable.CM.columns.CM_STATE} IS NOT NULL
       ) AS cm_states,
       ARRAY(
-        SELECT DISTINCT ${ environment.bigQuery.tables.CM.columns.CM_CITY}
-        FROM ${ environment.bigQuery.tables.CM.tableName}
-        WHERE ${ environment.bigQuery.tables.CM.columns.CM_CITY} IS NOT NULL
+        SELECT DISTINCT ${ FilterFormService.environmentRouteTable.CM.columns.CM_CITY}
+        FROM ${ FilterFormService.environmentRouteTable.CM.tableName}
+        WHERE ${ FilterFormService.environmentRouteTable.CM.columns.CM_CITY} IS NOT NULL
       ) AS cm_cities,
 
       ARRAY(
-        SELECT DISTINCT ${ environment.bigQuery.tables.DOWNSTREAM.columns.GDC_COUNTRY}
-        FROM ${ environment.bigQuery.tables.DOWNSTREAM.tableName}
-        WHERE ${ environment.bigQuery.tables.DOWNSTREAM.columns.GDC_COUNTRY} IS NOT NULL
+        SELECT DISTINCT ${ FilterFormService.environmentRouteTable.DOWNSTREAM.columns.GDC_COUNTRY}
+        FROM ${ FilterFormService.environmentRouteTable.DOWNSTREAM.tableName}
+        WHERE ${ FilterFormService.environmentRouteTable.DOWNSTREAM.columns.GDC_COUNTRY} IS NOT NULL
       ) AS gdc_countries,
       ARRAY(
-        SELECT DISTINCT ${ environment.bigQuery.tables.DOWNSTREAM.columns.GDC_STATE}
-        FROM ${ environment.bigQuery.tables.DOWNSTREAM.tableName}
-        WHERE ${ environment.bigQuery.tables.DOWNSTREAM.columns.GDC_STATE} IS NOT NULL
+        SELECT DISTINCT ${ FilterFormService.environmentRouteTable.DOWNSTREAM.columns.GDC_STATE}
+        FROM ${ FilterFormService.environmentRouteTable.DOWNSTREAM.tableName}
+        WHERE ${ FilterFormService.environmentRouteTable.DOWNSTREAM.columns.GDC_STATE} IS NOT NULL
       ) AS gdc_states,
       ARRAY(
-        SELECT DISTINCT ${ environment.bigQuery.tables.DOWNSTREAM.columns.GDC_CITY}
-        FROM ${ environment.bigQuery.tables.DOWNSTREAM.tableName}
-        WHERE ${ environment.bigQuery.tables.DOWNSTREAM.columns.GDC_CITY} IS NOT NULL
+        SELECT DISTINCT ${ FilterFormService.environmentRouteTable.DOWNSTREAM.columns.GDC_CITY}
+        FROM ${ FilterFormService.environmentRouteTable.DOWNSTREAM.tableName}
+        WHERE ${ FilterFormService.environmentRouteTable.DOWNSTREAM.columns.GDC_CITY} IS NOT NULL
       ) AS gdc_cities,
   `;
 
@@ -201,7 +202,7 @@ export class FilterFormService {
     let SQL_PRODUCT_SUBQUERY = '1 = 1';
     if (filterSelection.basicFilterGroup.productFilterGroup.productSelect != null) {
       SQL_PRODUCT_SUBQUERY =
-        `${environment.bigQuery.tables.UPSTREAM.columns.PRODUCT}
+        `${FilterFormService.environmentRouteTable.UPSTREAM.columns.PRODUCT}
         IN (${ filterSelection.basicFilterGroup.productFilterGroup.productSelect.map((e: string) => `'${e}'`).join(', ')})`;
     }
 
@@ -212,7 +213,7 @@ export class FilterFormService {
     /** Add condition for upstream filter (categories, suppliers, location) */
     SQL_UPSTREAM_SUBQUERY_CONDITIONS.push(...this.getUpstreamFormSubquery(filterSelection.upstreamFilterGroup));
     /** Create the select query */
-    const UPSTREAM_COLUMNS = environment.bigQuery.tables.UPSTREAM.columns;
+    const UPSTREAM_COLUMNS = FilterFormService.environmentRouteTable.UPSTREAM.columns;
     const SQL_UPSTREAM_SUBQUERY = `
       SELECT AS STRUCT
           ${UPSTREAM_COLUMNS.PRODUCT},
@@ -228,7 +229,7 @@ export class FilterFormService {
           ${UPSTREAM_COLUMNS.MFG_LAT},
           ${UPSTREAM_COLUMNS.MFG_LONG}
       FROM
-          ${environment.bigQuery.tables.UPSTREAM.tableName}
+          ${FilterFormService.environmentRouteTable.UPSTREAM.tableName}
       WHERE
           ${SQL_UPSTREAM_SUBQUERY_CONDITIONS.join(' AND ')}
     `;
@@ -241,7 +242,7 @@ export class FilterFormService {
     /** Add condition for upstream filter (categories, suppliers, location) */
     SQL_CM_SUBQUERY_CONDITIONS.push(...this.getCmFormSubquery(filterSelection.cmFilterGroup));
     /** Create the select query */
-    const CM_COLUMNS = environment.bigQuery.tables.CM.columns;
+    const CM_COLUMNS = FilterFormService.environmentRouteTable.CM.columns;
     const SQL_CM_SUBQUERY = `
       SELECT AS STRUCT
           ${CM_COLUMNS.PRODUCT},
@@ -255,7 +256,7 @@ export class FilterFormService {
           ${CM_COLUMNS.CM_LAT},
           ${CM_COLUMNS.CM_LONG}
       FROM
-          ${environment.bigQuery.tables.CM.tableName}
+          ${FilterFormService.environmentRouteTable.CM.tableName}
       WHERE
           ${SQL_CM_SUBQUERY_CONDITIONS.join(' AND ')}
     `;
@@ -268,7 +269,7 @@ export class FilterFormService {
     /** Add condition for upstream filter (categories, suppliers, location) */
     SQL_DOWNSTREAM_SUBQUERY_CONDITIONS.push(...this.getDownstreamFormSubquery(filterSelection.downstreamFilterGroup));
     /** Create the select query */
-    const DOWNSTREAM_COLUMNS = environment.bigQuery.tables.DOWNSTREAM.columns;
+    const DOWNSTREAM_COLUMNS = FilterFormService.environmentRouteTable.DOWNSTREAM.columns;
     const SQL_DOWNSTREAM_SUBQUERY = `
       SELECT AS STRUCT
           ${DOWNSTREAM_COLUMNS.PRODUCT},
@@ -281,7 +282,7 @@ export class FilterFormService {
           ${DOWNSTREAM_COLUMNS.GDC_LAT},
           ${DOWNSTREAM_COLUMNS.GDC_LONG}
       FROM
-          ${environment.bigQuery.tables.DOWNSTREAM.tableName}
+          ${FilterFormService.environmentRouteTable.DOWNSTREAM.tableName}
       WHERE
           ${SQL_DOWNSTREAM_SUBQUERY_CONDITIONS.join(' AND ')}
     `;
@@ -324,7 +325,7 @@ export class FilterFormService {
      */
     if (upstreamFilterGroup.componentFilterGroup.categorySelect != null) {
       conditions.push(
-        `${environment.bigQuery.tables.UPSTREAM.columns.CATEGORY}
+        `${FilterFormService.environmentRouteTable.UPSTREAM.columns.CATEGORY}
         IN (${ upstreamFilterGroup.componentFilterGroup.categorySelect.map((e: string) => `'${e}'`).join(', ')})`
       );
     }
@@ -334,7 +335,7 @@ export class FilterFormService {
      */
     if (upstreamFilterGroup.componentFilterGroup.supplierSelect != null) {
       conditions.push(
-        `${environment.bigQuery.tables.UPSTREAM.columns.SUPPLIER_NAME}
+        `${FilterFormService.environmentRouteTable.UPSTREAM.columns.SUPPLIER_NAME}
         IN (${ upstreamFilterGroup.componentFilterGroup.supplierSelect.map((e: string) => `'${e}'`).join(', ')})`
       );
     }
@@ -344,7 +345,7 @@ export class FilterFormService {
      */
     if (upstreamFilterGroup.locationFilterGroup.countrySelect != null) {
       conditions.push(
-        `${environment.bigQuery.tables.UPSTREAM.columns.MFG_COUNTRY}
+        `${FilterFormService.environmentRouteTable.UPSTREAM.columns.MFG_COUNTRY}
         IN (${ upstreamFilterGroup.locationFilterGroup.countrySelect.map((e: string) => `'${e}'`).join(', ')})`
       );
     }
@@ -354,7 +355,7 @@ export class FilterFormService {
      */
     if (upstreamFilterGroup.locationFilterGroup.regionSelect != null) {
       conditions.push(
-        `${environment.bigQuery.tables.UPSTREAM.columns.MFG_STATE}
+        `${FilterFormService.environmentRouteTable.UPSTREAM.columns.MFG_STATE}
         IN (${ upstreamFilterGroup.locationFilterGroup.regionSelect.map((e: string) => `'${e}'`).join(', ')})`
       );
     }
@@ -364,7 +365,7 @@ export class FilterFormService {
      */
     if (upstreamFilterGroup.locationFilterGroup.citySelect != null) {
       conditions.push(
-        `${environment.bigQuery.tables.UPSTREAM.columns.MFG_CITY}
+        `${FilterFormService.environmentRouteTable.UPSTREAM.columns.MFG_CITY}
         IN (${ upstreamFilterGroup.locationFilterGroup.citySelect.map((e: string) => `'${e}'`).join(', ')})`
       );
     }
@@ -374,7 +375,7 @@ export class FilterFormService {
      */
     conditions.push(
       this.getLeadTimeSubquery(
-        environment.bigQuery.tables.UPSTREAM.columns.LEAD_TIME,
+        FilterFormService.environmentRouteTable.UPSTREAM.columns.LEAD_TIME,
         upstreamFilterGroup.additionalFilterGroup.minLeadTimeInput,
         upstreamFilterGroup.additionalFilterGroup.maxLeadTimeInput
       )
@@ -396,7 +397,7 @@ export class FilterFormService {
      */
     if (cmFilterGroup.locationFilterGroup.countrySelect != null) {
       conditions.push(
-        `${environment.bigQuery.tables.CM.columns.CM_COUNTRY}
+        `${FilterFormService.environmentRouteTable.CM.columns.CM_COUNTRY}
         IN (${ cmFilterGroup.locationFilterGroup.countrySelect.map((e: string) => `'${e}'`).join(', ')})`
       );
     }
@@ -406,7 +407,7 @@ export class FilterFormService {
      */
     if (cmFilterGroup.locationFilterGroup.regionSelect != null) {
       conditions.push(
-        `${environment.bigQuery.tables.CM.columns.CM_STATE}
+        `${FilterFormService.environmentRouteTable.CM.columns.CM_STATE}
         IN (${ cmFilterGroup.locationFilterGroup.regionSelect.map((e: string) => `'${e}'`).join(', ')})`
       );
     }
@@ -416,7 +417,7 @@ export class FilterFormService {
      */
     if (cmFilterGroup.locationFilterGroup.citySelect != null) {
       conditions.push(
-        `${environment.bigQuery.tables.CM.columns.CM_CITY}
+        `${FilterFormService.environmentRouteTable.CM.columns.CM_CITY}
         IN (${ cmFilterGroup.locationFilterGroup.citySelect.map((e: string) => `'${e}'`).join(', ')})`
       );
     }
@@ -426,7 +427,7 @@ export class FilterFormService {
      */
     conditions.push(
       this.getLeadTimeSubquery(
-        environment.bigQuery.tables.UPSTREAM.columns.LEAD_TIME,
+        FilterFormService.environmentRouteTable.UPSTREAM.columns.LEAD_TIME,
         cmFilterGroup.additionalFilterGroup.minLeadTimeInput,
         cmFilterGroup.additionalFilterGroup.maxLeadTimeInput
       )
@@ -448,7 +449,7 @@ export class FilterFormService {
      */
     if (downstreamFilterGroup.locationFilterGroup.countrySelect != null) {
       conditions.push(
-        `${environment.bigQuery.tables.DOWNSTREAM.columns.GDC_COUNTRY}
+        `${FilterFormService.environmentRouteTable.DOWNSTREAM.columns.GDC_COUNTRY}
         IN (${ downstreamFilterGroup.locationFilterGroup.countrySelect.map((e: string) => `'${e}'`).join(', ')})`
       );
     }
@@ -458,7 +459,7 @@ export class FilterFormService {
      */
     if (downstreamFilterGroup.locationFilterGroup.regionSelect != null) {
       conditions.push(
-        `${environment.bigQuery.tables.DOWNSTREAM.columns.GDC_STATE}
+        `${FilterFormService.environmentRouteTable.DOWNSTREAM.columns.GDC_STATE}
         IN (${ downstreamFilterGroup.locationFilterGroup.regionSelect.map((e: string) => `'${e}'`).join(', ')})`
       );
     }
@@ -468,7 +469,7 @@ export class FilterFormService {
      */
     if (downstreamFilterGroup.locationFilterGroup.citySelect != null) {
       conditions.push(
-        `${environment.bigQuery.tables.DOWNSTREAM.columns.GDC_CITY}
+        `${FilterFormService.environmentRouteTable.DOWNSTREAM.columns.GDC_CITY}
         IN (${ downstreamFilterGroup.locationFilterGroup.citySelect.map((e: string) => `'${e}'`).join(', ')})`
       );
     }
@@ -478,7 +479,7 @@ export class FilterFormService {
      */
     conditions.push(
       this.getLeadTimeSubquery(
-        environment.bigQuery.tables.UPSTREAM.columns.LEAD_TIME,
+        FilterFormService.environmentRouteTable.UPSTREAM.columns.LEAD_TIME,
         downstreamFilterGroup.additionalFilterGroup.minLeadTimeInput,
         downstreamFilterGroup.additionalFilterGroup.maxLeadTimeInput
       )

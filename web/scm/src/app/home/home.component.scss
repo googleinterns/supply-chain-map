@@ -1,6 +1,84 @@
-.container {
+.outer-container {
     height: 100%;
     width: 100%;
+    background-color: #efefef;
+    display: flex;
+    flex-direction: column;
+    max-height: 100%;
+}
+
+.inner-container {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    height: 100%;
+    overflow: hidden;
+}
+
+.left-panel {
+    position: relative;
+    margin-right: 8px;
+    background: white;
+    display: block;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.12), inset 0 -1px 0 0 #dadce0;
+    height: 100%;
+}
+
+.left-panel::after {
+    position: absolute;
+    right: 0;
+    top: 0;
+    height: 100%;
+    font-family: "Material Icons";
+    content: "more_vert";
+    font-size: 1.4em;
+    display: flex;
+    align-items: center;
+    border-left: 1px solid lightgray;
+}
+
+.right-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    flex-grow: 1;
+    overflow-x: auto;
+    overflow-y: hidden;
+    position: relative;
+}
+
+.top-resizable {
+    background: white;
+    display: block;
+    position: relative;
+    margin-top: 8px;
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.12), inset 0 -1px 0 0 #dadce0;
+    max-height: 100%;
+}
+
+.top-resizable::before {
+    position: absolute;
+    top: 0;
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    font-family: "Material Icons";
+    content: "more_horiz";
+    font-size: 1.4em;
+    border-bottom: 1px solid lightgray;
+}
+
+scm-map {
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.12), inset 0 -1px 0 0 #dadce0;
+    flex-grow: 1;
+}
+
+scm-dashboard {
+    box-shadow: 0 2px 6px 0 rgba(0, 0, 0, 0.12), inset 0 -1px 0 0 #dadce0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
 }
 
 .filter {
@@ -11,4 +89,25 @@
 
 mat-drawer-container {
     height: 100%;
+}
+
+.form-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.548);
+    z-index: 1;
+}
+
+.error-icon {
+    color: red;
+    font-size: 8em;
+    height: auto;
+    width: auto;
 }

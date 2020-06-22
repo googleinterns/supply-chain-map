@@ -1,0 +1,41 @@
+@import "src/styles.scss";
+
+.code-container {
+    padding: 10px;
+}
+
+.stats-container {
+    padding: 10px;
+}
+
+.code-snippet {
+    padding: 0 10px;
+    border: 2px solid darkgray;
+    border-left: 8px solid mat-color($scm-primary);
+}
+
+.schema-row {
+    padding: 2px 10px;
+    font-size: 1em;
+    display: flex;
+}
+
+.schema-row:nth-child(odd) {
+    background-color: #fafafa;
+}
+
+.schema-field-name {
+    display: inline-block;
+    font-weight: bold;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 200px;
+    padding-right: 10px;
+}
+
+.schema-field-value {
+    display: inline-block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    width: 150px;
+}

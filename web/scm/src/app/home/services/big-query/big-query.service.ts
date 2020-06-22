@@ -50,7 +50,7 @@ export class BigQueryService {
         query: query,
         useLegacySql: false,
         defaultDataset: {
-          datasetId: environment.bigQuery.dataset,
+          datasetId: environment.bigQuery.layerDatasets.route.dataset,
           projectId: environment.projectId
         }
       })

@@ -1,1 +1,25 @@
-<!-- TODO(dpronin): Add Dashboard -->
+<div class="header-container">
+    <h1 class="dashboard-header">Dashboard</h1>
+</div>
+<div class="body-container">
+    <mat-tab-group mat-align-tabs="start">
+        <mat-tab label="Map">
+            <div class="tab-container">
+                <scm-map-tab></scm-map-tab>
+            </div>
+        </mat-tab>
+        <mat-tab label="Data" *ngIf="receivedData">
+            <div class="tab-container">
+                <scm-data-tab></scm-data-tab>
+            </div>
+        </mat-tab>
+        <mat-tab label="Graphs" *ngIf="receivedData">
+
+        </mat-tab>
+        <mat-tab label="Stats" *ngIf="receivedData">
+            <div class="tab-container">
+                <scm-stats-tab></scm-stats-tab>
+            </div>
+        </mat-tab>
+    </mat-tab-group>
+</div>

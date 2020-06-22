@@ -9,9 +9,11 @@ const homeReducer = createReducer(
         formQuery: formQuery,
         isLoading: true
     })),
-    on(HomeActions.formQueryFetchSuccess, (state, { formQueryResult }) => ({
+    on(HomeActions.formQueryFetchSuccess, (state, { formQueryResponse }) => ({
         ...state,
-        formQueryResult: formQueryResult,
+        formQueryResult: formQueryResponse.formQueryResult,
+        formQueryResultSchema: formQueryResponse.formQueryResultSchema,
+        formQueryResultStats: formQueryResponse.formQueryResultStats,
         isLoading: false
     })),
     on(HomeActions.formQueryFetchFailure, (state, { error }) => ({

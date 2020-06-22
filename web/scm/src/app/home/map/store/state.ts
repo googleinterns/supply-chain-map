@@ -1,15 +1,13 @@
-import { RouteLayerMarker, RouteLayerLine } from '../map.models';
+import { Layer } from '../map.models';
 
 export interface MapState {
-    routeLayerMarkers: RouteLayerMarker[];
-    routeLayerLines: RouteLayerLine[];
+    layers: Layer[];
     error: Error;
     isLoading: boolean;
 }
 
 export const initialState: MapState = {
-    routeLayerMarkers: [],
-    routeLayerLines: [],
+    layers: [],
     error: null,
     isLoading: false
 };
