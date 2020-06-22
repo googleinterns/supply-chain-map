@@ -1,7 +1,7 @@
 import { createAction, props } from '@ngrx/store';
-import { AdditionalLayer, RouteLayer } from '../map.models';
+import { Layer } from '../map.models';
 
-export const loadRouteLayer = createAction(
+/* export const loadRouteLayer = createAction(
   '[Map] Load Route Layer',
   props<{ layer: RouteLayer }>()
 );
@@ -28,5 +28,20 @@ export const additionalLayerLoadSuccess = createAction(
 
 export const additionalLayerLoadFailure = createAction(
   '[Map] Load Additional Layer Failure',
+  props<{ error: Error }>()
+); */
+
+export const loadLayer = createAction(
+  '[Map] Load Layer',
+  props<{ layer: Layer }>()
+);
+
+export const layerLoadSuccess = createAction(
+  '[Map] Load Layer Success',
+  props<{ layer: Layer }>()
+);
+
+export const layerLoadFailure = createAction(
+  '[Map] Load Layer Failure',
   props<{ error: Error }>()
 );

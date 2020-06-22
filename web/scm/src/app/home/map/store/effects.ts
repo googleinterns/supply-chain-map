@@ -5,6 +5,7 @@ import * as HomeFeatureActions from '../../store/actions';
 import { MapHelperService } from '../services/map-helper/map-helper.service';
 import { switchMap, map, catchError } from 'rxjs/operators';
 import { of, from } from 'rxjs';
+import { RouteLayer } from '../map.models';
 
 @Injectable()
 export class MapStoreEffects {
@@ -18,13 +19,14 @@ export class MapStoreEffects {
                     try {
                         const markers = this.mapHelperService.createMarkerPoints(formQueryResponse.formQueryResult);
                         const lines = this.mapHelperService.createLines(formQueryResponse.formQueryResult);
-                        return of(MapFeatureActions.routeLayerLoadSuccess({ layer: {
+                        const routeLayer: RouteLayer = {
                             name: 'Route Layer',
                             markers: markers,
                             lines: lines
-                        } }));
+                        };
+                        return of(MapFeatureActions.layerLoadSuccess({ layer: routeLayer }));
                     } catch (ex) {
-                        return of(MapFeatureActions.routeLayerLoadFailure({ error: ex }));
+                        return of(MapFeatureActions.layerLoadFailure({ error: ex }));
                     }
                 }
             )
@@ -33,15 +35,15 @@ export class MapStoreEffects {
 
     loadAdditionalLayer$ = createEffect(
         () => this.actions$.pipe(
-            ofType(MapFeatureActions.loadAdditionalLayer),
+            ofType(MapFeatureActions.loadLayer),
             switchMap(
-                ({ layerName }) => {
-                    return from(this.mapHelperService.getAdditionalLayer(layerName))
+                ({ layer }) => {
+                    return from(this.mapHelperService.getLayer(layer))
                     .pipe(
                         map(
-                            layer => MapFeatureActions.additionalLayerLoadSuccess({ layer: layer })
+                            loadedLayer => MapFeatureActions.layerLoadSuccess({ layer: loadedLayer })
                         ),
-                        catchError(error => of(MapFeatureActions.additionalLayerLoadFailure({ error: error })))
+                        catchError(error => of(MapFeatureActions.layerLoadFailure({ error: error })))
                     );
                 }
             )

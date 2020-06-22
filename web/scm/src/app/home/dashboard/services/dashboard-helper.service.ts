@@ -10,7 +10,7 @@ export class DashboardHelperService {
     constructor(private bigQueryService: BigQueryService) { }
 
     private readonly SQL_LAYER_QUERY = `
-        SELECT TABLE_NAME FROM ${environment.bigQuery.layerDataset}.INFORMATION_SCHEMA.TABLES
+        SELECT TABLE_NAME FROM ${environment.bigQuery.layerDatasets.heatmap.dataset}.INFORMATION_SCHEMA.TABLES
     `;
 
     async getAdditionalLayers() {

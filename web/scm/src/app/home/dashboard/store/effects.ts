@@ -17,7 +17,7 @@ export class DashboardStoreEffects {
                     return from(this.dashboardHelperService.getAdditionalLayers())
                         .pipe(
                             map(
-                                layers => DashboardFeatureActions.getAdditionalMapLayerNamesSuccess({ additionalLayerNames: layers })
+                                layers => DashboardFeatureActions.getAdditionalMapLayerNamesSuccess({ additionalHeatmapLayerNames: layers })
                             ),
                             catchError(error => of(DashboardFeatureActions.getAdditionalMapLayerNamesFailure({ error: error })))
                         );

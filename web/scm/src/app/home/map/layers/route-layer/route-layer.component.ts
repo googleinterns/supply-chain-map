@@ -3,7 +3,8 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { MapState } from '../../store/state';
 import { RouteLayer } from '../../map.models';
-import { selectMapRouteLayer } from '../../store/selectors';
+import { selectMapLayer } from '../../store/selectors';
+import { MapHelperService } from '../../services/map-helper/map-helper.service';
 
 @Component({
   selector: 'scm-route-layer',
@@ -11,10 +12,17 @@ import { selectMapRouteLayer } from '../../store/selectors';
 })
 export class RouteLayerComponent {
 
-  layer$: Observable<RouteLayer>;
+  layer: RouteLayer;
 
   constructor(private store: Store<MapState>) {
-    this.layer$ = this.store.select(selectMapRouteLayer);
+    this.store.select(selectMapLayer('Route Layer'))
+      .subscribe(
+        layer => {
+          if ('markers' in layer && 'lines' in layer) {
+            this.layer = layer;
+          }
+        }
+      );
   }
 
 }

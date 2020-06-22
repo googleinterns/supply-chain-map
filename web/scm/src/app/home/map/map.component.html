@@ -1,3 +1,5 @@
 <agm-map [zoom]="3">
-    <scm-route-layer></scm-route-layer>
+    <div *ngFor="let layer of ($layers | async)">
+        <scm-route-layer *ngIf="isOfTypeRouteLayer(layer)"></scm-route-layer>
+    </div>
 </agm-map>

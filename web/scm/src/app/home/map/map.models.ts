@@ -48,10 +48,11 @@ export interface RouteLayer extends Layer {
     lines: RouteLayerLine[];
 }
 
-export interface AdditionalLayer extends Layer {
-    markers: {
+export interface HeatMapLayer extends Layer {
+    hotspots: {
         latitude: number;
         longitude: number;
+        weight: number;
         icon: string;
         data?: any;
     }[];

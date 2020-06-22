@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormQueryResult } from 'src/app/home/home.models';
-import { RouteLayerLine, RouteLayerMarker, AdditionalLayer } from '../../map.models';
+import { RouteLayerLine, RouteLayerMarker, Layer, HeatMapLayer } from '../../map.models';
 import { BigQueryService } from 'src/app/home/services/big-query/big-query.service';
 import { environment } from 'src/environments/environment';
 
@@ -18,11 +18,18 @@ export class MapHelperService {
         MFG_CM: 'assets/mfg_cm.svg'
     };
 
-    public async getAdditionalLayer(layerName: string): Promise<AdditionalLayer> {
-        const layerCols = environment.bigQuery.layerTableCols;
+    public getLayer(layer: Layer){
+        const layerName = layer.name;
+        if ('hotspots' in layer) {
+            return this.getHeatmapLayer(layerName);
+        }
+    }
+
+    private async getHeatmapLayer(layerName: string): Promise<HeatMapLayer> {
+        const layerCols = environment.bigQuery.layerDatasets.heatmap.columns;
         const SQL_FETCH_ADDITIONAL_LAYER = `
             SELECT ${layerCols.join(', ')}
-            FROM ${environment.bigQuery.layerDataset}.${layerName}
+            FROM ${environment.bigQuery.layerDatasets.heatmap.dataset}.${layerName}
         `;
 
         try {
@@ -40,7 +47,7 @@ export class MapHelperService {
 
             return {
                 name: layerName,
-                markers: markers
+                hotspots: markers
             };
         } catch (ex) {
             if (!environment.production) {

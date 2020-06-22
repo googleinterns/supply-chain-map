@@ -1,15 +1,13 @@
-import { AdditionalLayer, RouteLayer } from '../map.models';
+import { Layer } from '../map.models';
 
 export interface MapState {
-    routeLayer?: RouteLayer;
-    additionalLayers: (AdditionalLayer)[];
+    layers: Layer[];
     error: Error;
     isLoading: boolean;
 }
 
 export const initialState: MapState = {
-    additionalLayers: [
-    ],
+    layers: [],
     error: null,
     isLoading: false
 };

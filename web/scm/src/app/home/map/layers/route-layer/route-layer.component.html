@@ -1,4 +1,4 @@
-<div *ngIf="layer$ | async as layer">
+<div *ngIf="layer">
     <agm-marker *ngFor="let marker of layer.markers" [latitude]="marker.lat" [longitude]="marker.long"
         [iconUrl]="{
         url: marker.iconUrl,

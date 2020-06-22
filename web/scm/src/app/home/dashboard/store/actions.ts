@@ -6,7 +6,7 @@ export const getAdditionalMapLayerNames = createAction(
 
 export const getAdditionalMapLayerNamesSuccess = createAction(
   '[Dashboard] Get Additional Map Layer Names Success',
-  props<{ additionalLayerNames: string[] }>()
+  props<{ additionalHeatmapLayerNames: string[] }>()
 );
 
 export const getAdditionalMapLayerNamesFailure = createAction(

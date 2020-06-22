@@ -3,9 +3,9 @@ import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
 import { SelectLayerComponent } from './select-layer-dialog/select-layer.dialog';
-import { loadAdditionalLayer } from 'src/app/home/map/store/actions';
-import { AdditionalLayer, RouteLayer } from 'src/app/home/map/map.models';
-import { selectMapAdditionalLayers, selectMapRouteLayer } from 'src/app/home/map/store/selectors';
+import { Layer } from 'src/app/home/map/map.models';
+import { selectMapLayers } from 'src/app/home/map/store/selectors';
+import { loadLayer } from 'src/app/home/map/store/actions';
 
 @Component({
   selector: 'scm-map-tab',
@@ -14,12 +14,10 @@ import { selectMapAdditionalLayers, selectMapRouteLayer } from 'src/app/home/map
 })
 export class MapTabComponent implements OnInit {
 
-  additionalLayers$: Observable<AdditionalLayer[]>;
-  routeLayer$: Observable<RouteLayer>;
+  layers$: Observable<Layer[]>;
 
   constructor(private store: Store, public matDialog: MatDialog) {
-    this.additionalLayers$ = this.store.select(selectMapAdditionalLayers);
-    this.routeLayer$ = this.store.select(selectMapRouteLayer);
+    this.layers$ = this.store.select(selectMapLayers);
   }
 
   ngOnInit(): void {
@@ -31,7 +29,7 @@ export class MapTabComponent implements OnInit {
     dialogRef.afterClosed().subscribe(
       layers => {
         for (const layer of layers) {
-          this.store.dispatch(loadAdditionalLayer({ layerName: layer }));
+          this.store.dispatch(loadLayer({ layer: { name: layer } }));
         }
       }
     );
