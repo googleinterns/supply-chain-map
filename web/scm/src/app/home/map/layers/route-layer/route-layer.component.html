@@ -1,5 +1,5 @@
 <div *ngIf="layer$ | async as layer">
-    <agm-marker *ngFor="let marker of layer.data.routeLayerMarkers" [latitude]="marker.lat" [longitude]="marker.long"
+    <agm-marker *ngFor="let marker of layer.markers" [latitude]="marker.lat" [longitude]="marker.long"
         [iconUrl]="{
         url: marker.iconUrl,
         scaledSize: {
@@ -17,7 +17,7 @@
         </agm-info-window>
     </agm-marker>
 
-    <scm-line *ngFor="let line of layer.data.routeLayerLines" [route]="line">
+    <scm-line *ngFor="let line of layer.lines" [route]="line">
         <div><b>Route Identifier</b>: {{ line.from.city + '_' + line.to.city }}</div>
         <div><b>Route Stage</b>: {{ line.type }}</div>
     </scm-line>

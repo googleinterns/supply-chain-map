@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
+import { RouteLayerComponent } from './layers/route-layer/route-layer.component';
 
 describe('MapComponent', () => {
   let component: MapComponent;
@@ -13,7 +14,9 @@ describe('MapComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ MapComponent ],
+      declarations: [
+        MapComponent
+      ],
       imports: [
         AgmCoreModule.forRoot({
           apiKey: environment.googleMapApi
@@ -25,10 +28,6 @@ describe('MapComponent', () => {
     })
     .compileComponents();
   }));
-
-afterAll(() => {
-    TestBed.resetTestingModule();
-  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(MapComponent);

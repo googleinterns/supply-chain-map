@@ -12,12 +12,10 @@ import { FormQueryResultSchema, FormQueryResultStats } from 'src/app/home/home.m
 export class StatsTabComponent implements OnInit {
 
   formQuery$: Observable<string>;
-  formQueryResultSchema$: Observable<FormQueryResultSchema>;
   formQueryResultStats$: Observable<FormQueryResultStats>;
 
   constructor(private store: Store) {
     this.formQuery$ = this.store.select(selectHomeFormQuery);
-    this.formQueryResultSchema$ = this.store.select(selectHomeFormQueryResultSchema);
     this.formQueryResultStats$ = this.store.select(selectHomeFormQueryResultStats);
   }
 

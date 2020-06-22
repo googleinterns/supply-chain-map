@@ -4,7 +4,7 @@ import { RouteLayerComponent } from './route-layer.component';
 import { MemoizedSelector } from '@ngrx/store';
 import { MapState } from '../../store/state';
 import { Layer, AdditionalLayer } from '../../map.models';
-import { selectMapLayer } from '../../store/selectors';
+import { selectMapRouteLayer } from '../../store/selectors';
 
 describe('RouteLayerComponent', () => {
   let component: RouteLayerComponent;
@@ -24,14 +24,11 @@ describe('RouteLayerComponent', () => {
 
     mockStore = TestBed.inject(MockStore);
     mockLayerSelector = mockStore.overrideSelector(
-      selectMapLayer('Route Layer'),
+      selectMapRouteLayer,
       {
         name: 'Route Layer',
-        deletable: true,
-        data: {
-          routeLayerMarkers: [],
-          routeLayerLines: []
-        }
+        markers: [],
+        lines: []
       }
     );
   }));

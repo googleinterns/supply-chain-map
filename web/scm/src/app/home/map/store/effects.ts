@@ -20,10 +20,8 @@ export class MapStoreEffects {
                         const lines = this.mapHelperService.createLines(formQueryResponse.formQueryResult);
                         return of(MapFeatureActions.routeLayerLoadSuccess({ layer: {
                             name: 'Route Layer',
-                            data: {
-                                routeLayerMarkers: markers,
-                                routeLayerLines: lines
-                            }
+                            markers: markers,
+                            lines: lines
                         } }));
                     } catch (ex) {
                         return of(MapFeatureActions.routeLayerLoadFailure({ error: ex }));

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import GoogleAuth = gapi.auth2.GoogleAuth;
 import { Observable, Observer, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { Router } from '@angular/router';
 
 /**
  * Singleton class that holds basic user information
@@ -26,7 +27,7 @@ export class GoogleAuthService {
      */
     private googleAuth: GoogleAuth = undefined;
 
-    constructor() {
+    constructor(private router: Router) {
         this.loadGapiAuth();
     }
 
@@ -84,7 +85,7 @@ export class GoogleAuthService {
                 auth => auth.signIn()
             )
             .then(
-                () => window.location.reload()
+                () => this.router.navigate([''])
             );
     }
 
@@ -95,9 +96,9 @@ export class GoogleAuthService {
     public signOut(): void {
         this.googleAuth
             .signOut()
-            .then(() => {
-                window.location.reload();
-            });
+            .then(
+                () => this.router.navigate([''])
+            );
     }
 
     /**
