@@ -154,28 +154,28 @@ export class FilterFormService {
 
     try {
       const request = await this.bigQueryService.runQuery(FilterFormService.SQL_UNIQUE_PRODUCT_SUPPLIER_CATEGORY);
-      const result = request.result;
+      const result = this.bigQueryService.convertResult(request.result)[0];
 
       const filterData = {
         basic: {
-          products: result.rows[0].f[0].v.map(e => e.v),
+          products: result.products,
         },
         upstream: {
-          suppliers: result.rows[0].f[1].v.map(e => e.v),
-          categories: result.rows[0].f[2].v.map(e => e.v),
-          countries: result.rows[0].f[3].v.map(e => e.v),
-          states: result.rows[0].f[4].v.map(e => e.v),
-          cities: result.rows[0].f[5].v.map(e => e.v),
+          suppliers: result.upstream_suppliers,
+          categories: result.upstream_categories,
+          countries: result.upstream_countries,
+          states: result.upstream_states,
+          cities: result.upstream_cities,
         },
         cm: {
-          countries: result.rows[0].f[6].v.map(e => e.v),
-          states: result.rows[0].f[7].v.map(e => e.v),
-          cities: result.rows[0].f[8].v.map(e => e.v)
+          countries: result.cm_countries,
+          states: result.cm_states,
+          cities: result.cm_cities
         },
         downstream: {
-          countries: result.rows[0].f[9].v.map(e => e.v),
-          states: result.rows[0].f[10].v.map(e => e.v),
-          cities: result.rows[0].f[11].v.map(e => e.v)
+          countries: result.gdc_countries,
+          states: result.gdc_states,
+          cities: result.gdc_cities
         }
       };
 

@@ -27,10 +27,13 @@ export class MapTabComponent implements OnInit {
     const dialogRef = this.matDialog.open(SelectLayerComponent);
 
     dialogRef.afterClosed().subscribe(
-      layers => {
-        for (const layer of layers) {
-          this.store.dispatch(loadLayer({ layer: { name: layer } }));
+      selectedLayer => {
+        let layer;
+        switch (selectedLayer.type) {
+          case 'heatmap': layer = {name: selectedLayer.name, hotspots: []}; break;
+          case 'shape': layer = {name: selectedLayer.name, shapes: []}; break;
         }
+        this.store.dispatch(loadLayer({ layer: layer }));
       }
     );
   }

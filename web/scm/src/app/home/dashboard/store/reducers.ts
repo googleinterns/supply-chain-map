@@ -4,9 +4,10 @@ import * as DashboardActions from './actions';
 
 const dashboardReducer = createReducer(
     initialState,
-    on(DashboardActions.getAdditionalMapLayerNamesSuccess, (state, { additionalHeatmapLayerNames }) => ({
+    on(DashboardActions.getAdditionalMapLayerNamesSuccess, (state, { heatmapLayers, shapeLayers }) => ({
         ...state,
-        additionalHeatmapLayerNames: additionalHeatmapLayerNames
+        heatmapLayers: heatmapLayers,
+        shapeLayers: shapeLayers
     })),
     on(DashboardActions.getAdditionalMapLayerNamesFailure, (state, { error }) => ({
         ...state,

@@ -1,12 +1,18 @@
 <h1 mat-dialog-title>Select a layer</h1>
 <div mat-dialog-content>
-    <mat-selection-list #selectionList (selectionChange)="setSelectedLayers(selectionList.selectedOptions.selected)" *ngIf="additionalLayerNames$ | async as layers" >
-        <mat-list-option [value]="layer" *ngFor="let layer of layers">
+    <mat-selection-list #selectionList (selectionChange)="setSelectedLayers(selectionList.selectedOptions.selected)"  [multiple]="false">
+
+        <div mat-subheader>Heatmap layers</div>
+        <mat-list-option value="heatmap" *ngFor="let layer of heatmapLayers$ | async">
+            {{ layer }}
+        </mat-list-option>
+        <div mat-subheader>Shape layers</div>
+        <mat-list-option value="shape" *ngFor="let layer of shapeLayers$ | async">
             {{ layer }}
         </mat-list-option>
     </mat-selection-list>
 </div>
 <div mat-dialog-actions>
     <button mat-button [mat-dialog-close]="">Cancel</button>
-    <button mat-button [mat-dialog-close]="this.selectedLayers" cdkFocusInitial>Submit</button>
+    <button mat-button [mat-dialog-close]="this.selectedLayer" cdkFocusInitial>Submit</button>
 </div>

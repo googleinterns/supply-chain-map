@@ -10,17 +10,27 @@ export class DashboardHelperService {
     constructor(private bigQueryService: BigQueryService) { }
 
     private readonly SQL_LAYER_QUERY = `
-        SELECT TABLE_NAME FROM ${environment.bigQuery.layerDatasets.heatmap.dataset}.INFORMATION_SCHEMA.TABLES
+    SELECT
+        ARRAY(
+            SELECT TABLE_NAME FROM ${environment.bigQuery.layerDatasets.heatmap.dataset}.INFORMATION_SCHEMA.TABLES
+        ) as heatmap_layers,
+        ARRAY(
+            SELECT TABLE_NAME FROM ${environment.bigQuery.layerDatasets.shape.dataset}.INFORMATION_SCHEMA.TABLES
+        ) as shape_layers
     `;
 
     async getAdditionalLayers() {
-        const layers: string[] = [];
+        const layers = {
+            heatmap: [],
+            shape: []
+        };
         try {
             const response = await this.bigQueryService.runQuery(this.SQL_LAYER_QUERY);
+            const result = this.bigQueryService.convertResult(response.result);
+            layers.heatmap = result[0].heatmap_layers;
+            layers.shape = result[0].shape_layers;
 
-            for (const tableRow of response.result.rows) {
-                layers.push(tableRow.f[0].v);
-            }
+            return layers;
         } catch (ex) {
             if (!environment.production) {
                 console.error(ex);

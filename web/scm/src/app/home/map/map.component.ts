@@ -15,13 +15,9 @@ export class MapComponent {
 
   constructor(store: Store) {
     this.$layers = store.select(selectMapLayers);
-    this.$layers.subscribe(
-      console.log
-    )
   }
 
   isOfTypeRouteLayer(layer: Layer) {
-    console.log(layer);
     return 'markers' in layer && 'lines' in layer;
   }
 

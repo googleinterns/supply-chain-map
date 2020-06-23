@@ -52,8 +52,15 @@ export interface HeatMapLayer extends Layer {
     hotspots: {
         latitude: number;
         longitude: number;
-        weight: number;
-        icon: string;
+        magnitude: number;
         data?: any;
+    }[];
+}
+
+export interface ShapeLayer extends Layer {
+    shapes: {
+        shape: any,
+        magnitude: number,
+        data?: any
     }[];
 }

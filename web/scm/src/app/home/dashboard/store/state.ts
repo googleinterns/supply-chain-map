@@ -1,9 +1,11 @@
 export interface DashboardState {
-    additionalHeatmapLayerNames: string[];
+    heatmapLayers: string[];
+    shapeLayers: string[];
     error: Error;
 }
 
 export const initialState: DashboardState = {
-    additionalHeatmapLayerNames: [],
+    heatmapLayers: [],
+    shapeLayers: [],
     error: null
 };

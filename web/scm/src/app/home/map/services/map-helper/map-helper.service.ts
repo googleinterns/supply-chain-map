@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormQueryResult } from 'src/app/home/home.models';
-import { RouteLayerLine, RouteLayerMarker, Layer, HeatMapLayer } from '../../map.models';
+import { RouteLayerLine, RouteLayerMarker, Layer, HeatMapLayer, ShapeLayer } from '../../map.models';
 import { BigQueryService } from 'src/app/home/services/big-query/big-query.service';
 import { environment } from 'src/environments/environment';
 
@@ -33,6 +33,8 @@ export class MapHelperService {
         const layerName = layer.name;
         if ('hotspots' in layer) {
             return this.getHeatmapLayer(layerName);
+        } else if ('shapes' in layer) {
+            return this.getShapeLayer(layerName);
         }
     }
 
@@ -212,20 +214,35 @@ export class MapHelperService {
 
         try {
             const response = await this.bigQueryService.runQuery(SQL_FETCH_ADDITIONAL_LAYER);
-            const result = response.result;
-            const markers = [];
-
-            for (const row of result.rows) {
-                const marker = {};
-                for (let col = 0; col < layerCols.length; col++) {
-                    marker[layerCols[col]] = row.f[col].v;
-                }
-                markers.push(marker);
-            }
+            const markers = this.bigQueryService.convertResult(response.result);
 
             return {
                 name: layerName,
                 hotspots: markers
+            };
+        } catch (ex) {
+            if (!environment.production) {
+                console.error(ex);
+            }
+            throw new Error('Cannot load layer ' + layerName);
+        }
+    }
+
+    private async getShapeLayer(layerName: string): Promise<ShapeLayer> {
+        const layerCols = environment.bigQuery.layerDatasets.shape.columns;
+        const SQL_FETCH_ADDITIONAL_LAYER = `
+            SELECT ${layerCols.join(', ')}
+            FROM ${environment.bigQuery.layerDatasets.shape.dataset}.${layerName}
+        `;
+
+
+        try {
+            const response = await this.bigQueryService.runQuery(SQL_FETCH_ADDITIONAL_LAYER);
+            const shapes = this.bigQueryService.convertResult(response.result);
+
+            return {
+                name: layerName,
+                shapes: shapes
             };
         } catch (ex) {
             if (!environment.production) {

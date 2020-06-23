@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { selectDashboardAdditionalLayerNamess } from '../../../store/selectors';
 import { MatListOption } from '@angular/material/list';
 import { getAdditionalMapLayerNames } from '../../../store/actions';
+import { selectDashboardHeatmapLayerNames, selectDashboardShapeLayerNames } from '../../../store/selectors';
 
 @Component({
     selector: 'scm-layer-selection-dialog',
@@ -11,15 +11,17 @@ import { getAdditionalMapLayerNames } from '../../../store/actions';
 })
 export class SelectLayerComponent {
 
-    additionalLayerNames$: Observable<string[]>;
-    selectedLayers: string[] = [];
+    heatmapLayers$: Observable<string[]>;
+    shapeLayers$: Observable<string[]>;
+    selectedLayer: { type: string, name: string };
 
     constructor(private store: Store) {
         this.store.dispatch(getAdditionalMapLayerNames());
-        this.additionalLayerNames$ = this.store.select(selectDashboardAdditionalLayerNamess);
+        this.heatmapLayers$ = this.store.select(selectDashboardHeatmapLayerNames);
+        this.shapeLayers$ = this.store.select(selectDashboardShapeLayerNames);
     }
 
     setSelectedLayers(options: MatListOption[]) {
-        this.selectedLayers = options.map(o => o.value);
+        this.selectedLayer = { type: options[0].value, name: options[0]._text.nativeElement.innerText};
     }
 }
