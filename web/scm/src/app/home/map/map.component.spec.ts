@@ -6,11 +6,17 @@ import { environment } from 'src/environments/environment';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
-import { RouteLayerComponent } from './layers/route-layer/route-layer.component';
+import { provideMockStore, MockStore, MockSelector } from '@ngrx/store/testing';
+import { selectMapLayers } from './store/selectors';
+import { MemoizedSelector } from '@ngrx/store';
+import { MapState } from './store/state';
+import { Layer } from './map.models';
 
 describe('MapComponent', () => {
   let component: MapComponent;
   let fixture: ComponentFixture<MapComponent>;
+  let mockStore: MockStore;
+  let mockSelectLayers: MemoizedSelector<MapState, Layer[]>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -24,9 +30,18 @@ describe('MapComponent', () => {
         BrowserAnimationsModule,
         BrowserModule,
         RouterTestingModule
+      ],
+      providers: [
+        provideMockStore()
       ]
     })
     .compileComponents();
+
+    mockStore = TestBed.inject(MockStore);
+    mockSelectLayers = mockStore.overrideSelector(
+      selectMapLayers,
+      []
+    );
   }));
 
   beforeEach(() => {

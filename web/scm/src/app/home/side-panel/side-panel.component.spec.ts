@@ -12,6 +12,7 @@ import { MemoizedSelector } from '@ngrx/store';
 import { SidePanelState } from './store/state';
 import { SidePanel } from './side-panel.models';
 import { selectSidePanelData, selectSidePanelIsLoading, selectSidePanelError } from './store/selectors';
+import { sidePanelInitDataRequest } from './store/actions';
 
 describe('SidePanelComponent', () => {
   let component: SidePanelComponent;
@@ -20,6 +21,7 @@ describe('SidePanelComponent', () => {
   let mockSidePanelDataSelector: MemoizedSelector<SidePanelState, SidePanel>;
   let mockIsLoadingSelector: MemoizedSelector<SidePanelState, boolean>;
   let mockErrorSelector: MemoizedSelector<SidePanelState, Error>;
+  let dispatchSpy: jasmine.Spy;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -54,6 +56,8 @@ describe('SidePanelComponent', () => {
       null
     );
 
+    dispatchSpy = spyOn(mockStore, 'dispatch');
+
   }));
 
   afterAll(() => {
@@ -68,5 +72,10 @@ describe('SidePanelComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should dispatch init action', () => {
+    expect(dispatchSpy).toHaveBeenCalled();
+    expect(dispatchSpy).toHaveBeenCalledWith(sidePanelInitDataRequest());
   });
 });
