@@ -1,11 +1,11 @@
-import { Input, Component } from '@angular/core';
+import { Input, Component, OnDestroy } from '@angular/core';
 import { HeatmapLayer } from '../../map.models';
 
 @Component({
     selector: 'scm-heatmap-layer',
     templateUrl: './heatmap-layer.component.html'
 })
-export class HeatmapLayerComponent {
+export class HeatmapLayerComponent implements OnDestroy {
 
     _map: google.maps.Map;
     @Input('map')
@@ -23,6 +23,12 @@ export class HeatmapLayerComponent {
     private heatmap: google.maps.visualization.HeatmapLayer;
 
     constructor() {
+    }
+
+    ngOnDestroy(): void {
+        if (this.heatmap) {
+            this.heatmap.setMap(null);
+        }
     }
 
     private drawHeatmap() {

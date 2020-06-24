@@ -12,6 +12,10 @@ const mapReducer = createReducer(
     on(MapActions.layerLoadFailure, (state, { error }) => ({
         ...state,
         error: error
+    })),
+    on(MapActions.layerRemove, (state, { layer }) => ({
+        ...state,
+        layers: state.layers.filter(l => l.name !== layer.name)
     }))
 );
 

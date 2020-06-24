@@ -5,7 +5,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { SelectLayerComponent } from './select-layer-dialog/select-layer.dialog';
 import { Layer } from 'src/app/home/map/map.models';
 import { selectMapLayers } from 'src/app/home/map/store/selectors';
-import { loadLayer } from 'src/app/home/map/store/actions';
+import { loadLayer, layerRemove } from 'src/app/home/map/store/actions';
 
 @Component({
   selector: 'scm-map-tab',
@@ -36,5 +36,9 @@ export class MapTabComponent implements OnInit {
         this.store.dispatch(loadLayer({ layer: layer }));
       }
     );
+  }
+
+  removeLayer(layer: Layer) {
+    this.store.dispatch(layerRemove({ layer: layer }));
   }
 }

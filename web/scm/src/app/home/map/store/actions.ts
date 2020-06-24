@@ -45,3 +45,8 @@ export const layerLoadFailure = createAction(
   '[Map] Load Layer Failure',
   props<{ error: Error }>()
 );
+
+export const layerRemove = createAction(
+  '[Map] Remove Layer',
+  props<{ layer: Layer }>()
+);
