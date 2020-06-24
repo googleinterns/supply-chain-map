@@ -5,17 +5,24 @@ import { Layer } from '../map.models';
 
 const mapReducer = createReducer(
     initialState,
+    on(MapActions.loadLayer, (state, { layer }) => ({
+        ...state,
+        isLoading: true
+    })),
     on(MapActions.layerLoadSuccess, (state, { layer }) => ({
         ...state,
-        layers: pushLayerToArray(layer, state.layers)
+        layers: pushLayerToArray(layer, state.layers),
+        isLoading: false
     })),
     on(MapActions.layerLoadFailure, (state, { error }) => ({
         ...state,
-        error: error
+        error: error,
+        isLoading: false
     })),
     on(MapActions.layerRemove, (state, { layer }) => ({
         ...state,
-        layers: state.layers.filter(l => l.name !== layer.name)
+        layers: state.layers.filter(l => l.name !== layer.name),
+        isLoading: false
     }))
 );
 

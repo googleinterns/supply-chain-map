@@ -2,6 +2,7 @@ import { FormQueryResult, FormQueryResultSchema, FormQueryResultStats } from '..
 
 export interface HomeState {
     formQuery: string;
+    originalFormQueryResult: FormQueryResult;
     formQueryResult: FormQueryResult;
     formQueryResultSchema: FormQueryResultSchema;
     formQueryResultStats: FormQueryResultStats;
@@ -11,6 +12,7 @@ export interface HomeState {
 
 export const initialState: HomeState = {
     formQuery: null,
+    originalFormQueryResult: null,
     formQueryResult: null,
     formQueryResultSchema: null,
     formQueryResultStats: null,

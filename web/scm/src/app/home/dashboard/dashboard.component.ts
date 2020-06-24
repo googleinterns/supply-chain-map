@@ -3,6 +3,7 @@ import { Observable } from 'rxjs';
 import { FormQueryResult } from '../home.models';
 import { Store } from '@ngrx/store';
 import { selectHomeFormQueryResult } from '../store/selectors';
+import { selectDashboardIsLoading, selectDashboardError } from './store/selectors';
 
 @Component({
   selector: 'scm-dashboard',
@@ -13,9 +14,13 @@ export class DashboardComponent {
 
   receivedData = false;
   formQueryResult$: Observable<FormQueryResult>;
+  isLoading$: Observable<boolean>;
+  error$: Observable<Error>;
 
   constructor(private store: Store) {
     this.formQueryResult$ = this.store.select(selectHomeFormQueryResult);
+    this.isLoading$ = this.store.select(selectDashboardIsLoading);
+    this.error$ = this.store.select(selectDashboardError);
 
     this.formQueryResult$.subscribe(
       formQueryResult => {

@@ -15,3 +15,8 @@ export const formQueryFetchFailure = createAction(
   '[Home] Fetch Using Form Query Failure',
   props<{ error: Error }>()
 );
+
+export const skuFilterFormQueryResult = createAction(
+  '[Home] Filter Form Query Result with SKUs',
+  props<{ sku: Set<string> }>()
+);

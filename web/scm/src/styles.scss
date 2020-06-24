@@ -7,4 +7,26 @@ $scm-theme: mat-light-theme($scm-primary, $scm-accent, $scm-warn);
 @include angular-material-theme($scm-theme);
 
 html, body { height: 100%; }
+
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.form-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    z-index: 3;
+}
+
+.error-icon {
+    color: red;
+    font-size: 8em;
+    height: auto !important;
+    width: auto !important;
+}

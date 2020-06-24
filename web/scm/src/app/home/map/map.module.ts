@@ -11,6 +11,8 @@ import { EffectsModule } from '@ngrx/effects';
 import { MapStoreEffects } from './store/effects';
 import { HeatmapLayerComponent } from './layers/heatmap-layer/heatmap-layer.component';
 import { ShapeLayerComponent } from './layers/shape-layer/shape-layer.component';
+import { MatIconModule } from '@angular/material/icon';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [
@@ -26,6 +28,8 @@ import { ShapeLayerComponent } from './layers/shape-layer/shape-layer.component'
       libraries: ['visualization']
     }),
     CommonModule,
+    MatIconModule,
+    MatProgressSpinnerModule,
     StoreModule.forFeature('map', fromMap.reducer),
     EffectsModule.forFeature([MapStoreEffects])
   ],

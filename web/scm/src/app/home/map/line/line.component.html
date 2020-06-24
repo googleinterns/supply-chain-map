@@ -1,5 +1,5 @@
 <agm-polyline *ngIf="route" [strokeColor]="route.color ? route.color : 'blue'" (lineClick)="openInfoWindow($event)"
-    [strokeOpacity]="isMouseHovering?1:0.2" (lineMouseOver)="isMouseHovering=true"
+    [strokeOpacity]="isMouseHovering?1:0.2" (lineMouseOver)="isMouseHovering=true" [strokeWeight]="1"
     (lineMouseOut)="isMouseHovering=false" geodesic="true">
     <agm-icon-sequence [path]="'FORWARD_OPEN_ARROW'"></agm-icon-sequence>
     <agm-polyline-point [latitude]="route.from.lat" [longitude]="route.from.long"></agm-polyline-point>

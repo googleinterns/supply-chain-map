@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Store } from '@ngrx/store';
-import { selectHomeFormQuery, selectHomeFormQueryResult } from 'src/app/home/store/selectors';
+import { selectHomeFormQueryResult } from 'src/app/home/store/selectors';
 
 @Component({
   selector: 'scm-data-tab',
@@ -92,9 +92,23 @@ export class DataTabComponent {
     this.formQueryResult$.subscribe(
       formQueryResult => {
         if (formQueryResult) {
-          this.upstreamDataSource = new MatTableDataSource(formQueryResult.upstream);
-          this.cmDataSource = new MatTableDataSource(formQueryResult.cm);
-          this.downstreamDataSource = new MatTableDataSource(formQueryResult.downstream);
+          if (this.upstreamDataSource) {
+            this.upstreamDataSource.data = formQueryResult.upstream;
+          } else {
+            this.upstreamDataSource = new MatTableDataSource(formQueryResult.upstream);
+          }
+
+          if (this.cmDataSource) {
+            this.cmDataSource.data = formQueryResult.cm;
+          } else {
+            this.cmDataSource = new MatTableDataSource(formQueryResult.cm);
+          }
+
+          if (this.downstreamDataSource) {
+            this.downstreamDataSource.data = formQueryResult.downstream;
+          } else {
+            this.downstreamDataSource = new MatTableDataSource(formQueryResult.downstream);
+          }
         }
       }
     );
