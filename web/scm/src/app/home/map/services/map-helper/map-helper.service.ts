@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { FormQueryResult } from 'src/app/home/home.models';
-import { RouteLayerLine, RouteLayerMarker, Layer, HeatMapLayer, ShapeLayer } from '../../map.models';
+import { RouteLayerLine, RouteLayerMarker, Layer, HeatmapLayer, ShapeLayer } from '../../map.models';
 import { BigQueryService } from 'src/app/home/services/big-query/big-query.service';
 import { environment } from 'src/environments/environment';
+import { heatmap_data } from './mock_data';
 
 @Injectable({
     providedIn: 'root'
@@ -205,7 +206,7 @@ export class MapHelperService {
         return markers;
     }
 
-    private async getHeatmapLayer(layerName: string): Promise<HeatMapLayer> {
+    private async getHeatmapLayer(layerName: string): Promise<HeatmapLayer> {
         const layerCols = environment.bigQuery.layerDatasets.heatmap.columns;
         const SQL_FETCH_ADDITIONAL_LAYER = `
             SELECT ${layerCols.join(', ')}
@@ -213,8 +214,8 @@ export class MapHelperService {
         `;
 
         try {
-            const response = await this.bigQueryService.runQuery(SQL_FETCH_ADDITIONAL_LAYER);
-            const markers = this.bigQueryService.convertResult(response.result);
+            // const response = await this.bigQueryService.runQuery(SQL_FETCH_ADDITIONAL_LAYER);
+            const markers = this.bigQueryService.convertResult(heatmap_data);
 
             return {
                 name: layerName,
@@ -239,10 +240,21 @@ export class MapHelperService {
         try {
             const response = await this.bigQueryService.runQuery(SQL_FETCH_ADDITIONAL_LAYER);
             const shapes = this.bigQueryService.convertResult(response.result);
+            const features = {
+                type: 'FeatureCollection',
+                features: []
+            };
+            for (const shape of shapes) {
+                features.features.push({
+                    type: 'Feature',
+                    properties: { ...shape.data, magnitude: shape.magnitude },
+                    geometry: JSON.parse(shape.shape) });
+            }
 
             return {
                 name: layerName,
-                shapes: shapes
+                shapes: shapes,
+                geoJSON: features
             };
         } catch (ex) {
             if (!environment.production) {

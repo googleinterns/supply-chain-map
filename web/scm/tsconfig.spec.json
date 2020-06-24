@@ -7,7 +7,8 @@
       "node",
       "gapi",
       "gapi.auth2",
-      "gapi.client.bigquery"
+      "gapi.client.bigquery",
+      "googlemaps"
     ]
   },
   "files": [

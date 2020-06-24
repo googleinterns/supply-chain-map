@@ -12,6 +12,7 @@ import { selectMapLayers } from './store/selectors';
 export class MapComponent {
 
   $layers: Observable<Layer[]>;
+  map: google.maps.Map;
 
   constructor(store: Store) {
     this.$layers = store.select(selectMapLayers);
@@ -19,6 +20,18 @@ export class MapComponent {
 
   isOfTypeRouteLayer(layer: Layer) {
     return 'markers' in layer && 'lines' in layer;
+  }
+
+  isOfTypeHeatmapLayer(layer: Layer) {
+    return 'hotspots' in layer;
+  }
+
+  isOfTypeShapeLayer(layer: Layer) {
+    return 'shapes' in layer;
+  }
+
+  onMapLoad(mapInstance) {
+    this.map = mapInstance;
   }
 
 }

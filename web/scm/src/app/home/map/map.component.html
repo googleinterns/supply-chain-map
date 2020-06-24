@@ -1,5 +1,7 @@
-<agm-map [zoom]="3">
+<agm-map [zoom]="3" (mapReady)="onMapLoad($event)">
     <div *ngFor="let layer of ($layers | async)">
-        <scm-route-layer *ngIf="isOfTypeRouteLayer(layer)"></scm-route-layer>
+        <scm-route-layer [layer]="layer" *ngIf="isOfTypeRouteLayer(layer)"></scm-route-layer>
+        <scm-heatmap-layer [map]="this.map" [layer]="layer" *ngIf="map && isOfTypeHeatmapLayer(layer)"></scm-heatmap-layer>
+        <scm-shape-layer [layer]="layer" *ngIf="isOfTypeShapeLayer(layer)"></scm-shape-layer>
     </div>
 </agm-map>

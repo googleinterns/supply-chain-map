@@ -48,7 +48,7 @@ export interface RouteLayer extends Layer {
     lines: RouteLayerLine[];
 }
 
-export interface HeatMapLayer extends Layer {
+export interface HeatmapLayer extends Layer {
     hotspots: {
         latitude: number;
         longitude: number;
@@ -63,4 +63,5 @@ export interface ShapeLayer extends Layer {
         magnitude: number,
         data?: any
     }[];
+    geoJSON: object;
 }

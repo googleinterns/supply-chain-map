@@ -9,16 +9,21 @@ import { StoreModule } from '@ngrx/store';
 import * as fromMap from './store/reducers';
 import { EffectsModule } from '@ngrx/effects';
 import { MapStoreEffects } from './store/effects';
+import { HeatmapLayerComponent } from './layers/heatmap-layer/heatmap-layer.component';
+import { ShapeLayerComponent } from './layers/shape-layer/shape-layer.component';
 
 @NgModule({
   declarations: [
+    HeatmapLayerComponent,
     MapComponent,
     RouteLayerComponent,
-    LineComponent
+    LineComponent,
+    ShapeLayerComponent
   ],
   imports: [
     AgmCoreModule.forRoot({
-      apiKey: environment.googleMapApi
+      apiKey: environment.googleMapApi,
+      libraries: ['visualization']
     }),
     CommonModule,
     StoreModule.forFeature('map', fromMap.reducer),

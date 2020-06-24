@@ -1,3 +1,11 @@
 agm-map {
     height: 100%;
 }
+
+scm-route-layer {
+    z-index: 2;
+}
+
+scm-heatmap-layer {
+    z-index: 1;
+}

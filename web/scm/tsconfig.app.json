@@ -2,7 +2,7 @@
   "extends": "./tsconfig.json",
   "compilerOptions": {
     "outDir": "./out-tsc/app",
-    "types": ["gapi", "gapi.auth2", "gapi.client.bigquery"]
+    "types": ["gapi", "gapi.auth2", "gapi.client.bigquery", "googlemaps"]
   },
   "files": [
     "src/main.ts",

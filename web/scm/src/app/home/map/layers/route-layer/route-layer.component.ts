@@ -1,8 +1,5 @@
-import { Component } from '@angular/core';
-import { Store } from '@ngrx/store';
-import { MapState } from '../../store/state';
+import { Component, Input } from '@angular/core';
 import { RouteLayer } from '../../map.models';
-import { selectMapLayer } from '../../store/selectors';
 
 @Component({
   selector: 'scm-route-layer',
@@ -10,17 +7,9 @@ import { selectMapLayer } from '../../store/selectors';
 })
 export class RouteLayerComponent {
 
-  layer: RouteLayer;
+  @Input() layer: RouteLayer;
 
-  constructor(private store: Store<MapState>) {
-    this.store.select(selectMapLayer('Route Layer'))
-      .subscribe(
-        layer => {
-          if ('markers' in layer && 'lines' in layer) {
-            this.layer = layer;
-          }
-        }
-      );
+  constructor() {
   }
 
 }
