@@ -1,11 +1,10 @@
 export interface SidePanel {
-    basic: Basic;
+    product: Product;
     upstream: Upstream;
-    cm: Cm;
     downstream: Downstream;
 }
 
-export interface Basic {
+export interface Product {
     products: string[];
     isUnique?: boolean;
     isDrawPath?: boolean;
@@ -15,12 +14,6 @@ export interface Basic {
 export interface Upstream {
     categories: string[];
     suppliers: string[];
-    countries: string[];
-    states: string[];
-    cities: string[];
-}
-
-export interface Cm {
     countries: string[];
     states: string[];
     cities: string[];

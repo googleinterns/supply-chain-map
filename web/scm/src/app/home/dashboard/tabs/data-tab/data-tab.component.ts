@@ -1,11 +1,12 @@
 import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
 import { Observable } from 'rxjs';
-import { FormQueryResult, FormQueryUpstreamResult, FormQueryCmResult, FormQueryDownstreamResult } from 'src/app/home/home.models';
+import { FormQueryResult } from 'src/app/home/home.models';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { Store } from '@ngrx/store';
 import { selectHomeFormQueryResult } from 'src/app/home/store/selectors';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'scm-data-tab',
@@ -15,11 +16,11 @@ import { selectHomeFormQueryResult } from 'src/app/home/store/selectors';
 export class DataTabComponent {
   formQueryResult$: Observable<FormQueryResult>;
 
-  upstreamDataSource: MatTableDataSource<FormQueryUpstreamResult>;
+  upstreamDataSource: MatTableDataSource<object>;
   upstreamColumns: string[];
-  cmDataSource: MatTableDataSource<FormQueryCmResult>;
+  cmDataSource: MatTableDataSource<object>;
   cmColumns: string[];
-  downstreamDataSource: MatTableDataSource<FormQueryDownstreamResult>;
+  downstreamDataSource: MatTableDataSource<object>;
   downstreamColumns: string[];
 
   @ViewChildren(MatPaginator)
@@ -44,46 +45,9 @@ export class DataTabComponent {
      * Set up column names by declaring empty objects
      * and retreiving the keys
      */
-    const upstreamSample: FormQueryUpstreamResult = {
-      product: '',
-      parent_sku: '',
-      part_number: '',
-      description: '',
-      category: '',
-      supplier_name: '',
-      lead_time: '',
-      mfg_city: '',
-      mfg_state: '',
-      mfg_country: '',
-      mfg_lat: 0,
-      mfg_long: 0
-    };
-    this.upstreamColumns = Object.values(Object.keys(upstreamSample));
-    const cmSample: FormQueryCmResult = {
-      product: '',
-      sku: '',
-      description: '',
-      cm_name: '',
-      lead_time: '',
-      cm_city: '',
-      cm_state: '',
-      cm_country: '',
-      cm_lat: 0,
-      cm_long: 0
-    };
-    this.cmColumns = Object.values(Object.keys(cmSample));
-    const downstreamSample: FormQueryDownstreamResult = {
-      product: '',
-      sku: '',
-      gdc_code: '',
-      lead_time: '',
-      gdc_city: '',
-      gdc_state: '',
-      gdc_country: '',
-      gdc_lat: 0,
-      gdc_long: 0
-    };
-    this.downstreamColumns = Object.values(Object.keys(downstreamSample));
+    this.upstreamColumns = Object.values(environment.bigQuery.layerDatasets.route.tables.UPSTREAM.columns);
+    this.cmColumns = Object.values(environment.bigQuery.layerDatasets.route.tables.CM.columns);
+    this.downstreamColumns = Object.values(environment.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns);
 
     /**
      * Using subscribe method instead of async pipe because we

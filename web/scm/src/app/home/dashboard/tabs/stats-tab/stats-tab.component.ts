@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { selectHomeFormQuery, selectHomeFormQueryResultSchema, selectHomeFormQueryResultStats } from 'src/app/home/store/selectors';
-import { FormQueryResultSchema, FormQueryResultStats } from 'src/app/home/home.models';
+import { selectHomeFormQuery, selectHomeFormQueryResultStats } from 'src/app/home/store/selectors';
+import { FormQueryResultStats } from 'src/app/home/home.models';
 
 @Component({
   selector: 'scm-stats-tab',

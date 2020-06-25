@@ -40,6 +40,10 @@ mat-panel-title {
     font-size: 1.5em;
 }
 
+mat-radio-button {
+    width: 100%;
+}
+
 @import "src/styles.scss";
 
 mat-expansion-panel {

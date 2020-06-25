@@ -1,20 +1,21 @@
+import { environment } from '../../environments/environment';
+
 /**
  * The return type expected after running the query
  * obtained from side panel form.
  */
 export interface FormQueryResponse {
     formQueryResult: FormQueryResult;
-    formQueryResultSchema: FormQueryResultSchema;
     formQueryResultStats: FormQueryResultStats;
 }
 
 export interface FormQueryResult {
-    upstream: FormQueryUpstreamResult[];
-    cm: FormQueryCmResult[];
-    downstream: FormQueryDownstreamResult[];
+    upstream?: object[];
+    cm: object[];
+    downstream?: object[];
 }
 
-export interface FormQueryUpstreamResult {
+/* export interface FormQueryUpstreamResult {
     product: string;
     parent_sku: string;
     part_number: string;
@@ -27,7 +28,7 @@ export interface FormQueryUpstreamResult {
     mfg_country: string;
     mfg_lat: number;
     mfg_long: number;
-}
+} 
 
 export interface FormQueryCmResult {
     product: string;
@@ -52,31 +53,7 @@ export interface FormQueryDownstreamResult {
     gdc_country: string;
     gdc_lat: number;
     gdc_long: number;
-}
-
-export interface FormQueryResultSchema {
-    upstream: {
-        fields: {
-            name: string,
-            type: string,
-            mode: string
-        }[]
-    };
-    cm: {
-        fields: {
-            name: string,
-            type: string,
-            mode: string
-        }[]
-    };
-    downstream: {
-        fields: {
-            name: string,
-            type: string,
-            mode: string
-        }[]
-    };
-}
+} */
 
 export interface FormQueryResultStats {
     jobId: string;

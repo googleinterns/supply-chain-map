@@ -6,7 +6,7 @@ import { Directive, ElementRef, OnInit, Input } from '@angular/core';
 export class TopResizableDirective implements OnInit {
 
     @Input() resizableGrabHeight = 20;
-    @Input() resizableMinHeight = 400;
+    @Input() resizableMinHeight = 200;
     @Input() collapsibleMinHeight = this.resizableMinHeight / 2;
 
     dragging = false;

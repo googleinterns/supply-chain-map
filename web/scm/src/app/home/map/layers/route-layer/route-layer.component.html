@@ -7,7 +7,7 @@
             height: 20
         }
     }"
-    (markerClick)="filter(marker)">
+    (markerDblClick)="filter(marker)">
         <agm-info-window>
             <div><b>Name</b>: {{ marker.data.name.join(", ") }}</div>
             <div><b>Type</b>: {{ marker.type.join(", ") }}</div>

@@ -13,7 +13,7 @@ export class MapStoreEffects {
 
     initRouteLayerDataEffect$ = createEffect(
         () => this.actions$.pipe(
-            ofType(HomeFeatureActions.formQueryFetchSuccess),
+            ofType(HomeFeatureActions.formQueryFetchSuccess, HomeFeatureActions.skuFilterFormQueryResultSuccess),
             switchMap(
                 ({ formQueryResponse }) => {
                     try {

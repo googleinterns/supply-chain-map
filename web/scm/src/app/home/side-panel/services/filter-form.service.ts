@@ -7,12 +7,10 @@ import { BigQueryService } from '../../services/big-query/big-query.service';
  * The structure that a submitted form must follow
  */
 export interface FormStructure {
-  basicFilterGroup: {
-    productFilterGroup: {
-      productSelect: string[];
-    }
+  productFilterGroup: {
+    productSelect: string[];
   };
-  upstreamFilterGroup: {
+  upstreamFilterGroup?: {
     componentFilterGroup: {
       categorySelect: string[];
       supplierSelect: string[];
@@ -27,18 +25,7 @@ export interface FormStructure {
       maxLeadTimeInput: number
     };
   };
-  cmFilterGroup: {
-    locationFilterGroup: {
-      countrySelect: string[];
-      regionSelect: string[];
-      citySelect: string[];
-    };
-    additionalFilterGroup: {
-      minLeadTimeInput: number;
-      maxLeadTimeInput: number;
-    };
-  };
-  downstreamFilterGroup: {
+  downstreamFilterGroup?: {
     locationFilterGroup: {
       countrySelect: string[];
       regionSelect: string[];
@@ -113,22 +100,6 @@ export class FilterFormService {
       ) AS upstream_cities,
 
       ARRAY(
-        SELECT DISTINCT ${ FilterFormService.environmentRouteTable.CM.columns.CM_COUNTRY}
-        FROM ${ FilterFormService.environmentRouteTable.CM.tableName}
-        WHERE ${ FilterFormService.environmentRouteTable.CM.columns.CM_COUNTRY} IS NOT NULL
-      ) AS cm_countries,
-      ARRAY(
-        SELECT DISTINCT ${ FilterFormService.environmentRouteTable.CM.columns.CM_STATE}
-        FROM ${ FilterFormService.environmentRouteTable.CM.tableName}
-        WHERE ${ FilterFormService.environmentRouteTable.CM.columns.CM_STATE} IS NOT NULL
-      ) AS cm_states,
-      ARRAY(
-        SELECT DISTINCT ${ FilterFormService.environmentRouteTable.CM.columns.CM_CITY}
-        FROM ${ FilterFormService.environmentRouteTable.CM.tableName}
-        WHERE ${ FilterFormService.environmentRouteTable.CM.columns.CM_CITY} IS NOT NULL
-      ) AS cm_cities,
-
-      ARRAY(
         SELECT DISTINCT ${ FilterFormService.environmentRouteTable.DOWNSTREAM.columns.GDC_COUNTRY}
         FROM ${ FilterFormService.environmentRouteTable.DOWNSTREAM.tableName}
         WHERE ${ FilterFormService.environmentRouteTable.DOWNSTREAM.columns.GDC_COUNTRY} IS NOT NULL
@@ -157,7 +128,7 @@ export class FilterFormService {
       const result = this.bigQueryService.convertResult(request.result)[0];
 
       const filterData = {
-        basic: {
+        product: {
           products: result.products,
         },
         upstream: {
@@ -166,11 +137,6 @@ export class FilterFormService {
           countries: result.upstream_countries,
           states: result.upstream_states,
           cities: result.upstream_cities,
-        },
-        cm: {
-          countries: result.cm_countries,
-          states: result.cm_states,
-          cities: result.cm_cities
         },
         downstream: {
           countries: result.gdc_countries,
@@ -196,120 +162,86 @@ export class FilterFormService {
    */
   public convertFormToQuery(filterSelection: FormStructure) {
 
+    const FINAL_QUERY_SELECTS = [];
     /**
      * Selected products subquery
      */
     let SQL_PRODUCT_SUBQUERY = '1 = 1';
-    if (filterSelection.basicFilterGroup.productFilterGroup.productSelect != null) {
+    if (filterSelection.productFilterGroup.productSelect != null) {
       SQL_PRODUCT_SUBQUERY =
         `${FilterFormService.environmentRouteTable.UPSTREAM.columns.PRODUCT}
-        IN (${ filterSelection.basicFilterGroup.productFilterGroup.productSelect.map((e: string) => `'${e}'`).join(', ')})`;
+        IN (${ filterSelection.productFilterGroup.productSelect.map((e: string) => `'${e}'`).join(', ')})`;
     }
 
-    /**
-     * Subquery to get upstream data
-     */
-    const SQL_UPSTREAM_SUBQUERY_CONDITIONS = [SQL_PRODUCT_SUBQUERY];
-    /** Add condition for upstream filter (categories, suppliers, location) */
-    SQL_UPSTREAM_SUBQUERY_CONDITIONS.push(...this.getUpstreamFormSubquery(filterSelection.upstreamFilterGroup));
-    /** Create the select query */
-    const UPSTREAM_COLUMNS = FilterFormService.environmentRouteTable.UPSTREAM.columns;
-    const SQL_UPSTREAM_SUBQUERY = `
-      SELECT AS STRUCT
-          ${UPSTREAM_COLUMNS.PRODUCT},
-          ${UPSTREAM_COLUMNS.PARENT_SKU},
-          ${UPSTREAM_COLUMNS.PART_NUMBER},
-          ${UPSTREAM_COLUMNS.DESCRIPTION},
-          ${UPSTREAM_COLUMNS.CATEGORY},
-          ${UPSTREAM_COLUMNS.SUPPLIER_NAME},
-          ${UPSTREAM_COLUMNS.LEAD_TIME},
-          ${UPSTREAM_COLUMNS.MFG_CITY},
-          ${UPSTREAM_COLUMNS.MFG_STATE},
-          ${UPSTREAM_COLUMNS.MFG_COUNTRY},
-          ${UPSTREAM_COLUMNS.MFG_LAT},
-          ${UPSTREAM_COLUMNS.MFG_LONG}
-      FROM
-          ${FilterFormService.environmentRouteTable.UPSTREAM.tableName}
-      WHERE
-          ${SQL_UPSTREAM_SUBQUERY_CONDITIONS.join(' AND ')}
-    `;
-
-
-    /**
-     * Subquery to get CM data
-     */
-    const SQL_CM_SUBQUERY_CONDITIONS = [SQL_PRODUCT_SUBQUERY];
-    /** Add condition for upstream filter (categories, suppliers, location) */
-    SQL_CM_SUBQUERY_CONDITIONS.push(...this.getCmFormSubquery(filterSelection.cmFilterGroup));
-    /** Create the select query */
-    const CM_COLUMNS = FilterFormService.environmentRouteTable.CM.columns;
-    const SQL_CM_SUBQUERY = `
-      SELECT AS STRUCT
-          ${CM_COLUMNS.PRODUCT},
-          ${CM_COLUMNS.SKU},
-          ${CM_COLUMNS.DESCRIPTION},
-          ${CM_COLUMNS.CM_NAME},
-          ${CM_COLUMNS.LEAD_TIME},
-          ${CM_COLUMNS.CM_CITY},
-          ${CM_COLUMNS.CM_STATE},
-          ${CM_COLUMNS.CM_COUNTRY},
-          ${CM_COLUMNS.CM_LAT},
-          ${CM_COLUMNS.CM_LONG}
-      FROM
-          ${FilterFormService.environmentRouteTable.CM.tableName}
-      WHERE
-          ${SQL_CM_SUBQUERY_CONDITIONS.join(' AND ')}
-    `;
-
-
-    /**
-     * Subquery to get downstream data
-     */
-    const SQL_DOWNSTREAM_SUBQUERY_CONDITIONS = [SQL_PRODUCT_SUBQUERY];
-    /** Add condition for upstream filter (categories, suppliers, location) */
-    SQL_DOWNSTREAM_SUBQUERY_CONDITIONS.push(...this.getDownstreamFormSubquery(filterSelection.downstreamFilterGroup));
-    /** Create the select query */
-    const DOWNSTREAM_COLUMNS = FilterFormService.environmentRouteTable.DOWNSTREAM.columns;
-    const SQL_DOWNSTREAM_SUBQUERY = `
-      SELECT AS STRUCT
-          ${DOWNSTREAM_COLUMNS.PRODUCT},
-          ${DOWNSTREAM_COLUMNS.SKU},
-          ${DOWNSTREAM_COLUMNS.GDC_CODE},
-          ${DOWNSTREAM_COLUMNS.LEAD_TIME},
-          ${DOWNSTREAM_COLUMNS.GDC_CITY},
-          ${DOWNSTREAM_COLUMNS.GDC_STATE},
-          ${DOWNSTREAM_COLUMNS.GDC_COUNTRY},
-          ${DOWNSTREAM_COLUMNS.GDC_LAT},
-          ${DOWNSTREAM_COLUMNS.GDC_LONG}
-      FROM
-          ${FilterFormService.environmentRouteTable.DOWNSTREAM.tableName}
-      WHERE
-          ${SQL_DOWNSTREAM_SUBQUERY_CONDITIONS.join(' AND ')}
-    `;
-
-    return `
-      SELECT
+    if (filterSelection.upstreamFilterGroup) {
+      /**
+       * Subquery to get upstream data
+       */
+      const SQL_UPSTREAM_SUBQUERY_CONDITIONS = [SQL_PRODUCT_SUBQUERY];
+      /** Add condition for upstream filter (categories, suppliers, location) */
+      SQL_UPSTREAM_SUBQUERY_CONDITIONS.push(...this.getUpstreamFormSubquery(filterSelection.upstreamFilterGroup));
+      /** Create the select query */
+      const UPSTREAM_COLUMNS = Object.values(FilterFormService.environmentRouteTable.UPSTREAM.columns);
+      const SQL_UPSTREAM_SUBQUERY = `
       ARRAY(
-        ${SQL_UPSTREAM_SUBQUERY}
-      ) AS upstream,
+        SELECT AS STRUCT
+            ${UPSTREAM_COLUMNS.join(', ')}
+        FROM
+            ${FilterFormService.environmentRouteTable.UPSTREAM.tableName}
+        WHERE
+            ${SQL_UPSTREAM_SUBQUERY_CONDITIONS.join(' AND ')}
+      ) AS upstream
+      `;
+
+      FINAL_QUERY_SELECTS.push(SQL_UPSTREAM_SUBQUERY);
+    }
+
+    if (filterSelection.downstreamFilterGroup) {
+      /**
+       * Subquery to get downstream data
+       */
+      const SQL_DOWNSTREAM_SUBQUERY_CONDITIONS = [SQL_PRODUCT_SUBQUERY];
+      /** Add condition for upstream filter (categories, suppliers, location) */
+      SQL_DOWNSTREAM_SUBQUERY_CONDITIONS.push(...this.getDownstreamFormSubquery(filterSelection.downstreamFilterGroup));
+      /** Create the select query */
+      const DOWNSTREAM_COLUMNS = Object.values(FilterFormService.environmentRouteTable.DOWNSTREAM.columns);
+      const SQL_DOWNSTREAM_SUBQUERY = `
       ARRAY(
-        ${SQL_CM_SUBQUERY}
-      ) AS cm,
-      ARRAY(
-        ${SQL_DOWNSTREAM_SUBQUERY}
+        SELECT AS STRUCT
+            ${DOWNSTREAM_COLUMNS.join(', ')}
+        FROM
+            ${FilterFormService.environmentRouteTable.DOWNSTREAM.tableName}
+        WHERE
+            ${SQL_DOWNSTREAM_SUBQUERY_CONDITIONS.join(' AND ')}
       ) AS downstream
-    `;
-  }
+      `;
 
-  /**
-   * Convert the basic filter form group
-   * @param basicFilterGroup The child form group.
-   * Must be of type @var FormStructure.basicFilterGroup
-   */
-  private getBasicFormSubquery(basicFilterGroup): string[] {
-    const conditions = [];
+      FINAL_QUERY_SELECTS.push(SQL_DOWNSTREAM_SUBQUERY);
+    }
 
-    return conditions;
+    if (filterSelection.upstreamFilterGroup || filterSelection.downstreamFilterGroup) {
+      /**
+       * Subquery to get CM data
+       */
+      const SQL_CM_SUBQUERY_CONDITIONS = [SQL_PRODUCT_SUBQUERY];
+      /** Create the select query */
+      const CM_COLUMNS = Object.values(FilterFormService.environmentRouteTable.CM.columns);
+      const SQL_CM_SUBQUERY = `
+      ARRAY(
+        SELECT AS STRUCT
+            ${CM_COLUMNS.join(', ')}
+        FROM
+            ${FilterFormService.environmentRouteTable.CM.tableName}
+        WHERE
+            ${SQL_CM_SUBQUERY_CONDITIONS.join(' AND ')}
+      ) AS cm
+      `;
+
+      FINAL_QUERY_SELECTS.push(SQL_CM_SUBQUERY);
+    }
+
+
+    return 'SELECT ' + FINAL_QUERY_SELECTS.join(',\n');
   }
 
   /**
@@ -378,58 +310,6 @@ export class FilterFormService {
         FilterFormService.environmentRouteTable.UPSTREAM.columns.LEAD_TIME,
         upstreamFilterGroup.additionalFilterGroup.minLeadTimeInput,
         upstreamFilterGroup.additionalFilterGroup.maxLeadTimeInput
-      )
-    );
-
-    return conditions;
-  }
-
-  /**
-   * Convert the CM filter form group
-   * @param cmFilterGroup The child form group.
-   * Must be of type @var FormStructure.cmFilterGroup
-   */
-  private getCmFormSubquery(cmFilterGroup): string[] {
-    const conditions = [];
-
-    /**
-     * Get the selected countries
-     */
-    if (cmFilterGroup.locationFilterGroup.countrySelect != null) {
-      conditions.push(
-        `${FilterFormService.environmentRouteTable.CM.columns.CM_COUNTRY}
-        IN (${ cmFilterGroup.locationFilterGroup.countrySelect.map((e: string) => `'${e}'`).join(', ')})`
-      );
-    }
-
-    /**
-     * Get the selected states
-     */
-    if (cmFilterGroup.locationFilterGroup.regionSelect != null) {
-      conditions.push(
-        `${FilterFormService.environmentRouteTable.CM.columns.CM_STATE}
-        IN (${ cmFilterGroup.locationFilterGroup.regionSelect.map((e: string) => `'${e}'`).join(', ')})`
-      );
-    }
-
-    /**
-     * Get the selected cities
-     */
-    if (cmFilterGroup.locationFilterGroup.citySelect != null) {
-      conditions.push(
-        `${FilterFormService.environmentRouteTable.CM.columns.CM_CITY}
-        IN (${ cmFilterGroup.locationFilterGroup.citySelect.map((e: string) => `'${e}'`).join(', ')})`
-      );
-    }
-
-    /**
-     * Get lead time subquery
-     */
-    conditions.push(
-      this.getLeadTimeSubquery(
-        FilterFormService.environmentRouteTable.UPSTREAM.columns.LEAD_TIME,
-        cmFilterGroup.additionalFilterGroup.minLeadTimeInput,
-        cmFilterGroup.additionalFilterGroup.maxLeadTimeInput
       )
     );
 

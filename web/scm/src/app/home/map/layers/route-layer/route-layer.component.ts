@@ -16,7 +16,5 @@ export class RouteLayerComponent {
 
   filter(marker: RouteLayerMarker) {
     this.store.dispatch(skuFilterFormQueryResult({ sku: new Set(marker.data.sku) }));
-    /* this.layer.markers = this.layer.markers.filter(m => marker.data.sku.filter(s => m.data.sku.includes(s)).length > 0);
-    this.layer.lines = this.layer.lines.filter(l => this.layer.markers.includes(l.from)); */
   }
 }

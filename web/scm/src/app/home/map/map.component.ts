@@ -16,6 +16,11 @@ export class MapComponent {
   isLoading$: Observable<boolean>;
   error$: Observable<Error>;
 
+  initialZoomLatLong = {
+    lat: 34.690398,
+    long: -178.421932
+  };
+
   constructor(private store: Store) {
     this.$layers = this.store.select(selectMapLayers);
     this.isLoading$ = this.store.select(selectMapIsLoading);

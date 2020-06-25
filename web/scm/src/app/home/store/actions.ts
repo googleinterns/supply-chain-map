@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { FormQueryResponse } from '../home.models';
+import { FormQueryResponse, FormQueryResult } from '../home.models';
 
 export const formQueryGenerated = createAction(
   '[Home] Form Query Generated',
@@ -19,4 +19,9 @@ export const formQueryFetchFailure = createAction(
 export const skuFilterFormQueryResult = createAction(
   '[Home] Filter Form Query Result with SKUs',
   props<{ sku: Set<string> }>()
+);
+
+export const skuFilterFormQueryResultSuccess = createAction(
+  '[Home] Filter Form Query Result with SKUs Success',
+  props<{ formQueryResponse: { formQueryResult: FormQueryResult } }>()
 );

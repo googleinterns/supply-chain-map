@@ -9,37 +9,175 @@
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>
                         <mat-panel-title>
-                            Basic
+                            Product
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <scm-basic-filter [basicData]="sidePanelData.basic"></scm-basic-filter>
+                    <div class="form-input-container">
+                        <div formGroupName="productFilterGroup">
+
+                            <h2>Filter Products</h2>
+
+                            <mat-form-field appearance="outline">
+                                <mat-label>Product</mat-label>
+                                <mat-select formControlName="productSelect" multiple>
+                                    <mat-option *ngFor="let product of sidePanelData.product.products"
+                                        [value]="product">{{ product }}
+                                    </mat-option>
+                                </mat-select>
+                            </mat-form-field>
+
+                        </div>
+                        <div>
+
+                            <h2>Supply Chain Nodes</h2>
+
+                            <mat-radio-group (change)="changeSupplyChainNodesRadio($event)">
+                                <mat-radio-button [value]="'UPSTREAM'">Upstream</mat-radio-button>
+                                <mat-radio-button [value]="'DOWNSTREAM'">Downstream</mat-radio-button>
+                                <mat-radio-button [value]="'BOTH'">Both</mat-radio-button>
+                            </mat-radio-group>
+                        </div>
+                    </div>
                 </mat-expansion-panel>
 
-                <mat-expansion-panel>
+                <mat-expansion-panel *ngIf="this.shouldIncludeUpstream">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             Upstream
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <scm-upstream-filter [upstreamData]="sidePanelData.upstream"></scm-upstream-filter>
+                    <div class="form-input-container">
+                        <div formGroupName="upstreamFilterGroup">
+                            <div formGroupName="componentFilterGroup">
+
+                                <h2>Filter Component</h2>
+
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Category</mat-label>
+                                    <mat-select formControlName="categorySelect" multiple>
+                                        <mat-option *ngFor="let category of sidePanelData.upstream.categories"
+                                            [value]="category">
+                                            {{ category }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Supplier</mat-label>
+                                    <mat-select formControlName="supplierSelect" multiple>
+                                        <mat-option *ngFor="let supplier of sidePanelData.upstream.suppliers"
+                                            [value]="supplier">
+                                            {{ supplier }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div formGroupName="locationFilterGroup">
+
+                                <h2>Filter Locations</h2>
+
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Country</mat-label>
+                                    <mat-select formControlName="countrySelect" multiple>
+                                        <mat-option *ngFor="let country of sidePanelData.upstream.countries"
+                                            [value]="country">{{ country }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline">
+                                    <mat-label>State/Region</mat-label>
+                                    <mat-select formControlName="regionSelect" multiple>
+                                        <mat-option *ngFor="let region of sidePanelData.upstream.states"
+                                            [value]="region">
+                                            {{ region }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline">
+                                    <mat-label>City</mat-label>
+                                    <mat-select formControlName="citySelect" multiple>
+                                        <mat-option *ngFor="let city of sidePanelData.upstream.cities" [value]="city">
+                                            {{ city }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                            </div>
+                            <div formGroupName="additionalFilterGroup">
+
+                                <h2>Additional Properties</h2>
+
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Minimum Lead Time</mat-label>
+                                    <input matInput type="number" formControlName="minLeadTimeInput">
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Maximum Lead Time</mat-label>
+                                    <input matInput type="number" formControlName="maxLeadTimeInput">
+                                </mat-form-field>
+
+                            </div>
+                        </div>
+                    </div>
                 </mat-expansion-panel>
 
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            Contract Manufacturers
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <scm-cm-filter [cmData]="sidePanelData.cm"></scm-cm-filter>
-                </mat-expansion-panel>
-
-                <mat-expansion-panel>
+                <mat-expansion-panel *ngIf="this.shouldIncludeDownstream">
                     <mat-expansion-panel-header>
                         <mat-panel-title>
                             Downstream
                         </mat-panel-title>
                     </mat-expansion-panel-header>
-                    <scm-downstream-filter [downstreamData]="sidePanelData.downstream"></scm-downstream-filter>
+                    <div class="form-input-container">
+                        <div formGroupName="downstreamFilterGroup">
+                            <div formGroupName="locationFilterGroup">
+
+                                <h2>Filter Locations</h2>
+
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Country</mat-label>
+                                    <mat-select formControlName="countrySelect" multiple>
+                                        <mat-option *ngFor="let country of sidePanelData.downstream.countries"
+                                            [value]="country">{{ country }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline">
+                                    <mat-label>State/Region</mat-label>
+                                    <mat-select formControlName="regionSelect" multiple>
+                                        <mat-option *ngFor="let region of sidePanelData.downstream.states"
+                                            [value]="region">
+                                            {{ region }}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline">
+                                    <mat-label>City</mat-label>
+                                    <mat-select formControlName="citySelect" multiple>
+                                        <mat-option *ngFor="let city of sidePanelData.downstream.cities" [value]="city">
+                                            {{ city }}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+
+                            </div>
+                            <div formGroupName="additionalFilterGroup">
+
+                                <h2>Additional Properties</h2>
+
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Minimum Lead Time</mat-label>
+                                    <input matInput type="number" formControlName="minLeadTimeInput">
+                                </mat-form-field>
+
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Maximum Lead Time</mat-label>
+                                    <input matInput type="number" formControlName="maxLeadTimeInput">
+                                </mat-form-field>
+
+                            </div>
+                        </div>
+                    </div>
                 </mat-expansion-panel>
             </mat-accordion>
             <button mat-raised-button color="primary" class="submit-button">Submit</button>
