@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { RouteLayer, RouteLayerMarker } from '../../map.models';
 import { Store } from '@ngrx/store';
-import { skuFilterFormQueryResult } from 'src/app/home/store/actions';
 
 @Component({
   selector: 'scm-route-layer',
@@ -15,6 +14,6 @@ export class RouteLayerComponent {
   }
 
   filter(marker: RouteLayerMarker) {
-    this.store.dispatch(skuFilterFormQueryResult({ sku: new Set(marker.data.sku) }));
+    console.log('Filter now');
   }
 }

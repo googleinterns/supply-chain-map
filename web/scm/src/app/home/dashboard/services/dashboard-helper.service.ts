@@ -36,6 +36,7 @@ export class DashboardHelperService {
             if (!environment.production) {
                 console.error(ex);
             }
+            throw new Error('Failed to fetch layers');
         }
 
         return layers;

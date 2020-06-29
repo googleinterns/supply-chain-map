@@ -29,7 +29,7 @@ export class HomeStoreEffects {
         )
     );
 
-    filterFormQueryDataEffect$ = createEffect(
+    /* filterFormQueryDataEffect$ = createEffect(
         () => this.actions$.pipe(
             ofType(HomeFeatureActions.skuFilterFormQueryResult),
             withLatestFrom(this.store.select(selectHomeFormQueryResult)),
@@ -55,6 +55,6 @@ export class HomeStoreEffects {
                 }
             )
         )
-    );
+    ); */
 
 }

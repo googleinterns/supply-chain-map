@@ -1,8 +1,6 @@
 import { createReducer, on, Action } from '@ngrx/store';
 import { HomeState, initialState } from './state';
 import * as HomeActions from './actions';
-import { FormQueryResult } from '../home.models';
-import { environment } from 'src/environments/environment';
 
 const homeReducer = createReducer(
     initialState,
@@ -18,6 +16,11 @@ const homeReducer = createReducer(
         isLoading: false
     })),
     on(HomeActions.formQueryFetchFailure, (state, { error }) => ({
+        ...state,
+        error: error,
+        isLoading: false
+    })),
+    on(HomeActions.invalidServiceAccount, (state, { error }) => ({
         ...state,
         error: error,
         isLoading: false

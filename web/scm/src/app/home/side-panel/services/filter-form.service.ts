@@ -150,8 +150,7 @@ export class FilterFormService {
       if (!environment.production) {
         console.error(err);
       }
-
-      return;
+      throw new Error('Fetching data failed!');
     }
   }
 

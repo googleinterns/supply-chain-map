@@ -17,6 +17,7 @@ import { StoreModule } from '@ngrx/store';
 import { EffectsModule } from '@ngrx/effects';
 import { DashboardStoreEffects } from './store/effects';
 import { SelectLayerComponent } from './tabs/map-tab/select-layer-dialog/select-layer.dialog';
+import { MatSortModule } from '@angular/material/sort';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { SelectLayerComponent } from './tabs/map-tab/select-layer-dialog/select-
     MatListModule,
     MatIconModule,
     MatProgressSpinnerModule,
+    MatSortModule,
     MatTableModule,
     MatTabsModule,
     StoreModule.forFeature('dashboard', fromDashboard.reducer),

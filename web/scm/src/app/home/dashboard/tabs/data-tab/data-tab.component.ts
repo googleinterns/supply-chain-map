@@ -3,7 +3,7 @@ import { Observable } from 'rxjs';
 import { FormQueryResult } from 'src/app/home/home.models';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort } from '@angular/material/sort';
+import { MatSort, MatSortHeader, Sort } from '@angular/material/sort';
 import { Store } from '@ngrx/store';
 import { selectHomeFormQueryResult } from 'src/app/home/store/selectors';
 import { environment } from 'src/environments/environment';
@@ -16,6 +16,9 @@ import { environment } from 'src/environments/environment';
 export class DataTabComponent {
   formQueryResult$: Observable<FormQueryResult>;
 
+  shouldDisplayUpstream = false;
+  shouldDisplayDownstream = false;
+
   upstreamDataSource: MatTableDataSource<object>;
   upstreamColumns: string[];
   cmDataSource: MatTableDataSource<object>;
@@ -26,16 +29,26 @@ export class DataTabComponent {
   @ViewChildren(MatPaginator)
   set paginatorSetter(content: QueryList<MatPaginator>) {
     const paginatorArray = content.toArray();
-    this.upstreamDataSource.paginator = paginatorArray[0];
-    this.cmDataSource.paginator = paginatorArray[1];
-    this.downstreamDataSource.paginator = paginatorArray[2];
+    // Since popping, reverse order
+    if (this.downstreamDataSource) {
+      this.downstreamDataSource.paginator = paginatorArray.pop();
+    }
+    this.cmDataSource.paginator = paginatorArray.pop();
+    if (this.upstreamDataSource) {
+      this.upstreamDataSource.paginator = paginatorArray.pop();
+    }
   }
   @ViewChildren(MatSort)
   set sortSetter(content: QueryList<MatSort>) {
     const sortArray = content.toArray();
-    this.upstreamDataSource.sort = sortArray[0];
-    this.cmDataSource.sort = sortArray[1];
-    this.downstreamDataSource.sort = sortArray[2];
+    // Since popping, reverse order
+    if (this.downstreamDataSource) {
+      this.downstreamDataSource.sort = sortArray.pop();
+    }
+    this.cmDataSource.sort = sortArray.pop();
+    if (this.upstreamDataSource) {
+      this.upstreamDataSource.sort = sortArray.pop();
+    }
   }
 
   constructor(private store: Store) {
@@ -56,10 +69,15 @@ export class DataTabComponent {
     this.formQueryResult$.subscribe(
       formQueryResult => {
         if (formQueryResult) {
-          if (this.upstreamDataSource) {
-            this.upstreamDataSource.data = formQueryResult.upstream;
+          if ('upstream' in formQueryResult) {
+            if (this.upstreamDataSource) {
+              this.upstreamDataSource.data = formQueryResult.upstream;
+            } else {
+              this.upstreamDataSource = new MatTableDataSource(formQueryResult.upstream);
+            }
+            this.shouldDisplayUpstream = true;
           } else {
-            this.upstreamDataSource = new MatTableDataSource(formQueryResult.upstream);
+            this.shouldDisplayUpstream = false;
           }
 
           if (this.cmDataSource) {
@@ -68,10 +86,15 @@ export class DataTabComponent {
             this.cmDataSource = new MatTableDataSource(formQueryResult.cm);
           }
 
-          if (this.downstreamDataSource) {
-            this.downstreamDataSource.data = formQueryResult.downstream;
+          if ('downstream' in formQueryResult) {
+            if (this.downstreamDataSource) {
+              this.downstreamDataSource.data = formQueryResult.downstream;
+            } else {
+              this.downstreamDataSource = new MatTableDataSource(formQueryResult.downstream);
+            }
+            this.shouldDisplayDownstream = true;
           } else {
-            this.downstreamDataSource = new MatTableDataSource(formQueryResult.downstream);
+            this.shouldDisplayDownstream = false;
           }
         }
       }

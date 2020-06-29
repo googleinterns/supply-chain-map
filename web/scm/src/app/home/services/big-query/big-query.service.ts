@@ -39,11 +39,12 @@ export class BigQueryService {
    * @param query This is the query that will be executed in BigQuery
    * @returns am observable that contains the data returned by BigQuery
    */
-  runQuery(query: string): Promise<gapi.client.Request<gapi.client.bigquery.QueryResponse>> {
+  public runQuery(query: string): Promise<gapi.client.Request<gapi.client.bigquery.QueryResponse>> {
     /**
      * Prepare the data.
      */
-    return this.loadBigQuery().toPromise()
+    return this.loadBigQuery()
+      .toPromise()
       .then(
         () => gapi.client['bigquery'].jobs.query({
           projectId: environment.projectId,
@@ -54,6 +55,24 @@ export class BigQueryService {
             projectId: environment.projectId
           }
         })
+      );
+  }
+
+  public checkProjectMembership(projectId: string): Promise<boolean> {
+    return this.loadBigQuery()
+      .toPromise()
+      .then(
+        () => {
+          return gapi.client['bigquery'].projects.getServiceAccount({
+            projectId: projectId
+          });
+        }
+      )
+      .then(
+        serviceAccount => 'email' in serviceAccount.result
+      )
+      .catch (
+        err => false
       );
   }
 

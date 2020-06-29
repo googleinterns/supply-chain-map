@@ -16,12 +16,7 @@ export const formQueryFetchFailure = createAction(
   props<{ error: Error }>()
 );
 
-export const skuFilterFormQueryResult = createAction(
-  '[Home] Filter Form Query Result with SKUs',
-  props<{ sku: Set<string> }>()
-);
-
-export const skuFilterFormQueryResultSuccess = createAction(
-  '[Home] Filter Form Query Result with SKUs Success',
-  props<{ formQueryResponse: { formQueryResult: FormQueryResult } }>()
+export const invalidServiceAccount = createAction(
+  '[Home] User does not have access to GCP project',
+  props<{ error: Error }>()
 );

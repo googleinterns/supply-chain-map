@@ -28,8 +28,8 @@ export class SidePanelComponent {
   error$: Observable<Error>;
   sidePanelData$: Observable<SidePanel>;
 
-  shouldIncludeUpstream: boolean;
-  shouldIncludeDownstream: boolean;
+  shouldIncludeUpstream = true;
+  shouldIncludeDownstream = true;
   /**
    * Initializing the @var sidePanelFormGroup with an empty
    * form group, until the view is initialized.

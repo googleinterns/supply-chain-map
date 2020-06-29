@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { provideMockStore, MockStore, MockSelector } from '@ngrx/store/testing';
-import { selectMapLayers } from './store/selectors';
+import { selectMapLayers, selectMapError, selectMapIsLoading } from './store/selectors';
 import { MemoizedSelector } from '@ngrx/store';
 import { MapState } from './store/state';
 import { Layer } from './map.models';
@@ -17,6 +17,8 @@ describe('MapComponent', () => {
   let fixture: ComponentFixture<MapComponent>;
   let mockStore: MockStore;
   let mockSelectLayers: MemoizedSelector<MapState, Layer[]>;
+  let mockError:  MemoizedSelector<MapState, Error>;
+  let mockIsLoading: MemoizedSelector<MapState, boolean>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -41,6 +43,14 @@ describe('MapComponent', () => {
     mockSelectLayers = mockStore.overrideSelector(
       selectMapLayers,
       []
+    );
+    mockError = mockStore.overrideSelector(
+      selectMapError,
+      null
+    );
+    mockIsLoading = mockStore.overrideSelector(
+      selectMapIsLoading,
+      false
     );
   }));
 

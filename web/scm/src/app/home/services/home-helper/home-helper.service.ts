@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { BigQueryService } from '../big-query/big-query.service';
-import { FormQueryResult, FormQueryResponse, FormQueryResultStats } from '../../home.models';
+import { FormQueryResponse, FormQueryResultStats } from '../../home.models';
 
 @Injectable({
   providedIn: 'root'
@@ -16,35 +16,28 @@ export class HomeHelperService {
    * @param query The query obtained from side panel form
    */
   public async runFormQuery(query: string): Promise<FormQueryResponse> {
-    try {
-      const request = await this.bigQueryService.runQuery(query);
-      const result = request.result;
-      const formattedResult = this.bigQueryService.convertResult(result)[0];
+    const request = await this.bigQueryService.runQuery(query);
+    const formattedResult = this.bigQueryService.convertResult(request.result)[0];
 
-      if (!this.validateFormattedResult(formattedResult)) {
-        throw new Error('Invalid Query');
-      }
-
-      /**
-       * Get other stats from response
-       */
-      const formQueryResultStats: FormQueryResultStats = {
-        projectId: result.jobReference.projectId,
-        jobId: result.jobReference.jobId,
-        totalBytesProcessed: result.totalBytesProcessed,
-        jobComplete: result.jobComplete,
-        cacheHit: result.cacheHit
-
-      };
-      return {
-        formQueryResult: formattedResult,
-        formQueryResultStats: formQueryResultStats
-      };
-    } catch (err) {
-      if (!environment.production) {
-        console.error(err);
-      }
+    if (!this.validateFormattedResult(formattedResult)) {
+      throw new Error('Invalid Query');
     }
+
+    /**
+     * Get other stats from response
+     */
+    const formQueryResultStats: FormQueryResultStats = {
+      projectId: request.result.jobReference.projectId,
+      jobId: request.result.jobReference.jobId,
+      totalBytesProcessed: request.result.totalBytesProcessed,
+      jobComplete: request.result.jobComplete,
+      cacheHit: request.result.cacheHit
+
+    };
+    return {
+      formQueryResult: formattedResult,
+      formQueryResultStats: formQueryResultStats
+    };
   }
 
   private validateFormattedResult(formattedResult) {

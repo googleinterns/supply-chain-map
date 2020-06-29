@@ -1,5 +1,5 @@
 <!-- Upstream -->
-<div class="table-container">
+<div class="table-container" *ngIf="this.shouldDisplayUpstream">
     <h2>Upstream</h2>
     <div class="mat-elevation-z8">
         <table mat-table [dataSource]="upstreamDataSource" matSort>
@@ -37,7 +37,7 @@
     </div>
 </div>
 <!-- Downstream -->
-<div class="table-container">
+<div class="table-container" *ngIf="this.shouldDisplayDownstream">
     <h2>Downstream</h2>
     <div class="mat-elevation-z8">
         <table mat-table [dataSource]="downstreamDataSource" matSort>

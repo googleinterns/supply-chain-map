@@ -31,10 +31,10 @@
 
                             <h2>Supply Chain Nodes</h2>
 
-                            <mat-radio-group (change)="changeSupplyChainNodesRadio($event)">
+                            <mat-radio-group (change)="changeSupplyChainNodesRadio($event)" [value]="'BOTH'">
                                 <mat-radio-button [value]="'UPSTREAM'">Upstream</mat-radio-button>
                                 <mat-radio-button [value]="'DOWNSTREAM'">Downstream</mat-radio-button>
-                                <mat-radio-button [value]="'BOTH'">Both</mat-radio-button>
+                                <mat-radio-button [value]="'BOTH'" >Both</mat-radio-button>
                             </mat-radio-group>
                         </div>
                     </div>
