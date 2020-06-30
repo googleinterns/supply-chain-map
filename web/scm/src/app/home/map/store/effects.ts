@@ -22,7 +22,24 @@ export class MapStoreEffects {
                         const routeLayer: RouteLayer = {
                             name: 'Route Layer',
                             markers: markers,
-                            lines: lines
+                            lines: lines,
+                            legend: [{
+                                name: 'MFG',
+                                icon: MapHelperService.ICON_MAP.MFG,
+                                type: 'URL'
+                            }, {
+                                name: 'CM',
+                                icon: MapHelperService.ICON_MAP.CM,
+                                type: 'URL'
+                            }, {
+                                name: 'GDC',
+                                icon: MapHelperService.ICON_MAP.GDC,
+                                type: 'URL'
+                            }, {
+                                name: 'MFG & CM',
+                                icon: MapHelperService.ICON_MAP.MFG_CM,
+                                type: 'URL'
+                            }]
                         };
                         return of(MapFeatureActions.layerLoadSuccess({ layer: routeLayer }));
                     } catch (ex) {

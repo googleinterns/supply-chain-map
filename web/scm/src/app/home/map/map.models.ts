@@ -38,10 +38,19 @@ export interface RouteLayerLine {
 
 export interface Layer {
     name: string;
-    legend?: {
+    legend?: ({
         name: string,
-        icon: string
-    }[];
+        icon: string,
+        type: 'MAT'|'URL'
+    }|
+    {
+        name: string,
+        spectrum: {
+            gradientColors: string[],
+            startLabel: number,
+            endLabel: number
+        }
+    })[];
 }
 
 export interface RouteLayer extends Layer {
@@ -64,5 +73,8 @@ export interface ShapeLayer extends Layer {
         magnitude: number,
         data?: any
     }[];
-    geoJSON: object;
+    geoJSON: {
+        type: string,
+        features: Array<any>
+    };
 }

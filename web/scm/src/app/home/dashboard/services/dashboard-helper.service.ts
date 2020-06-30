@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { BigQueryService } from 'src/app/home/services/big-query/big-query.service';
-import { data } from './mock_data';
 
 @Injectable({
     providedIn: 'root'
@@ -26,8 +25,8 @@ export class DashboardHelperService {
             shape: []
         };
         try {
-            //const response = await this.bigQueryService.runQuery(this.SQL_LAYER_QUERY);
-            const result = this.bigQueryService.convertResult(data);
+            const response = await this.bigQueryService.runQuery(this.SQL_LAYER_QUERY);
+            const result = this.bigQueryService.convertResult(response.result);
             layers.heatmap = result[0].heatmap_layers;
             layers.shape = result[0].shape_layers;
 

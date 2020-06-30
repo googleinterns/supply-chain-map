@@ -47,7 +47,7 @@ export const Colors = {
             return i > 5 ? null : a[Math.floor(Math.random() * 16)];
         }).join('');
     },
-    lightenDarkenColor: (col, amt) => {
+    lightenDarkenColor: (col, amt, retHex = true) => {
 
         let usePound = false;
 
@@ -84,7 +84,11 @@ export const Colors = {
             g = 0;
         }
 
-        return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16);
+        if (retHex) {
+            return (usePound ? '#' : '') + (g | (b << 8) | (r << 16)).toString(16);
+        } else {
+            return `rgb(${r},${g},${b})`;
+        }
 
     }
 };

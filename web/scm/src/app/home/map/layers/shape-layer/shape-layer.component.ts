@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, ViewChild, TemplateRef } from '@angular/core';
 import { ShapeLayer } from '../../map.models';
 import { Colors } from '../../../../../assets/colors';
 
@@ -9,22 +9,14 @@ import { Colors } from '../../../../../assets/colors';
 })
 export class ShapeLayerComponent implements OnInit {
 
-  color: string;
-  maxMagnitude: number;
-  // tslint:disable-next-line: variable-name
-  _layer: ShapeLayer;
-  @Input('layer') 
-  set layer(value: ShapeLayer) {
-    this._layer = value;
-    let maxMagnitude = -1;
-    for (const shape of this._layer.shapes) {
-      maxMagnitude = Math.max(maxMagnitude, shape.magnitude);
-    }
-    this.maxMagnitude = maxMagnitude;
-  }
+  @Input() layer: ShapeLayer;
+  infoWindowData: {
+    latitude: number,
+    longitude: number,
+    data: object
+  }[] = [];
 
   constructor() {
-    this.color = Colors.randomColor();
   }
 
   ngOnInit(): void {
@@ -33,16 +25,23 @@ export class ShapeLayerComponent implements OnInit {
   styleFunc = (feature) => {
     const o = {
       clickable: true,
-      fillColor: Colors.lightenDarkenColor(
-        this.color,
-        -50 * (parseFloat(feature.getProperty('magnitude'))) / (this.maxMagnitude)
-      ),
+      fillColor: feature.getProperty('color'),
       fillOpacity: 1,
       strokeWeight: 0.5,
-      strokeColor: this.color
+      strokeColor: feature.getProperty('color'),
+      zIndex: 0
     };
 
     return o;
+  }
+
+  layerClick($event) {
+    this.infoWindowData.push({
+      latitude: $event.latLng.lat(),
+      longitude: $event.latLng.lng(),
+      data: $event.feature.getProperty('data')
+    });
+    console.log(this.infoWindowData);
   }
 
 }

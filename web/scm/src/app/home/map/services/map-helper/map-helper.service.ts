@@ -3,6 +3,8 @@ import { FormQueryResult } from 'src/app/home/home.models';
 import { RouteLayerLine, RouteLayerMarker, Layer, HeatmapLayer, ShapeLayer } from '../../map.models';
 import { BigQueryService } from 'src/app/home/services/big-query/big-query.service';
 import { environment } from 'src/environments/environment';
+import { heatmap_data } from './mock_data';
+import { Colors } from 'src/assets/colors';
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +17,7 @@ export class MapHelperService {
      * Map for the type of marker to the path
      * to its svg icon
      */
-    private static readonly ICON_MAP = {
+    public static readonly ICON_MAP = {
         GDC: 'assets/gdc.svg',
         MFG: 'assets/mfg.svg',
         CM: 'assets/cm.svg',
@@ -224,14 +226,36 @@ export class MapHelperService {
             SELECT ${layerCols.join(', ')}
             FROM ${environment.bigQuery.layerDatasets.heatmap.dataset}.${layerName}
         `;
+        const heatMapColors = [
+            'rgba(102, 255, 0, 0)',
+            'rgba(102, 255, 0, 1)',
+            'rgba(147, 255, 0, 1)',
+            'rgba(193, 255, 0, 1)',
+            'rgba(238, 255, 0, 1)',
+            'rgba(244, 227, 0, 1)',
+            'rgba(249, 198, 0, 1)',
+            'rgba(255, 170, 0, 1)',
+            'rgba(255, 113, 0, 1)',
+            'rgba(255, 57, 0, 1)',
+            'rgba(255, 0, 0, 1)'
+        ];
 
         try {
-            const response = await this.bigQueryService.runQuery(SQL_FETCH_ADDITIONAL_LAYER);
-            const markers = this.bigQueryService.convertResult(response.result);
+            // const response = await this.bigQueryService.runQuery(SQL_FETCH_ADDITIONAL_LAYER);
+            const markers = this.bigQueryService.convertResult(heatmap_data);
+            const magnitudes = markers.map(m => m.magnitude);
 
             return {
                 name: layerName,
-                hotspots: markers
+                hotspots: markers,
+                legend: [{
+                    name: markers[0].data.magnitude_desc ?? 'Magnitude',
+                    spectrum: {
+                        gradientColors: heatMapColors,
+                        startLabel: Math.min(...magnitudes),
+                        endLabel: Math.max(...magnitudes)
+                    }
+                }]
             };
         } catch (ex) {
             if (!environment.production) {
@@ -252,6 +276,18 @@ export class MapHelperService {
         try {
             const response = await this.bigQueryService.runQuery(SQL_FETCH_ADDITIONAL_LAYER);
             const shapes = this.bigQueryService.convertResult(response.result);
+            const baseColor = Colors.randomColor();
+            const magnitudes = [...new Set(shapes.map(s => s.magnitude))];
+            magnitudes.sort();
+            const maxMagnitude = Math.max(...magnitudes);
+            const colorMap = [];
+            for (const m of magnitudes) {
+                colorMap[m] = Colors.lightenDarkenColor(
+                    baseColor,
+                    -50 * (parseFloat(m)) / (maxMagnitude),
+                    false
+                  );
+            }
             const features = {
                 type: 'FeatureCollection',
                 features: []
@@ -259,7 +295,7 @@ export class MapHelperService {
             for (const shape of shapes) {
                 features.features.push({
                     type: 'Feature',
-                    properties: { ...shape.data, magnitude: shape.magnitude },
+                    properties: { data: shape.data, magnitude: shape.magnitude, color: colorMap[shape.magnitude] },
                     geometry: JSON.parse(shape.shape)
                 });
             }
@@ -267,7 +303,15 @@ export class MapHelperService {
             return {
                 name: layerName,
                 shapes: shapes,
-                geoJSON: features
+                geoJSON: features,
+                legend: [{
+                    name: shapes[0].data.magnitude_desc ?? 'Magnitude',
+                    spectrum: {
+                        gradientColors: magnitudes.map(m => colorMap[m]),
+                        startLabel: magnitudes[0],
+                        endLabel: magnitudes[1]
+                    }
+                }]
             };
         } catch (ex) {
             if (!environment.production) {
