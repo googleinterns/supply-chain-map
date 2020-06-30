@@ -6,6 +6,7 @@ export interface RouteLayerMarker {
     data: {
         product: string[];
         sku: string[];
+        mpn?: string[];
         description: string[];
         category: string[];
         name: string[];

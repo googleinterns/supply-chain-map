@@ -13,6 +13,8 @@ import { HeatmapLayerComponent } from './layers/heatmap-layer/heatmap-layer.comp
 import { ShapeLayerComponent } from './layers/shape-layer/shape-layer.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -28,6 +30,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
       libraries: ['visualization']
     }),
     CommonModule,
+    FormsModule,
+    MatSlideToggleModule,
     MatIconModule,
     MatProgressSpinnerModule,
     StoreModule.forFeature('map', fromMap.reducer),

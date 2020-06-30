@@ -125,6 +125,7 @@ export class MapHelperService {
                 data: {
                     product: [],
                     sku: [],
+                    mpn: [],
                     description: [],
                     category: [],
                     name: [],
@@ -146,9 +147,10 @@ export class MapHelperService {
                     marker.data.avgLeadTime += parseInt(dataPoint[UPSTREAM_COLS.LEAD_TIME], 10);
                     marker.data.product.push(dataPoint[UPSTREAM_COLS.PRODUCT]);
                     marker.data.sku.push(dataPoint[UPSTREAM_COLS.PARENT_SKU]);
+                    marker.data.mpn.push(dataPoint[UPSTREAM_COLS.MPN]);
                     marker.data.description.push(dataPoint[UPSTREAM_COLS.DESCRIPTION]);
                     marker.data.category.push(dataPoint[UPSTREAM_COLS.CATEGORY]);
-                    marker.data.name.push(dataPoint[UPSTREAM_COLS.SUPPLIER_NAME]); //Makes more sense than description
+                    marker.data.name.push(dataPoint[UPSTREAM_COLS.SUPPLIER_NAME]);
                 } else if (dataPoint.type === 'CM') {
                     marker.type.push('CM');
                     marker.lat = dataPoint[CM_COLS.CM_LAT];
@@ -183,6 +185,11 @@ export class MapHelperService {
             marker.data.description = [...new Set(marker.data.description)];
             marker.data.category = [...new Set(marker.data.category)];
             marker.data.sku = [...new Set(marker.data.sku)];
+            if (marker.data.mpn.length > 0) {
+                marker.data.sku = [...new Set(marker.data.mpn)];
+            } else {
+                delete marker.data.mpn;
+            }
 
             if (marker.type.length === 1) {
                 switch (marker.type[0]) {
