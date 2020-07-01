@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Layer } from '../map.models';
+import { Layer, RouteLayerMarker, FilterFunction } from '../map.models';
 
 export const loadLayer = createAction(
   '[Map] Load Layer',
@@ -19,4 +19,14 @@ export const layerLoadFailure = createAction(
 export const layerRemove = createAction(
   '[Map] Remove Layer',
   props<{ layer: Layer }>()
+);
+
+export const addFilter = createAction(
+  '[Map] Add Filter',
+  props<{ filterIdentifier: string, filter: FilterFunction }>()
+);
+
+export const removeFilter = createAction(
+  '[Map] Remove Filter',
+  props<{ filterIdentifier: string }>()
 );

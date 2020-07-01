@@ -1,5 +1,7 @@
 import { Input, Component, OnDestroy } from '@angular/core';
 import { HeatmapLayer } from '../../map.models';
+import { Store } from '@ngrx/store';
+import { addFilter, removeFilter } from '../../store/actions';
 
 @Component({
     selector: 'scm-heatmap-layer',
@@ -14,21 +16,39 @@ export class HeatmapLayerComponent implements OnDestroy {
         this.drawHeatmap();
     }
 
-    _layer: HeatmapLayer
+    _layer: HeatmapLayer;
     @Input('layer')
     set layer(value: HeatmapLayer) {
         this._layer = value;
         this.drawHeatmap();
+        this.store.dispatch(addFilter({
+            filterIdentifier: 'HeatmapLayer',
+            filter: (markers) => {
+                return markers.filter(marker => {
+                    for (const hotspot of this._layer.hotspots) {
+                        const distance = google.maps.geometry.spherical.computeDistanceBetween(
+                            new google.maps.LatLng(marker.latitude, marker.longitude),
+                            new google.maps.LatLng(hotspot.latitude, hotspot.longitude)
+                        );
+                        if (distance <= 3000) {
+                            return true;
+                        }
+                    }
+                    return false;
+                });
+            }
+        }));
     }
     private heatmap: google.maps.visualization.HeatmapLayer;
 
-    constructor() {
+    constructor(private store: Store) {
     }
 
     ngOnDestroy(): void {
         if (this.heatmap) {
             this.heatmap.setMap(null);
         }
+        this.store.dispatch(removeFilter({ filterIdentifier: 'HeatmapLayer' }));
     }
 
     private drawHeatmap() {

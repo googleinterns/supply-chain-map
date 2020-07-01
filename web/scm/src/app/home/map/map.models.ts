@@ -1,6 +1,6 @@
 export interface RouteLayerMarker {
-    lat: number;
-    long: number;
+    latitude: number;
+    longitude: number;
     iconUrl: string;
     type: string[];
     data: {
@@ -19,15 +19,15 @@ export interface RouteLayerMarker {
 
 export interface RouteLayerLine {
     from: {
-        lat: number;
-        long: number;
+        latitude: number;
+        longitude: number;
         city: string;
         state: string;
         country: string
     };
     to: {
-        lat: number;
-        long: number;
+        latitude: number;
+        longitude: number;
         city: string;
         state: string;
         country: string;
@@ -69,12 +69,10 @@ export interface HeatmapLayer extends Layer {
 
 export interface ShapeLayer extends Layer {
     shapes: {
-        shape: any,
+        shapeOpts: google.maps.PolygonOptions,
         magnitude: number,
         data?: any
     }[];
-    geoJSON: {
-        type: string,
-        features: Array<any>
-    };
 }
+
+export type FilterFunction = (markers: RouteLayerMarker[]) => RouteLayerMarker[];

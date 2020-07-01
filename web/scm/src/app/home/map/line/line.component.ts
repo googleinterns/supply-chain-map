@@ -8,12 +8,12 @@ export class LineComponent implements OnInit {
   @Input()
   route: {
     to: {
-      lat: number,
-      long: number,
+      latitude: number,
+      longitude: number,
     },
     from: {
-      lat: number,
-      long: number
+      latitude: number,
+      longitude: number
     },
     color?: string
   };

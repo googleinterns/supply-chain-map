@@ -1,6 +1,3 @@
-<agm-data-layer [geoJson]="this.layer.geoJSON" [style]="styleFunc" (layerClick)="layerClick($event)">
-
-</agm-data-layer>
 <agm-info-window *ngFor="let info of this.infoWindowData"
     [latitude]="info.latitude" [longitude]="info.longitude" [isOpen]="true">
     <div *ngFor="let item of info.data | keyvalue"><b>{{ item.key | titlecase }}</b>: {{ item.value }}</div>

@@ -3,8 +3,8 @@ import { FormQueryResult } from 'src/app/home/home.models';
 import { RouteLayerLine, RouteLayerMarker, Layer, HeatmapLayer, ShapeLayer } from '../../map.models';
 import { BigQueryService } from 'src/app/home/services/big-query/big-query.service';
 import { environment } from 'src/environments/environment';
-import { heatmap_data } from './mock_data';
 import { Colors } from 'src/assets/colors';
+import { createPolygonPath } from './geojson-converter';
 
 @Injectable({
     providedIn: 'root'
@@ -58,15 +58,15 @@ export class MapHelperService {
                 for (const cmRow of skuMap.get(sku).cm) {
                     lines.push({
                         from: {
-                            lat: parseFloat(upstreamRow[UPSTREAM_COLS.MFG_LAT]),
-                            long: parseFloat(upstreamRow[UPSTREAM_COLS.MFG_LONG]),
+                            latitude: parseFloat(upstreamRow[UPSTREAM_COLS.MFG_LAT]),
+                            longitude: parseFloat(upstreamRow[UPSTREAM_COLS.MFG_LONG]),
                             city: upstreamRow[UPSTREAM_COLS.MFG_CITY],
                             state: upstreamRow[UPSTREAM_COLS.MFG_STATE],
                             country: upstreamRow[UPSTREAM_COLS.MFG_COUNTRY]
                         },
                         to: {
-                            lat: parseFloat(cmRow[CM_COLS.CM_LAT]),
-                            long: parseFloat(cmRow[CM_COLS.CM_LONG]),
+                            latitude: parseFloat(cmRow[CM_COLS.CM_LAT]),
+                            longitude: parseFloat(cmRow[CM_COLS.CM_LONG]),
                             city: cmRow[CM_COLS.CM_CITY],
                             state: cmRow[CM_COLS.CM_STATE],
                             country: cmRow[CM_COLS.CM_COUNTRY]
@@ -82,15 +82,15 @@ export class MapHelperService {
                 for (const downstreamRow of skuMap.get(sku).downstream) {
                     lines.push({
                         from: {
-                            lat: parseFloat(cmRow[CM_COLS.CM_LAT]),
-                            long: parseFloat(cmRow[CM_COLS.CM_LONG]),
+                            latitude: parseFloat(cmRow[CM_COLS.CM_LAT]),
+                            longitude: parseFloat(cmRow[CM_COLS.CM_LONG]),
                             city: cmRow[CM_COLS.CM_CITY],
                             state: cmRow[CM_COLS.CM_STATE],
                             country: cmRow[CM_COLS.CM_COUNTRY]
                         },
                         to: {
-                            lat: parseFloat(downstreamRow[DOWNSTREAM_COLS.GDC_LAT]),
-                            long: parseFloat(downstreamRow[DOWNSTREAM_COLS.GDC_LONG]),
+                            latitude: parseFloat(downstreamRow[DOWNSTREAM_COLS.GDC_LAT]),
+                            longitude: parseFloat(downstreamRow[DOWNSTREAM_COLS.GDC_LONG]),
                             city: downstreamRow[DOWNSTREAM_COLS.GDC_CITY],
                             state: downstreamRow[DOWNSTREAM_COLS.GDC_STATE],
                             country: downstreamRow[DOWNSTREAM_COLS.GDC_COUNTRY]
@@ -120,8 +120,8 @@ export class MapHelperService {
 
         for (const latLongId of markerMap.keys()) {
             const marker: RouteLayerMarker = {
-                lat: 0,
-                long: 0,
+                latitude: 0,
+                longitude: 0,
                 iconUrl: '',
                 type: [],
                 data: {
@@ -141,8 +141,8 @@ export class MapHelperService {
             for (const dataPoint of markerMap.get(latLongId)) {
                 if (dataPoint.type === 'MFG') {
                     marker.type.push('MFG');
-                    marker.lat = dataPoint[UPSTREAM_COLS.MFG_LAT];
-                    marker.long = dataPoint[UPSTREAM_COLS.MFG_LONG];
+                    marker.latitude = dataPoint[UPSTREAM_COLS.MFG_LAT];
+                    marker.longitude = dataPoint[UPSTREAM_COLS.MFG_LONG];
                     marker.data.city = dataPoint[UPSTREAM_COLS.MFG_CITY] ?? '';
                     marker.data.state = dataPoint[UPSTREAM_COLS.MFG_STATE] ?? '';
                     marker.data.country = dataPoint[UPSTREAM_COLS.MFG_COUNTRY] ?? '';
@@ -155,8 +155,8 @@ export class MapHelperService {
                     marker.data.name.push(dataPoint[UPSTREAM_COLS.SUPPLIER_NAME]);
                 } else if (dataPoint.type === 'CM') {
                     marker.type.push('CM');
-                    marker.lat = dataPoint[CM_COLS.CM_LAT];
-                    marker.long = dataPoint[CM_COLS.CM_LONG];
+                    marker.latitude = dataPoint[CM_COLS.CM_LAT];
+                    marker.longitude = dataPoint[CM_COLS.CM_LONG];
                     marker.data.city = dataPoint[CM_COLS.CM_CITY] ?? '';
                     marker.data.state = dataPoint[CM_COLS.CM_STATE] ?? '';
                     marker.data.country = dataPoint[CM_COLS.CM_COUNTRY] ?? '';
@@ -167,8 +167,8 @@ export class MapHelperService {
                     marker.data.name.push(dataPoint[CM_COLS.CM_NAME]);
                 } else if (dataPoint.type === 'GDC') {
                     marker.type.push('GDC');
-                    marker.lat = dataPoint[DOWNSTREAM_COLS.GDC_LAT];
-                    marker.long = dataPoint[DOWNSTREAM_COLS.GDC_LONG];
+                    marker.latitude = dataPoint[DOWNSTREAM_COLS.GDC_LAT];
+                    marker.longitude = dataPoint[DOWNSTREAM_COLS.GDC_LONG];
                     marker.data.city = dataPoint[DOWNSTREAM_COLS.GDC_CITY] ?? '';
                     marker.data.state = dataPoint[DOWNSTREAM_COLS.GDC_STATE] ?? '';
                     marker.data.country = dataPoint[DOWNSTREAM_COLS.GDC_COUNTRY] ?? '';
@@ -241,8 +241,8 @@ export class MapHelperService {
         ];
 
         try {
-            // const response = await this.bigQueryService.runQuery(SQL_FETCH_ADDITIONAL_LAYER);
-            const markers = this.bigQueryService.convertResult(heatmap_data);
+            const response = await this.bigQueryService.runQuery(SQL_FETCH_ADDITIONAL_LAYER);
+            const markers = this.bigQueryService.convertResult(response.result);
             const magnitudes = markers.map(m => m.magnitude);
 
             return {
@@ -277,39 +277,74 @@ export class MapHelperService {
             const response = await this.bigQueryService.runQuery(SQL_FETCH_ADDITIONAL_LAYER);
             const shapes = this.bigQueryService.convertResult(response.result);
             const baseColor = Colors.randomColor();
-            const magnitudes = [...new Set(shapes.map(s => s.magnitude))];
-            magnitudes.sort();
-            const maxMagnitude = Math.max(...magnitudes);
-            const colorMap = [];
-            for (const m of magnitudes) {
-                colorMap[m] = Colors.lightenDarkenColor(
-                    baseColor,
-                    -50 * (parseFloat(m)) / (maxMagnitude),
-                    false
-                  );
-            }
-            const features = {
-                type: 'FeatureCollection',
-                features: []
-            };
+
+            let maxMagnitude = -1;
+            let minMagnitude = Infinity;
             for (const shape of shapes) {
-                features.features.push({
-                    type: 'Feature',
-                    properties: { data: shape.data, magnitude: shape.magnitude, color: colorMap[shape.magnitude] },
-                    geometry: JSON.parse(shape.shape)
-                });
+                maxMagnitude = Math.max(maxMagnitude, shape.magnitude);
+                minMagnitude = Math.min(minMagnitude, shape.magnitude);
+            }
+
+            const colorMap = [];
+            const shapeLayerShapes: {
+                shapeOpts: google.maps.PolygonOptions,
+                magnitude: number,
+                data: any
+            }[] = [];
+            for (const shape of shapes) {
+                if (typeof shape.shape !== 'string') {
+                    // Unknown countries with null shape. Do not display
+                    continue;
+                }
+                const shapeJSON = JSON.parse(shape.shape);
+                if (!(shape.magnitude in colorMap)) {
+                    colorMap[shape.magnitude] = Colors.lightenDarkenColor(
+                        baseColor,
+                        -50 * (parseFloat(shape.magnitude)) / (maxMagnitude),
+                        false
+                    );
+                }
+
+                if (shapeJSON.type === 'Polygon') {
+                    shapeLayerShapes.push({
+                        shapeOpts: {
+                            paths: createPolygonPath(shapeJSON.coordinates),
+                            clickable: true,
+                            fillColor: colorMap[shape.magnitude],
+                            fillOpacity: 1,
+                            strokeWeight: 0.5,
+                            strokeColor: colorMap[shape.magnitude]
+                        },
+                        magnitude: shape.magnitude,
+                        data: shape.data
+                    });
+                } else if (shapeJSON.type === 'MultiPolygon') {
+                    for (const coord of shapeJSON.coordinates) {
+                        shapeLayerShapes.push({
+                            shapeOpts: {
+                                paths: createPolygonPath(coord),
+                                clickable: true,
+                                fillColor: colorMap[shape.magnitude],
+                                fillOpacity: 1,
+                                strokeWeight: 0.5,
+                                strokeColor: colorMap[shape.magnitude]
+                            },
+                            magnitude: shape.magnitude,
+                            data: shape.data
+                        });
+                    }
+                }
             }
 
             return {
                 name: layerName,
-                shapes: shapes,
-                geoJSON: features,
+                shapes: shapeLayerShapes,
                 legend: [{
                     name: shapes[0].data.magnitude_desc ?? 'Magnitude',
                     spectrum: {
-                        gradientColors: magnitudes.map(m => colorMap[m]),
-                        startLabel: magnitudes[0],
-                        endLabel: magnitudes[1]
+                        gradientColors: (Object.keys(colorMap).sort()).map(m => colorMap[m]),
+                        startLabel: minMagnitude,
+                        endLabel: maxMagnitude
                     }
                 }]
             };

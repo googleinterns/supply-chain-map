@@ -1,38 +1,64 @@
-import { Component, OnInit, Input, ViewChild, TemplateRef } from '@angular/core';
+import { Component, OnInit, Input, OnDestroy, ChangeDetectorRef } from '@angular/core';
 import { ShapeLayer } from '../../map.models';
-import { Colors } from '../../../../../assets/colors';
+import { Store } from '@ngrx/store';
+import { addFilter, removeFilter } from '../../store/actions';
 
 @Component({
   selector: 'scm-shape-layer',
   templateUrl: './shape-layer.component.html',
   styleUrls: ['./shape-layer.component.scss']
 })
-export class ShapeLayerComponent implements OnInit {
+export class ShapeLayerComponent implements OnInit, OnDestroy {
 
-  @Input() layer: ShapeLayer;
+  polygons: google.maps.Polygon[] = [];
+
+  _layer: ShapeLayer;
+  @Input('layer')
+  set layer(value: ShapeLayer) {
+    this._layer = value;
+    this.drawPolygons();
+    this.store.dispatch(addFilter({
+      filterIdentifier: 'ShapeLayer',
+      filter: (markers) => {
+        return markers.filter(marker => {
+          for (const p of this.polygons) {
+            if (google.maps.geometry.poly.containsLocation(
+              new google.maps.LatLng(marker.latitude, marker.longitude),
+              p
+            )) {
+              return true;
+            }
+          }
+          return false;
+        });
+      }
+    }));
+  }
+
+  _map: google.maps.Map;
+  @Input('map')
+  set map(value: google.maps.Map) {
+    this._map = value;
+    this.drawPolygons();
+  }
+
   infoWindowData: {
     latitude: number,
     longitude: number,
     data: object
   }[] = [];
 
-  constructor() {
+  constructor(private store: Store, private changeDetector: ChangeDetectorRef) {
   }
 
   ngOnInit(): void {
   }
 
-  styleFunc = (feature) => {
-    const o = {
-      clickable: true,
-      fillColor: feature.getProperty('color'),
-      fillOpacity: 1,
-      strokeWeight: 0.5,
-      strokeColor: feature.getProperty('color'),
-      zIndex: 0
-    };
-
-    return o;
+  ngOnDestroy(): void {
+    for (const p of this.polygons) {
+      p.setMap(null);
+    }
+    this.store.dispatch(removeFilter({ filterIdentifier: 'ShapeLayer' }));
   }
 
   layerClick($event) {
@@ -41,7 +67,28 @@ export class ShapeLayerComponent implements OnInit {
       longitude: $event.latLng.lng(),
       data: $event.feature.getProperty('data')
     });
-    console.log(this.infoWindowData);
+  }
+
+  private drawPolygons() {
+    if (this._layer !== undefined && this._map !== undefined) {
+      this.polygons = [];
+      for (const shape of this._layer.shapes) {
+        const p = new google.maps.Polygon({
+          ...shape.shapeOpts,
+          zIndex: 0,
+          map: this._map
+        });
+        p.addListener('click', (event) => {
+          this.infoWindowData.push({
+            latitude: event.latLng.lat(),
+            longitude: event.latLng.lng(),
+            data: shape.data
+          });
+          this.changeDetector.detectChanges();
+        });
+        this.polygons.push(p);
+      }
+    }
   }
 
 }

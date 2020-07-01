@@ -27,7 +27,7 @@ import { FormsModule } from '@angular/forms';
   imports: [
     AgmCoreModule.forRoot({
       apiKey: environment.googleMapApi,
-      libraries: ['visualization']
+      libraries: ['visualization', 'geometry']
     }),
     CommonModule,
     FormsModule,
