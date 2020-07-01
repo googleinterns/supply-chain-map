@@ -30,3 +30,14 @@ export const removeFilter = createAction(
   '[Map] Remove Filter',
   props<{ filterIdentifier: string }>()
 );
+
+export const activateFilter = createAction(
+  '[Map] Activate Filter',
+  props<{ filterIdentifier: string }>()
+);
+
+export const deactivateFilter = createAction(
+  '[Map] Deactivate Filter',
+  props<{ filterIdentifier: string }>()
+);
+

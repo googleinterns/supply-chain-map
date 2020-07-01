@@ -22,7 +22,7 @@ export class HeatmapLayerComponent implements OnDestroy {
         this._layer = value;
         this.drawHeatmap();
         this.store.dispatch(addFilter({
-            filterIdentifier: 'HeatmapLayer',
+            filterIdentifier: this._layer.name,
             filter: (markers) => {
                 return markers.filter(marker => {
                     for (const hotspot of this._layer.hotspots) {

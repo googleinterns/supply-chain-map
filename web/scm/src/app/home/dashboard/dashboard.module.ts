@@ -8,6 +8,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
+import { NgxChartsModule } from '@swimlane/ngx-charts';
 import { DashboardComponent } from './dashboard.component';
 import { DataTabComponent } from './tabs/data-tab/data-tab.component';
 import { StatsTabComponent } from './tabs/stats-tab/stats-tab.component';
@@ -18,6 +19,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { DashboardStoreEffects } from './store/effects';
 import { SelectLayerComponent } from './tabs/map-tab/select-layer-dialog/select-layer.dialog';
 import { MatSortModule } from '@angular/material/sort';
+import { GraphTabComponent } from './tabs/graph-tab/graph-tab.component';
 
 @NgModule({
   declarations: [
@@ -25,7 +27,8 @@ import { MatSortModule } from '@angular/material/sort';
     SelectLayerComponent,
     DataTabComponent,
     StatsTabComponent,
-    MapTabComponent
+    MapTabComponent,
+    GraphTabComponent
   ],
   imports: [
     CommonModule,
@@ -38,6 +41,7 @@ import { MatSortModule } from '@angular/material/sort';
     MatSortModule,
     MatTableModule,
     MatTabsModule,
+    NgxChartsModule,
     StoreModule.forFeature('dashboard', fromDashboard.reducer),
     EffectsModule.forFeature([DashboardStoreEffects])
   ],

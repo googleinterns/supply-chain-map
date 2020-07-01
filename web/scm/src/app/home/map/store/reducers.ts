@@ -1,12 +1,11 @@
 import { createReducer, on, Action } from '@ngrx/store';
 import { MapState, initialState } from './state';
 import * as MapActions from './actions';
-import { Layer, RouteLayerMarker, FilterFunction } from '../map.models';
-import { FilterFormService } from '../../side-panel/services/filter-form.service';
+import { Layer, FilterFunction } from '../map.models';
 
 const mapReducer = createReducer(
     initialState,
-    on(MapActions.loadLayer, (state, { layer }) => ({
+    on(MapActions.loadLayer, (state) => ({
         ...state,
         isLoading: true
     })),
@@ -31,29 +30,52 @@ const mapReducer = createReducer(
     })),
     on(MapActions.removeFilter, (state, { filterIdentifier }) => ({
         ...state,
-        filters: removeFilterFromObject(filterIdentifier, state.filters)
+        filters: state.filters.filter(f => f.identifier !== filterIdentifier)
+    })),
+    on(MapActions.activateFilter, (state, { filterIdentifier }) => ({
+        ...state,
+        filters: setFilterActiveStatus(filterIdentifier, true, state.filters)
+    })),
+    on(MapActions.deactivateFilter, (state, { filterIdentifier }) => ({
+        ...state,
+        filters: setFilterActiveStatus(filterIdentifier, false, state.filters)
     }))
 );
 
 function pushLayerToArray(layer: Layer, layers: Layer[]) {
-    layers = layers.filter(l => l.name !== layer.name );
+    layers = layers.filter(l => l.name !== layer.name);
     layers.push(layer);
     return layers;
 }
 
-function removeFilterFromObject(filterIdentifier: string, filters: { [key: string]: FilterFunction }): { [key: string]: FilterFunction } {
-    const t = Object.assign({}, filters);
-    delete t[filterIdentifier];
-    return t;
+function setFilterActiveStatus(
+    filterIdentifier: string,
+    status: boolean,
+    filters: { identifier: string, isActive: boolean, filter: FilterFunction }[])
+    : { identifier: string, isActive: boolean, filter: FilterFunction }[] {
+    const updatedFilters = [];
+    for (const filter of filters) {
+        const updatedFilter = Object.assign({}, filter);
+        if (filter.identifier === filterIdentifier) {
+            updatedFilter.isActive = status;
+        }
+        updatedFilters.push(updatedFilter);
+    }
+    return updatedFilters;
 }
 
 function addFilterToObject(
     filterIdentifier: string,
     filter: FilterFunction,
-    filters: { [key: string]: FilterFunction }): { [key: string]: FilterFunction } {
-        const t = {};
-        t[filterIdentifier] = filter;
-        return Object.assign({}, filters, t);
+    filters: { identifier: string, isActive: boolean, filter: FilterFunction }[])
+    : { identifier: string, isActive: boolean, filter: FilterFunction }[] {
+    filters = filters.filter(f => f.identifier !== filterIdentifier);
+    filters.push({
+        identifier: filterIdentifier,
+        isActive: false,
+        filter: filter
+    });
+    return filters;
 }
 
 export function reducer(state: MapState | undefined, action: Action) {

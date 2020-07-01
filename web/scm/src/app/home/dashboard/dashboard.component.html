@@ -14,7 +14,9 @@
             </div>
         </mat-tab>
         <mat-tab label="Graphs" *ngIf="receivedData">
-
+            <div class="tab-container">
+                <scm-graph-tab></scm-graph-tab>
+            </div>
         </mat-tab>
         <mat-tab label="Stats" *ngIf="receivedData">
             <div class="tab-container">

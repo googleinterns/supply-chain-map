@@ -132,6 +132,8 @@ export class MapHelperService {
                     category: [],
                     name: [],
                     avgLeadTime: 0,
+                    totalQty: 0,
+                    unitCost: 0,
                     city: '',
                     state: '',
                     country: '',
@@ -146,6 +148,8 @@ export class MapHelperService {
                     marker.data.city = dataPoint[UPSTREAM_COLS.MFG_CITY] ?? '';
                     marker.data.state = dataPoint[UPSTREAM_COLS.MFG_STATE] ?? '';
                     marker.data.country = dataPoint[UPSTREAM_COLS.MFG_COUNTRY] ?? '';
+                    marker.data.totalQty += parseFloat(dataPoint[UPSTREAM_COLS.TOTAL_QTY]);
+                    marker.data.unitCost += parseFloat(dataPoint[UPSTREAM_COLS.UNIT_COST]); // TODO(nirup): wrong, change this
                     marker.data.avgLeadTime += parseInt(dataPoint[UPSTREAM_COLS.LEAD_TIME], 10);
                     marker.data.product.push(dataPoint[UPSTREAM_COLS.PRODUCT]);
                     marker.data.sku.push(dataPoint[UPSTREAM_COLS.PARENT_SKU]);

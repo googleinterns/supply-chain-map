@@ -11,6 +11,8 @@ export interface RouteLayerMarker {
         category: string[];
         name: string[];
         avgLeadTime: number;
+        totalQty?: number;
+        unitCost?: number;
         city: string;
         state: string;
         country: string;

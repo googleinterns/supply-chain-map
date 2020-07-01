@@ -18,7 +18,7 @@ export class ShapeLayerComponent implements OnInit, OnDestroy {
     this._layer = value;
     this.drawPolygons();
     this.store.dispatch(addFilter({
-      filterIdentifier: 'ShapeLayer',
+      filterIdentifier: this._layer.name,
       filter: (markers) => {
         return markers.filter(marker => {
           for (const p of this.polygons) {
