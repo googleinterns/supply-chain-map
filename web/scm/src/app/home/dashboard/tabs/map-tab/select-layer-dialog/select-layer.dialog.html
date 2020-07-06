@@ -1,16 +1,29 @@
 <h1 mat-dialog-title>Select a layer</h1>
-<div mat-dialog-content>
-    <mat-selection-list #selectionList (selectionChange)="setSelectedLayers(selectionList.selectedOptions.selected)"  [multiple]="false">
+<div mat-dialog-content class="dialog-content">
+    <mat-selection-list #selectionList (selectionChange)="setSelectedLayers(selectionList.selectedOptions.selected)"
+        [multiple]="false">
 
-        <div mat-subheader>Heatmap layers</div>
-        <mat-list-option value="heatmap" *ngFor="let layer of heatmapLayers$ | async">
-            {{ layer }}
-        </mat-list-option>
-        <div mat-subheader>Shape layers</div>
-        <mat-list-option value="shape" *ngFor="let layer of shapeLayers$ | async">
-            {{ layer }}
-        </mat-list-option>
+        <div *ngIf="heatmapLayers$ | async as layers">
+            <div mat-subheader>Heatmap layers</div>
+            <mat-list-option value="heatmap" *ngFor="let layer of layers">
+                {{ layer }}
+            </mat-list-option>
+        </div>
+        <div *ngIf="shapeLayers$ | async as layers">
+            <div mat-subheader>Shape layers</div>
+            <mat-list-option value="shape" *ngFor="let layer of layers">
+                {{ layer }}
+            </mat-list-option>
+        </div>
     </mat-selection-list>
+    <div class="form-overlay" *ngIf="isLoading$ | async">
+        <mat-spinner></mat-spinner>
+        <h3>Loading data...</h3>
+    </div>
+    <div class="form-overlay" *ngIf="error$ | async as error">
+        <mat-icon class="error-icon">error</mat-icon>
+        <h3>{{ error.message }}</h3>
+    </div>
 </div>
 <div mat-dialog-actions>
     <button mat-button [mat-dialog-close]="">Cancel</button>

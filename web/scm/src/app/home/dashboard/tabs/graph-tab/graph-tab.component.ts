@@ -18,15 +18,15 @@ export class GraphTabComponent implements OnInit {
     private dashboardHelperService: DashboardHelperService,
     private changeDetector: ChangeDetectorRef
     ) {
+  }
+
+  ngOnInit(): void {
     this.store.select(selectHomeFormQueryResult).subscribe(
       formQueryResult => {
         this.chartOne = this.dashboardHelperService.getChartOne(formQueryResult);
         this.changeDetector.detectChanges();
       }
     );
-  }
-
-  ngOnInit(): void {
   }
 
 }

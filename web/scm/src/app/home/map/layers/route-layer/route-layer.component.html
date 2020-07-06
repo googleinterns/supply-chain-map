@@ -7,6 +7,7 @@
     }
 }" (markerDblClick)="filter(marker)">
     <agm-info-window>
+        <div><b>Name</b>: {{ marker.data.name.join(", ") }}</div>
         <div><b>Part Type</b>: {{ marker.data.category.join(", ") }}</div>
         <div><b>SC Node</b>: {{ marker.type.join(", ") }}</div>
         <div><b>Product</b>: {{ marker.data.mpn ? marker.data.mpn.join(", ") : marker.data.sku.join(", ") }}</div>

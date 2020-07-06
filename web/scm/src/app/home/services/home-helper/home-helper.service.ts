@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { BigQueryService } from '../big-query/big-query.service';
 import { FormQueryResponse, FormQueryResultStats } from '../../home.models';
+import { data } from '../mock_data';
 
 @Injectable({
   providedIn: 'root'
@@ -16,7 +17,8 @@ export class HomeHelperService {
    * @param query The query obtained from side panel form
    */
   public async runFormQuery(query: string): Promise<FormQueryResponse> {
-    const request = await this.bigQueryService.runQuery(query);
+    // const request = await this.bigQueryService.runQuery(query);
+    const request = { result: data }
     const formattedResult = this.bigQueryService.convertResult(request.result)[0];
 
     if (!this.validateFormattedResult(formattedResult)) {
