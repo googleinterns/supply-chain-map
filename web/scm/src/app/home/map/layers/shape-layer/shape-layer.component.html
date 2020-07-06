@@ -1,4 +1,6 @@
 <agm-info-window *ngFor="let info of this.infoWindowData"
     [latitude]="info.latitude" [longitude]="info.longitude" [isOpen]="true">
-    <div *ngFor="let item of info.data | keyvalue"><b>{{ item.key | titlecase }}</b>: {{ item.value }}</div>
+    <div *ngFor="let item of info.data | keyvalue">
+        <div *ngIf="item.value"><b>{{ item.key | titlecase }}</b>: {{ item.value }}</div>
+    </div>
 </agm-info-window>

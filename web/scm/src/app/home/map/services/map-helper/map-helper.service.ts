@@ -5,7 +5,6 @@ import { BigQueryService } from 'src/app/home/services/big-query/big-query.servi
 import { environment } from 'src/environments/environment';
 import { Colors } from 'src/assets/colors';
 import { createPolygonPath } from './geojson-converter';
-import { heatmap_data, shape_data } from './mock_data';
 
 @Injectable({
     providedIn: 'root'
@@ -246,8 +245,8 @@ export class MapHelperService {
         ];
 
         try {
-            // const response = await this.bigQueryService.runQuery(SQL_FETCH_HEATMAP_LAYER);
-            const markers = this.bigQueryService.convertResult(heatmap_data);
+            const response = await this.bigQueryService.runQuery(SQL_FETCH_HEATMAP_LAYER);
+            const markers = this.bigQueryService.convertResult(response.result);
             const magnitudes = markers.map(m => m.magnitude);
 
             return {
@@ -279,8 +278,8 @@ export class MapHelperService {
 
 
         try {
-            // const response = await this.bigQueryService.runQuery(SQL_FETCH_SHAPE_LAYER);
-            const shapes = this.bigQueryService.convertResult(shape_data);
+            const response = await this.bigQueryService.runQuery(SQL_FETCH_SHAPE_LAYER);
+            const shapes = this.bigQueryService.convertResult(response.result);
             const baseColor = Colors.randomColor();
 
             let maxMagnitude = -1;
