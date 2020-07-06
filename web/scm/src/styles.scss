@@ -6,7 +6,10 @@ $scm-warn: mat-palette($mat-red);
 $scm-theme: mat-light-theme($scm-primary, $scm-accent, $scm-warn);
 @include angular-material-theme($scm-theme);
 
-html, body { height: 100%; }
+html, body { 
+    height: 100%;
+    font-size: 14px;
+}
 
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
@@ -26,7 +29,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 .error-icon {
     color: red;
-    font-size: 8em;
+    font-size: 8rem;
     height: auto !important;
     width: auto !important;
 }

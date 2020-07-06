@@ -19,7 +19,7 @@
 }
 
 .side-panel-header {
-    font-size: 1.8em;
+    font-size: 1.8rem;
     margin: 0;
 }
 
@@ -48,4 +48,8 @@ mat-radio-button {
 
 mat-expansion-panel {
     border-left: 5px solid mat-color($scm-primary);
+}
+
+mat-form-field {
+    width: 100%;
 }

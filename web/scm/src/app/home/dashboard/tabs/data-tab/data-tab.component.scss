@@ -10,3 +10,11 @@ th {
 table {
     width: 100%;
 }
+
+.mat-elevation-z8 {
+    overflow: auto;
+}
+
+.mat-cell:nth-child(odd) {
+    background-color: #fafafa;
+}
