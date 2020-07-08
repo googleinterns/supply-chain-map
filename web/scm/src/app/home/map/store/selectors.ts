@@ -9,14 +9,12 @@ import { Layer, FilterFunction } from '../map.models';
 const isLoading = (state: MapState) => state.isLoading;
 const getError = (state: MapState) => state.error;
 const getLayers = (state: MapState) => state.layers;
-const getFilters = (state: MapState) => state.filters.filter(f => f.isActive).map(f => f.filter);
 
 export const selectMapState: MemoizedSelector<object, MapState> = createFeatureSelector<MapState>('map');
 
 export const selectMapIsLoading: MemoizedSelector<MapState, boolean> = createSelector(selectMapState, isLoading);
 export const selectMapError: MemoizedSelector<MapState, Error> = createSelector(selectMapState, getError);
 export const selectMapLayers: MemoizedSelector<MapState, Layer[]> = createSelector(selectMapState, getLayers);
-export const selectMapFilters: MemoizedSelector<MapState, FilterFunction[]> = createSelector(selectMapState, getFilters);
 
 export function selectMapLayer(name: string): MemoizedSelector<MapState, Layer> {
     return createSelector(

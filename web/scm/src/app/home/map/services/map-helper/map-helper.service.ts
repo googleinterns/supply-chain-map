@@ -46,6 +46,11 @@ export class MapHelperService {
      * @param formQueryResult The resut obtained after running the form query
      */
     public createLines(formQueryResult: FormQueryResult): RouteLayerLine[] {
+
+        if (!formQueryResult) {
+            return [];
+        }
+
         const skuMap = this.createSkuMap(formQueryResult);
         const lines: RouteLayerLine[] = [];
         const UPSTREAM_COLS = environment.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
@@ -111,6 +116,10 @@ export class MapHelperService {
      * @param formQueryResult The resut obtained after running the form query
      */
     public createMarkerPoints(formQueryResult: FormQueryResult): RouteLayerMarker[] {
+
+        if (!formQueryResult) {
+            return [];
+        }
 
         const markers: RouteLayerMarker[] = [];
         const markerMap = this.createLocationToMarkerMap(formQueryResult);

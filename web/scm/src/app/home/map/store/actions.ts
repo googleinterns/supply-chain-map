@@ -20,24 +20,3 @@ export const layerRemove = createAction(
   '[Map] Remove Layer',
   props<{ layer: Layer }>()
 );
-
-export const addFilter = createAction(
-  '[Map] Add Filter',
-  props<{ filterIdentifier: string, filter: FilterFunction }>()
-);
-
-export const removeFilter = createAction(
-  '[Map] Remove Filter',
-  props<{ filterIdentifier: string }>()
-);
-
-export const activateFilter = createAction(
-  '[Map] Activate Filter',
-  props<{ filterIdentifier: string }>()
-);
-
-export const deactivateFilter = createAction(
-  '[Map] Deactivate Filter',
-  props<{ filterIdentifier: string }>()
-);
-

@@ -1,3 +1,5 @@
+import { FormQueryResult } from '../home.models';
+
 export interface RouteLayerMarker {
     latitude: number;
     longitude: number;
@@ -77,4 +79,4 @@ export interface ShapeLayer extends Layer {
     }[];
 }
 
-export type FilterFunction = (markers: RouteLayerMarker[]) => RouteLayerMarker[];
+export type FilterFunction = (formQueryResult: FormQueryResult) => FormQueryResult;

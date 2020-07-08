@@ -1,8 +1,16 @@
-<div class="card-container">
-    <div class="card">
-        <ngx-charts-bar-vertical-2d [view]="[500, 300]" [results]="chartOne" [gradient]="true" [xAxis]="true"
-            [yAxis]="true" [legend]="true" [showXAxisLabel]="true" [showYAxisLabel]="true" [xAxisLabel]="'Program'"
-            [yAxisLabel]="'Percentage'" [legendTitle]="'% BOM sourced only from China'" *ngIf="chartOne">
-        </ngx-charts-bar-vertical-2d>
+<div class="container">
+    <div class="header">
+        <h2 class="header-text">Charts</h2>
+        <button mat-icon-button color="primary">
+            <mat-icon>add</mat-icon>
+        </button>
+    </div>
+    <div class="card-container">
+        <div class="card">
+            <ngx-charts-bar-vertical-2d [view]="[500, 300]" [results]="chartOne" [gradient]="true" [xAxis]="true"
+                [yAxis]="true" [legend]="true" [showXAxisLabel]="true" [showYAxisLabel]="true" [xAxisLabel]="'Program'"
+                [yAxisLabel]="'Percentage'" [legendTitle]="'% BOM sourced only from China'" *ngIf="chartOne">
+            </ngx-charts-bar-vertical-2d>
+        </div>
     </div>
 </div>
