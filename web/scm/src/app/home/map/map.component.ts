@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, ViewChild, ChangeDetectionStrategy } from '@angular/core';
+import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { Layer } from './map.models';
@@ -7,12 +7,11 @@ import { selectMapLayers, selectMapIsLoading, selectMapError } from './store/sel
 @Component({
   selector: 'scm-map',
   templateUrl: './map.component.html',
-  styleUrls: ['./map.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+  styleUrls: ['./map.component.scss']
 })
 export class MapComponent {
 
-  $layers: Observable<Layer[]>;
+  layers: Layer[] = [];
   map: google.maps.Map;
   isLoading$: Observable<boolean>;
   error$: Observable<Error>;
@@ -23,7 +22,9 @@ export class MapComponent {
   };
 
   constructor(private store: Store) {
-    this.$layers = this.store.select(selectMapLayers);
+    this.store.select(selectMapLayers).subscribe(
+      inLayers => this.layers = inLayers
+    );
     this.isLoading$ = this.store.select(selectMapIsLoading);
     this.error$ = this.store.select(selectMapError);
   }

@@ -85,7 +85,7 @@ export class HeatmapLayerComponent implements OnDestroy {
         if (this.heatmap) {
             this.heatmap.setMap(null);
         }
-        this.store.dispatch(removeFilter({ filterIdentifier: 'HeatmapLayer' }));
+        this.store.dispatch(removeFilter({ filterIdentifier: this._layer.name }));
     }
 
     private drawHeatmap() {

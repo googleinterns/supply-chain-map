@@ -1,4 +1,4 @@
-import { Component, Input, ViewChild } from '@angular/core';
+import { Component, Input, ViewChild, OnDestroy } from '@angular/core';
 import { RouteLayer, RouteLayerMarker } from '../../map.models';
 
 @Component({
@@ -6,7 +6,8 @@ import { RouteLayer, RouteLayerMarker } from '../../map.models';
   templateUrl: './route-layer.component.html',
   styleUrls: ['./route-layer.component.scss']
 })
-export class RouteLayerComponent {
+export class RouteLayerComponent implements OnDestroy {
+
   showLines = true;
 
   @Input() layer: RouteLayer;
@@ -20,6 +21,12 @@ export class RouteLayerComponent {
   }
 
   constructor() {
+  }
+
+  ngOnDestroy(): void {
+    if (this.map.controls[google.maps.ControlPosition.TOP_CENTER].getLength() !== 0) {
+      this.map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
+    }
   }
 
   filter(marker) {

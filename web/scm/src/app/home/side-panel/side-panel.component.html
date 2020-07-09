@@ -4,7 +4,7 @@
     </div>
     <div class="body-container">
         <form *ngIf="(sidePanelData$ | async) as sidePanelData" [formGroup]="sidePanelFormGroup"
-            (submit)="sidePanelFormSubmit()" #sidePanelForm>
+            (submit)="sidePanelFormSubmit()">
             <mat-accordion multi togglePosition="before">
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>

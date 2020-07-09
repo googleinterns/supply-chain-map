@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { MatDialog } from '@angular/material/dialog';
@@ -44,13 +44,13 @@ export class MapTabComponent implements OnInit {
   }
 
   toggleStatus($event, layerName) {
-    const isActive = $event.target.classList.contains('filter-active');
+    const isActive = $event.currentTarget.classList.contains('filter-active');
 
     if (isActive) {
-      $event.target.classList.remove('filter-active');
+      $event.currentTarget.classList.remove('filter-active');
       this.store.dispatch(deactivateFilter({ filterIdentifier: layerName }));
     } else {
-      $event.target.classList.add('filter-active');
+      $event.currentTarget.classList.add('filter-active');
       this.store.dispatch(activateFilter({ filterIdentifier: layerName }));
     }
   }

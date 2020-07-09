@@ -18,11 +18,12 @@ const homeReducer = createReducer(
         formQueryResultStats: formQueryResponse.formQueryResultStats,
         isLoading: false
     })),
-    on(HomeActions.formQueryFetchFailure, (state, { error }) => ({
+    on(HomeActions.formQueryFetchFailure, (state, { error }) => {
+        console.log(error);return {
         ...state,
         error: error,
         isLoading: false
-    })),
+    }}),
     on(HomeActions.invalidServiceAccount, (state, { error }) => ({
         ...state,
         error: error,

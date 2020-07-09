@@ -70,6 +70,6 @@ export class MapStoreEffects {
                 }
             )
         )
-    )
+    );
 
 }

@@ -1,0 +1,61 @@
+<h1 mat-dialog-title>Create chart</h1>
+<div mat-dialog-content class="dialog-content">
+    <form [formGroup]="this.createChartFormGroup" #chartForm>
+        <div>
+            <h2>Select Chart Type</h2>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Chart Type</mat-label>
+                <mat-select formControlName="chartTypeSelect">
+                    <mat-option *ngFor="let chart of chartTypes" [value]="chart">
+                        {{ chart.title }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+        </div>
+        <div>
+            <h2>Dimensions</h2>
+
+            <mat-form-field appearance="outline">
+                <mat-label>Analyze table</mat-label>
+                <mat-select formControlName="analyzeTableSelect" (selectionChange)="selectedTable = $event.value">
+                    <mat-option *ngFor="let item of tables | keyvalue" [value]="item.key">
+                        {{ item.key | titlecase }}
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+
+            <div *ngIf="selectedTable">
+                <mat-form-field appearance="outline">
+                    <mat-label>Group By</mat-label>
+                    <mat-select formControlName="groupBySelect">
+                        <mat-option *ngFor="let col of tables[selectedTable] | keyvalue" [value]="col.value"> {{ col.value }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Name</mat-label>
+                    <mat-select formControlName="nameSelect">
+                        <mat-option *ngFor="let col of tables[selectedTable] | keyvalue" [value]="col.value"> {{ col.value }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+                <mat-form-field appearance="outline">
+                    <mat-label>Value</mat-label>
+                    <mat-select formControlName="valueSelect">
+                        <mat-option *ngFor="let col of tables[selectedTable] | keyvalue" [value]="col.value"> {{ col.value }}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+
+            </div>
+        </div>
+    </form>
+</div>
+<div mat-dialog-actions>
+    <button mat-button [mat-dialog-close]="">Cancel</button>
+    <button mat-button [mat-dialog-close]="getDialogReturnData()" cdkFocusInitial>Submit</button>
+</div>

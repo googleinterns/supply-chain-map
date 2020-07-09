@@ -93,7 +93,7 @@ export class ShapeLayerComponent implements OnInit, OnDestroy {
     for (const p of this.polygons) {
       p.setMap(null);
     }
-    this.store.dispatch(removeFilter({ filterIdentifier: 'ShapeLayer' }));
+    this.store.dispatch(removeFilter({ filterIdentifier: this._layer.name }));
   }
 
   layerClick($event) {

@@ -1,7 +1,7 @@
 <agm-map [zoom]="3" [minZoom]="2.5" [latitude]="initialZoomLatLong.lat" [longitude]="initialZoomLatLong.long"
     (mapReady)="onMapLoad($event)" [streetViewControl]="false">
     <div *ngIf="map">
-        <div *ngFor="let layer of ($layers | async)">
+        <div *ngFor="let layer of layers">
             <scm-route-layer [map]="this.map" [layer]="layer" *ngIf="isOfTypeRouteLayer(layer)"></scm-route-layer>
             <scm-heatmap-layer [map]="this.map" [layer]="layer" *ngIf="isOfTypeHeatmapLayer(layer)"></scm-heatmap-layer>
             <scm-shape-layer [map]="this.map" [layer]="layer" *ngIf="isOfTypeShapeLayer(layer)"></scm-shape-layer>
