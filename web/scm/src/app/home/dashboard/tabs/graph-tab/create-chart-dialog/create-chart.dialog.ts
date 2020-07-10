@@ -3,7 +3,8 @@ import { chartTypes } from './chart-types';
 import { Store } from '@ngrx/store';
 import { selectHomeFormQueryResult } from 'src/app/home/store/selectors';
 import { environment } from 'src/environments/environment';
-import { FormGroup, FormControl } from '@angular/forms';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
     selector: 'scm-create-chart-dialog',
@@ -30,13 +31,13 @@ export class CreateChartComponent {
         showSeriesOnHover: true
     };
 
-    constructor(private store: Store) {
+    constructor(private store: Store, private dialogRef: MatDialogRef<CreateChartComponent>) {
         this.createChartFormGroup = new FormGroup({
-            chartTypeSelect: new FormControl(),
-            analyzeTableSelect: new FormControl(),
-            groupBySelect: new FormControl(),
-            nameSelect: new FormControl(),
-            valueSelect: new FormControl()
+            chartTypeSelect: new FormControl('', Validators.required),
+            analyzeTableSelect: new FormControl('', Validators.required),
+            groupBySelect: new FormControl('', Validators.required),
+            nameSelect: new FormControl('', Validators.required),
+            valueSelect: new FormControl('', Validators.required)
         });
 
         this.store.select(selectHomeFormQueryResult)
@@ -54,8 +55,19 @@ export class CreateChartComponent {
             );
     }
 
-    getDialogReturnData() {
+    submitForm() {
+        if (this.createChartFormGroup.invalid) {
+            this.createChartFormGroup.markAllAsTouched();
+            return;
+        }
         const formValue = this.createChartFormGroup.value;
-        return {...formValue, chartOptions: {...this.defaultOptions, xAxisLabel: formValue.nameSelect, yAxisLabel: formValue.valueSelect }};
+        this.dialogRef.close({
+            ...formValue,
+            chartOptions: {
+                ...this.defaultOptions,
+                xAxisLabel: formValue.nameSelect,
+                yAxisLabel: formValue.valueSelect
+            }
+        });
     }
 }

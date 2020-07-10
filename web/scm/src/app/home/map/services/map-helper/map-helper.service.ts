@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { FormQueryResult } from 'src/app/home/home.models';
-import { RouteLayerLine, RouteLayerMarker, Layer, HeatmapLayer, ShapeLayer } from '../../map.models';
+import { RouteLayerLine, RouteLayerMarker, Layer, HeatmapLayer, ShapeLayer, MFG_IDENTIFIER, CM_IDENTIFIER, GDC_IDENTIFIER } from '../../map.models';
 import { BigQueryService } from 'src/app/home/services/big-query/big-query.service';
 import { environment } from 'src/environments/environment';
 import { Colors } from 'src/assets/colors';
@@ -76,7 +76,7 @@ export class MapHelperService {
                             state: cmRow[CM_COLS.CM_STATE],
                             country: cmRow[CM_COLS.CM_COUNTRY]
                         },
-                        type: 'UPSTREAM',
+                        type: 'Upstream',
                         color: 'blue'
                     });
                 }
@@ -100,7 +100,7 @@ export class MapHelperService {
                             state: downstreamRow[DOWNSTREAM_COLS.GDC_STATE],
                             country: downstreamRow[DOWNSTREAM_COLS.GDC_COUNTRY]
                         },
-                        type: 'DOWNSTREAM',
+                        type: 'Downstream',
                         color: 'red'
                     });
                 }
@@ -150,8 +150,8 @@ export class MapHelperService {
             };
 
             for (const dataPoint of markerMap.get(latLongId)) {
-                if (dataPoint.type === 'MFG') {
-                    marker.type.push('MFG');
+                if (dataPoint.type === MFG_IDENTIFIER) {
+                    marker.type.push(MFG_IDENTIFIER);
                     marker.latitude = dataPoint[UPSTREAM_COLS.MFG_LAT];
                     marker.longitude = dataPoint[UPSTREAM_COLS.MFG_LONG];
                     marker.data.city = dataPoint[UPSTREAM_COLS.MFG_CITY] ?? '';
@@ -166,8 +166,8 @@ export class MapHelperService {
                     marker.data.description.push(dataPoint[UPSTREAM_COLS.DESCRIPTION]);
                     marker.data.category.push(dataPoint[UPSTREAM_COLS.CATEGORY]);
                     marker.data.name.push(dataPoint[UPSTREAM_COLS.SUPPLIER_NAME]);
-                } else if (dataPoint.type === 'CM') {
-                    marker.type.push('CM');
+                } else if (dataPoint.type === CM_IDENTIFIER) {
+                    marker.type.push(CM_IDENTIFIER);
                     marker.latitude = dataPoint[CM_COLS.CM_LAT];
                     marker.longitude = dataPoint[CM_COLS.CM_LONG];
                     marker.data.city = dataPoint[CM_COLS.CM_CITY] ?? '';
@@ -178,8 +178,8 @@ export class MapHelperService {
                     marker.data.sku.push(dataPoint[CM_COLS.SKU]);
                     marker.data.description.push(dataPoint[CM_COLS.DESCRIPTION]);
                     marker.data.name.push(dataPoint[CM_COLS.CM_NAME]);
-                } else if (dataPoint.type === 'GDC') {
-                    marker.type.push('GDC');
+                } else if (dataPoint.type === GDC_IDENTIFIER) {
+                    marker.type.push(GDC_IDENTIFIER);
                     marker.latitude = dataPoint[DOWNSTREAM_COLS.GDC_LAT];
                     marker.longitude = dataPoint[DOWNSTREAM_COLS.GDC_LONG];
                     marker.data.city = dataPoint[DOWNSTREAM_COLS.GDC_CITY] ?? '';
@@ -208,20 +208,20 @@ export class MapHelperService {
 
             if (marker.type.length === 1) {
                 switch (marker.type[0]) {
-                    case 'MFG': {
+                    case MFG_IDENTIFIER: {
                         marker.iconUrl = MapHelperService.ICON_MAP.MFG;
                         break;
                     }
-                    case 'CM': {
+                    case CM_IDENTIFIER: {
                         marker.iconUrl = MapHelperService.ICON_MAP.CM;
                         break;
                     }
-                    case 'GDC': {
+                    case GDC_IDENTIFIER: {
                         marker.iconUrl = MapHelperService.ICON_MAP.GDC;
                         break;
                     }
                 }
-            } else if (marker.type.includes('GDC')) {
+            } else if (marker.type.includes(GDC_IDENTIFIER)) {
                 marker.iconUrl = MapHelperService.ICON_MAP.GDC;
             } else {
                 marker.iconUrl = MapHelperService.ICON_MAP.MFG_CM;
@@ -375,7 +375,7 @@ export class MapHelperService {
 
         if ('upstream' in formQueryResult) {
             const UPSTREAM_COLS = environment.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
-            additionalProps = { type: 'MFG' };
+            additionalProps = { type: MFG_IDENTIFIER };
             for (const upstreamRow of formQueryResult.upstream) {
                 const id = upstreamRow[UPSTREAM_COLS.MFG_LAT] + ' ' + upstreamRow[UPSTREAM_COLS.MFG_LONG];
                 if (markerMap.has(id)) {
@@ -387,7 +387,7 @@ export class MapHelperService {
         }
 
         const CM_COLS = environment.bigQuery.layerDatasets.route.tables.CM.columns;
-        additionalProps = { type: 'CM' };
+        additionalProps = { type: CM_IDENTIFIER };
         for (const cmRow of formQueryResult.cm) {
             const id = cmRow[CM_COLS.CM_LAT] + ' ' + cmRow[CM_COLS.CM_LONG];
             if (markerMap.has(id)) {
@@ -399,7 +399,7 @@ export class MapHelperService {
 
         if ('downstream' in formQueryResult) {
             const DOWNSTREAM_COLS = environment.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
-            additionalProps = { type: 'GDC' };
+            additionalProps = { type: GDC_IDENTIFIER };
             for (const downstreamRow of formQueryResult.downstream) {
                 const id = downstreamRow[DOWNSTREAM_COLS.GDC_LAT] + ' ' + downstreamRow[DOWNSTREAM_COLS.GDC_LONG];
                 if (markerMap.has(id)) {

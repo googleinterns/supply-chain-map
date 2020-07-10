@@ -1,4 +1,4 @@
-import { Layer, RouteLayerMarker, FilterFunction } from '../map.models';
+import { Layer } from '../map.models';
 
 export interface MapState {
     layers: Layer[];

@@ -66,7 +66,8 @@ export class ShapeLayerComponent implements OnInit, OnDestroy {
           });
         }
         return filteredFormQueryResult;
-      }
+      },
+      isActive: false
     }));
   }
 
@@ -110,7 +111,7 @@ export class ShapeLayerComponent implements OnInit, OnDestroy {
       for (const shape of this._layer.shapes) {
         const p = new google.maps.Polygon({
           ...shape.shapeOpts,
-          zIndex: 0,
+          zIndex: -1,
           map: this._map
         });
         p.addListener('click', (event) => {

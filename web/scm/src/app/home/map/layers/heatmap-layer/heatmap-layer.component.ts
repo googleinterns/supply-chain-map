@@ -73,7 +73,8 @@ export class HeatmapLayerComponent implements OnDestroy {
                 }
 
                 return filteredFormQueryResult;
-            }
+            },
+            isActive: false
         }));
     }
     private heatmap: google.maps.visualization.HeatmapLayer;

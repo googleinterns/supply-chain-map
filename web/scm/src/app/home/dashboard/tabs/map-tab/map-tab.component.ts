@@ -25,10 +25,13 @@ export class MapTabComponent implements OnInit {
   }
 
   openDialog() {
-    const dialogRef = this.matDialog.open(SelectLayerComponent);
+    const dialogRef = this.matDialog.open(SelectLayerComponent, { disableClose: true });
 
     dialogRef.afterClosed().subscribe(
       selectedLayer => {
+        if (!selectedLayer) {
+          return;
+        }
         let layer;
         switch (selectedLayer.type) {
           case 'heatmap': layer = { name: selectedLayer.name, hotspots: [] }; break;

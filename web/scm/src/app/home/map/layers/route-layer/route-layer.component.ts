@@ -1,5 +1,8 @@
 import { Component, Input, ViewChild, OnDestroy } from '@angular/core';
-import { RouteLayer, RouteLayerMarker } from '../../map.models';
+import { RouteLayerMarker, RouteLayerLine } from '../../map.models';
+import { Store } from '@ngrx/store';
+import { selectHomeFormQueryResult } from 'src/app/home/store/selectors';
+import { MapHelperService } from '../../services/map-helper/map-helper.service';
 
 @Component({
   selector: 'scm-route-layer',
@@ -8,9 +11,10 @@ import { RouteLayer, RouteLayerMarker } from '../../map.models';
 })
 export class RouteLayerComponent implements OnDestroy {
 
+  markers: RouteLayerMarker[] = [];
+  lines: RouteLayerLine[] = [];
   showLines = true;
 
-  @Input() layer: RouteLayer;
   @Input() map: google.maps.Map;
 
   private _toggleDiv;
@@ -20,17 +24,19 @@ export class RouteLayerComponent implements OnDestroy {
     this.addToggleDiv();
   }
 
-  constructor() {
+  constructor(private store: Store, private mapHelperService: MapHelperService) {
+    this.store.select(selectHomeFormQueryResult).subscribe(
+      formQueryResult => {
+        this.markers = this.mapHelperService.createMarkerPoints(formQueryResult);
+        this.lines = this.mapHelperService.createLines(formQueryResult);
+      }
+    );
   }
 
   ngOnDestroy(): void {
     if (this.map.controls[google.maps.ControlPosition.TOP_CENTER].getLength() !== 0) {
       this.map.controls[google.maps.ControlPosition.TOP_CENTER].clear();
     }
-  }
-
-  filter(marker) {
-    console.log('Filter now');
   }
 
   private addToggleDiv() {

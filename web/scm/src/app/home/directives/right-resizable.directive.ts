@@ -33,6 +33,7 @@ export class RightResizableDirective implements OnInit {
             } else {
                 el.nativeElement.style.width = (Math.min(this.resizableMaxWidth, incomingWidth)) + 'px';
             }
+            window.dispatchEvent(new Event('resize'));
         };
 
 

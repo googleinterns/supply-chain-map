@@ -2,7 +2,7 @@
     (mapReady)="onMapLoad($event)" [streetViewControl]="false">
     <div *ngIf="map">
         <div *ngFor="let layer of layers">
-            <scm-route-layer [map]="this.map" [layer]="layer" *ngIf="isOfTypeRouteLayer(layer)"></scm-route-layer>
+            <scm-route-layer [map]="this.map" *ngIf="isOfTypeRouteLayer(layer)"></scm-route-layer>
             <scm-heatmap-layer [map]="this.map" [layer]="layer" *ngIf="isOfTypeHeatmapLayer(layer)"></scm-heatmap-layer>
             <scm-shape-layer [map]="this.map" [layer]="layer" *ngIf="isOfTypeShapeLayer(layer)"></scm-shape-layer>
         </div>

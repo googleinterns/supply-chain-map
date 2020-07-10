@@ -1,5 +1,5 @@
 import { createAction, props } from '@ngrx/store';
-import { Layer, RouteLayerMarker, FilterFunction } from '../map.models';
+import { Layer } from '../map.models';
 
 export const loadLayer = createAction(
   '[Map] Load Layer',

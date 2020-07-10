@@ -254,7 +254,8 @@ export class FilterFormService {
     /**
      * Get the selected categories
      */
-    if (upstreamFilterGroup.componentFilterGroup.categorySelect != null) {
+    if (upstreamFilterGroup.componentFilterGroup.categorySelect != null &&
+      upstreamFilterGroup.componentFilterGroup.categorySelect.length > 0) {
       conditions.push(
         `${FilterFormService.environmentRouteTable.UPSTREAM.columns.CATEGORY}
         IN (${ upstreamFilterGroup.componentFilterGroup.categorySelect.map((e: string) => `'${e}'`).join(', ')})`
@@ -264,7 +265,8 @@ export class FilterFormService {
     /**
      * Get the selected suppliers
      */
-    if (upstreamFilterGroup.componentFilterGroup.supplierSelect != null) {
+    if (upstreamFilterGroup.componentFilterGroup.supplierSelect != null &&
+      upstreamFilterGroup.componentFilterGroup.supplierSelect.length > 0) {
       conditions.push(
         `${FilterFormService.environmentRouteTable.UPSTREAM.columns.SUPPLIER_NAME}
         IN (${ upstreamFilterGroup.componentFilterGroup.supplierSelect.map((e: string) => `'${e}'`).join(', ')})`
@@ -274,7 +276,8 @@ export class FilterFormService {
     /**
      * Get the selected countries
      */
-    if (upstreamFilterGroup.locationFilterGroup.countrySelect != null) {
+    if (upstreamFilterGroup.locationFilterGroup.countrySelect != null &&
+      upstreamFilterGroup.locationFilterGroup.countrySelect.length > 0) {
       conditions.push(
         `${FilterFormService.environmentRouteTable.UPSTREAM.columns.MFG_COUNTRY}
         IN (${ upstreamFilterGroup.locationFilterGroup.countrySelect.map((e: string) => `'${e}'`).join(', ')})`
@@ -284,7 +287,8 @@ export class FilterFormService {
     /**
      * Get the selected states
      */
-    if (upstreamFilterGroup.locationFilterGroup.regionSelect != null) {
+    if (upstreamFilterGroup.locationFilterGroup.regionSelect != null &&
+      upstreamFilterGroup.locationFilterGroup.regionSelect.length > 0) {
       conditions.push(
         `${FilterFormService.environmentRouteTable.UPSTREAM.columns.MFG_STATE}
         IN (${ upstreamFilterGroup.locationFilterGroup.regionSelect.map((e: string) => `'${e}'`).join(', ')})`
@@ -294,7 +298,8 @@ export class FilterFormService {
     /**
      * Get the selected cities
      */
-    if (upstreamFilterGroup.locationFilterGroup.citySelect != null) {
+    if (upstreamFilterGroup.locationFilterGroup.citySelect != null &&
+      upstreamFilterGroup.locationFilterGroup.citySelect.length > 0) {
       conditions.push(
         `${FilterFormService.environmentRouteTable.UPSTREAM.columns.MFG_CITY}
         IN (${ upstreamFilterGroup.locationFilterGroup.citySelect.map((e: string) => `'${e}'`).join(', ')})`
@@ -326,7 +331,8 @@ export class FilterFormService {
     /**
      * Get the selected countries
      */
-    if (downstreamFilterGroup.locationFilterGroup.countrySelect != null) {
+    if (downstreamFilterGroup.locationFilterGroup.countrySelect != null &&
+      downstreamFilterGroup.locationFilterGroup.countrySelect.length > 0) {
       conditions.push(
         `${FilterFormService.environmentRouteTable.DOWNSTREAM.columns.GDC_COUNTRY}
         IN (${ downstreamFilterGroup.locationFilterGroup.countrySelect.map((e: string) => `'${e}'`).join(', ')})`
@@ -336,7 +342,8 @@ export class FilterFormService {
     /**
      * Get the selected states
      */
-    if (downstreamFilterGroup.locationFilterGroup.regionSelect != null) {
+    if (downstreamFilterGroup.locationFilterGroup.regionSelect != null &&
+      downstreamFilterGroup.locationFilterGroup.regionSelect.length > 0) {
       conditions.push(
         `${FilterFormService.environmentRouteTable.DOWNSTREAM.columns.GDC_STATE}
         IN (${ downstreamFilterGroup.locationFilterGroup.regionSelect.map((e: string) => `'${e}'`).join(', ')})`
@@ -346,7 +353,8 @@ export class FilterFormService {
     /**
      * Get the selected cities
      */
-    if (downstreamFilterGroup.locationFilterGroup.citySelect != null) {
+    if (downstreamFilterGroup.locationFilterGroup.citySelect != null &&
+      downstreamFilterGroup.locationFilterGroup.citySelect.length > 0) {
       conditions.push(
         `${FilterFormService.environmentRouteTable.DOWNSTREAM.columns.GDC_CITY}
         IN (${ downstreamFilterGroup.locationFilterGroup.citySelect.map((e: string) => `'${e}'`).join(', ')})`

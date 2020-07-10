@@ -1,11 +1,11 @@
-<agm-marker *ngFor="let marker of this.layer.markers" [latitude]="marker.latitude" [longitude]="marker.longitude"
+<agm-marker *ngFor="let marker of this.markers" [latitude]="marker.latitude" [longitude]="marker.longitude"
     [iconUrl]="{
     url: marker.iconUrl,
     scaledSize: {
         width: 20,
         height: 20
     }
-}" (markerDblClick)="filter(marker)">
+}">
     <agm-info-window>
         <div><b>Name</b>: {{ marker.data.name.join(", ") }}</div>
         <div><b>Part Type</b>: {{ marker.data.category.join(", ") }}</div>
@@ -18,7 +18,7 @@
 </agm-marker>
 
 <div *ngIf="showLines">
-    <scm-line *ngFor="let line of this.layer.lines" [route]="line">
+    <scm-line *ngFor="let line of this.lines" [route]="line">
         <div><b>Route</b>: {{ line.from.city + '_' + line.to.city }}</div>
         <div><b>SC Node Stream</b>: {{ line.type }}</div>
     </scm-line>

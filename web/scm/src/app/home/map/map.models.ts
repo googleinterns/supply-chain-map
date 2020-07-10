@@ -1,5 +1,12 @@
 import { FormQueryResult } from '../home.models';
 
+export const ROUTE_LAYER_NAME = 'Route Layer';
+export const MFG_IDENTIFIER = 'MFG';
+export const CM_IDENTIFIER = 'CM';
+export const GDC_IDENTIFIER = 'GDC';
+
+export type SupplyChainStream = 'Upstream' | 'Downstream';
+
 export interface RouteLayerMarker {
     latitude: number;
     longitude: number;
@@ -36,7 +43,7 @@ export interface RouteLayerLine {
         state: string;
         country: string;
     };
-    type: 'UPSTREAM' | 'DOWNSTREAM';
+    type: SupplyChainStream;
     color?: string;
 }
 
@@ -55,11 +62,6 @@ export interface Layer {
             endLabel: number
         }
     })[];
-}
-
-export interface RouteLayer extends Layer {
-    markers: RouteLayerMarker[];
-    lines: RouteLayerLine[];
 }
 
 export interface HeatmapLayer extends Layer {

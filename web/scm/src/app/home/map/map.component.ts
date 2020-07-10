@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { Layer } from './map.models';
+import { Layer, ROUTE_LAYER_NAME } from './map.models';
 import { selectMapLayers, selectMapIsLoading, selectMapError } from './store/selectors';
 
 @Component({
@@ -30,7 +30,7 @@ export class MapComponent {
   }
 
   isOfTypeRouteLayer(layer: Layer) {
-    return 'markers' in layer && 'lines' in layer;
+    return layer.name === ROUTE_LAYER_NAME;
   }
 
   isOfTypeHeatmapLayer(layer: Layer) {

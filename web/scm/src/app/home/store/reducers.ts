@@ -18,19 +18,18 @@ const homeReducer = createReducer(
         formQueryResultStats: formQueryResponse.formQueryResultStats,
         isLoading: false
     })),
-    on(HomeActions.formQueryFetchFailure, (state, { error }) => {
-        console.log(error);return {
+    on(HomeActions.formQueryFetchFailure, (state, { error }) => ({
         ...state,
         error: error,
         isLoading: false
-    }}),
+    })),
     on(HomeActions.invalidServiceAccount, (state, { error }) => ({
         ...state,
         error: error,
         isLoading: false
     })),
-    on(HomeActions.addFilter, (state, { filterIdentifier, filter }) => {
-        const filters = addFilterToObject(filterIdentifier, filter, state.filters);
+    on(HomeActions.addFilter, (state, { filterIdentifier, filter, isActive }) => {
+        const filters = addFilterToObject(filterIdentifier, filter, isActive, state.filters);
         return {
             ...state,
             filters: filters,
@@ -82,12 +81,13 @@ function setFilterActiveStatus(
 function addFilterToObject(
     filterIdentifier: string,
     filter: FilterFunction,
+    isActive: boolean,
     filters: { identifier: string, isActive: boolean, filter: FilterFunction }[])
     : { identifier: string, isActive: boolean, filter: FilterFunction }[] {
     filters = filters.filter(f => f.identifier !== filterIdentifier);
     filters.push({
         identifier: filterIdentifier,
-        isActive: false,
+        isActive: isActive,
         filter: filter
     });
     return filters;

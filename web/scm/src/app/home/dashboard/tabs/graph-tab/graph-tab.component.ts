@@ -28,24 +28,21 @@ export class GraphTabComponent implements OnInit {
   }
 
   openDialog() {
-    const dialogRef = this.matDialog.open(CreateChartComponent);
+    const dialogRef = this.matDialog.open(CreateChartComponent, { disableClose: true });
 
-    dialogRef.afterClosed().subscribe(
-      formValue => this.processData(formValue)
-    );
+    dialogRef.afterClosed().subscribe(formValue => this.processData(formValue));
   }
 
   processData(formValue) {
-    console.log(formValue);
-    if (!formValue.analyzeTableSelect) {
+    if (!formValue) {
       return;
     }
+
     const key$ = d => d[formValue.groupBySelect];
     const name$ = d => d[formValue.nameSelect];
     const value$ = d => d[formValue.valueSelect];
 
     const chartsInsertLoc = this.charts.length;
-
 
     this.formQueryResult$.subscribe(
       formQueryResult => {
@@ -53,9 +50,9 @@ export class GraphTabComponent implements OnInit {
         this.charts[chartsInsertLoc] = {
           chart: formValue.chartTypeSelect,
           data: nestedData.map(
-            d => ({
-              name: d.key,
-              series: rollUp(d.value.map(seriesPoints))
+            keyvalue => ({
+              name: keyvalue.key,
+              series: rollUp(keyvalue.value.map(row => ({ name: name$(row), value: value$(row) })))
             })
           ),
           chartOptions: formValue.chartOptions
@@ -63,14 +60,7 @@ export class GraphTabComponent implements OnInit {
       }
     );
 
-    function seriesPoints(d) {
-      return {
-        name: name$(d),
-        value: value$(d)
-      };
-    }
-
-    function nest(formQueryResult: FormQueryResult) {
+    function nest(formQueryResult: FormQueryResult): { key: string, value: any[] }[] {
       const arrayMap = [];
 
       for (const row of formQueryResult[formValue.analyzeTableSelect]) {
@@ -82,16 +72,35 @@ export class GraphTabComponent implements OnInit {
       return Object.keys(arrayMap).map(key => ({ key: key, value: arrayMap[key] }));
     }
 
-    function rollUp(arr): any[] {
-      const arrayMap = [];
-      for (const obj of arr) {
-        if (!(obj.name in arrayMap)) {
-          arrayMap[obj.name] = 0;
+    function rollUp(arr: { name: string, value: string }[]): any[] {
+      const floatRollUp = () => {
+        const arrayMap = [];
+        for (const obj of arr) {
+          if (!(obj.name in arrayMap)) {
+            arrayMap[obj.name] = 0;
+          }
+          if (+obj.value !== +obj.value) {
+            // FAST ISNUMBER CHECK
+            return null;
+          }
+          arrayMap[obj.name] += parseFloat(obj.value);
         }
-        arrayMap[obj.name] += parseFloat(obj.value) ?? 0;
-      }
+        return Object.keys(arrayMap).map(name => ({ name: name, value: arrayMap[name] }));
+      };
 
-      return Object.keys(arrayMap).map(name => ({ name: name, value: arrayMap[name] }));
+      const stringRollUp = () => {
+        const arrayMap = [];
+        for (const obj of arr) {
+          if (!(obj.name in arrayMap)) {
+            arrayMap[obj.name] = new Set();
+          }
+          arrayMap[obj.name].add(obj.value);
+        }
+        return Object.keys(arrayMap).map(name => ({ name: name, value: arrayMap[name].size }));
+      };
+
+      return floatRollUp() ?? stringRollUp();
+
     }
   }
 

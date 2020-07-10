@@ -24,7 +24,7 @@ export const invalidServiceAccount = createAction(
 
 export const addFilter = createAction(
   '[Map] Add Filter',
-  props<{ filterIdentifier: string, filter: FilterFunction }>()
+  props<{ filterIdentifier: string, filter: FilterFunction, isActive: boolean }>()
 );
 
 export const removeFilter = createAction(
