@@ -1,7 +1,6 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { DashboardHelperService } from '../../services/dashboard-helper.service';
 import { selectHomeFormQueryResult } from 'src/app/home/store/selectors';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateChartComponent } from './create-chart-dialog/create-chart.dialog';
@@ -55,8 +54,11 @@ export class GraphTabComponent implements OnInit {
               series: rollUp(keyvalue.value.map(row => ({ name: name$(row), value: value$(row) })))
             })
           ),
-          chartOptions: formValue.chartOptions
+          chartOptions: formValue.chartOptions,
+          identifier: Date.now()
         };
+        // ngx-charts has a resize issue. Must explicitly call resize.
+        window.dispatchEvent(new Event('resize'));
       }
     );
 
@@ -102,6 +104,12 @@ export class GraphTabComponent implements OnInit {
       return floatRollUp() ?? stringRollUp();
 
     }
+  }
+
+  removeChart(chart) {
+    this.charts = this.charts.filter(c => c.identifier !== chart.identifier);
+    // ngx-charts has a resize issue. Must explicitly call resize.
+    window.dispatchEvent(new Event('resize'));
   }
 
 }
