@@ -1,7 +1,7 @@
-import { Component, OnInit, Input, ViewChild } from '@angular/core';
+import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { Layer } from './map.models';
+import { Layer, ROUTE_LAYER_NAME } from './map.models';
 import { selectMapLayers, selectMapIsLoading, selectMapError } from './store/selectors';
 
 @Component({
@@ -11,7 +11,7 @@ import { selectMapLayers, selectMapIsLoading, selectMapError } from './store/sel
 })
 export class MapComponent {
 
-  $layers: Observable<Layer[]>;
+  layers: Layer[] = [];
   map: google.maps.Map;
   isLoading$: Observable<boolean>;
   error$: Observable<Error>;
@@ -22,13 +22,15 @@ export class MapComponent {
   };
 
   constructor(private store: Store) {
-    this.$layers = this.store.select(selectMapLayers);
+    this.store.select(selectMapLayers).subscribe(
+      inLayers => this.layers = inLayers
+    );
     this.isLoading$ = this.store.select(selectMapIsLoading);
     this.error$ = this.store.select(selectMapError);
   }
 
   isOfTypeRouteLayer(layer: Layer) {
-    return 'markers' in layer && 'lines' in layer;
+    return layer.name === ROUTE_LAYER_NAME;
   }
 
   isOfTypeHeatmapLayer(layer: Layer) {

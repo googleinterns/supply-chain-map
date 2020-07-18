@@ -17,7 +17,7 @@ describe('MapComponent', () => {
   let fixture: ComponentFixture<MapComponent>;
   let mockStore: MockStore;
   let mockSelectLayers: MemoizedSelector<MapState, Layer[]>;
-  let mockError:  MemoizedSelector<MapState, Error>;
+  let mockError: MemoizedSelector<MapState, Error>;
   let mockIsLoading: MemoizedSelector<MapState, boolean>;
 
   beforeEach(async(() => {

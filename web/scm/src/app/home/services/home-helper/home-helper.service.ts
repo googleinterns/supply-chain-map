@@ -55,9 +55,11 @@ export class HomeHelperService {
       /**
        * Check if all properties exist
        */
-      for (const prop of Object.values(environment.bigQuery.layerDatasets.route.tables.UPSTREAM.columns)) {
-        if (!(prop in formattedResult.upstream[0])) {
-          return false;
+      if (formattedResult.upstream.length > 0) {
+        for (const prop of Object.values(environment.bigQuery.layerDatasets.route.tables.UPSTREAM.columns)) {
+          if (!(prop in formattedResult.upstream[0])) {
+            return false;
+          }
         }
       }
     }
@@ -79,14 +81,16 @@ export class HomeHelperService {
     /**
      * Check if all properties exist
      */
-    for (const prop of Object.values(environment.bigQuery.layerDatasets.route.tables.CM.columns)) {
-      if (!(prop in formattedResult.cm[0])) {
-        return false;
+    if (formattedResult.cm.length > 0) {
+      for (const prop of Object.values(environment.bigQuery.layerDatasets.route.tables.CM.columns)) {
+        if (!(prop in formattedResult.cm[0])) {
+          return false;
+        }
       }
     }
 
     /**
-     * Check if upstream is present
+     * Check if downstream is present
      */
     if ('downstream' in formattedResult) {
       /**
@@ -99,9 +103,11 @@ export class HomeHelperService {
       /**
        * Check if all properties exist
        */
-      for (const prop of Object.values(environment.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns)) {
-        if (!(prop in formattedResult.downstream[0])) {
-          return false;
+      if (formattedResult.downstream.length > 0) {
+        for (const prop of Object.values(environment.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns)) {
+          if (!(prop in formattedResult.downstream[0])) {
+            return false;
+          }
         }
       }
     }

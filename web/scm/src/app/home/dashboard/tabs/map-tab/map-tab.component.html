@@ -5,15 +5,39 @@
             <mat-icon>add</mat-icon>
         </button>
     </div>
-    <mat-list *ngIf="layers$ | async as layers">
-        <mat-list-item>
-            Base Map
-        </mat-list-item>
-        <mat-list-item *ngFor="let layer of layers">
-            {{ layer.name }}
-            <button mat-icon-button color="warn" (click)="removeLayer(layer)">
-                <mat-icon>remove</mat-icon>
-            </button>
-        </mat-list-item>
-    </mat-list>
+    <div class="layer-list" *ngIf="layers$ | async as layers">
+        <div class="layer-list-item">
+            <div class="layer-list-item-header">
+                Base Map
+            </div>
+        </div>
+        <div *ngFor="let layer of layers" class="layer-list-item">
+            <div class="layer-list-item-header">
+                {{ layer.name }}
+                <div class="icon-container">
+                    <button mat-icon-button class="lock-icon" (click)="toggleStatus($event, layer.name)">
+                        <mat-icon>lock</mat-icon>
+                    </button>
+                    <button mat-icon-button color="warn" (click)="removeLayer(layer)">
+                        <mat-icon>remove</mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="layer-list-item-body">
+                <div *ngFor="let legend of layer.legend">
+                    <div class="legend-item" *ngIf="legend.icon">
+                        <mat-icon class="legend-icon" *ngIf="legend.type === 'MAT'">{{ legend.icon }}</mat-icon>
+                        <img class="legend-icon" *ngIf="legend.type === 'URL'" [src]="legend.icon" />
+                        {{ legend.name }}
+                    </div>
+                    <div class="legend-item" *ngIf="legend.spectrum">
+                        {{ legend.name }}: {{ legend.spectrum.startLabel }}
+                        <div class="spectrum"
+                            [ngStyle]="{'background': 'linear-gradient(.25turn, '+legend.spectrum.gradientColors.join(', ')+')'}">
+                        </div>{{ legend.spectrum.endLabel }}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

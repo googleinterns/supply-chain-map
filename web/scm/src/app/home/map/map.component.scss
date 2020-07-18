@@ -6,6 +6,6 @@ scm-route-layer {
     z-index: 2;
 }
 
-scm-heatmap-layer {
+scm-heatmap-layer scm-shape-layer {
     z-index: 1;
 }

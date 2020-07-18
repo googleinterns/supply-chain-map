@@ -16,6 +16,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { RightResizableDirective } from './directives/right-resizable.directive';
 import { TopResizableDirective } from './directives/top-resizable.directive';
 import { DashboardModule } from './dashboard/dashboard.module';
+import { MatButtonModule } from '@angular/material/button';
 
 @NgModule({
   declarations: [
@@ -27,6 +28,7 @@ import { DashboardModule } from './dashboard/dashboard.module';
   imports: [
     CommonModule,
     DashboardModule,
+    MatButtonModule,
     MatIconModule,
     MatMenuModule,
     MatSidenavModule,

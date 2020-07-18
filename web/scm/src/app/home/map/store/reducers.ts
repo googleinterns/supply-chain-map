@@ -1,11 +1,11 @@
 import { createReducer, on, Action } from '@ngrx/store';
 import { MapState, initialState } from './state';
 import * as MapActions from './actions';
-import { Layer } from '../map.models';
+import { Layer, FilterFunction } from '../map.models';
 
 const mapReducer = createReducer(
     initialState,
-    on(MapActions.loadLayer, (state, { layer }) => ({
+    on(MapActions.loadLayer, (state) => ({
         ...state,
         isLoading: true
     })),
@@ -27,7 +27,7 @@ const mapReducer = createReducer(
 );
 
 function pushLayerToArray(layer: Layer, layers: Layer[]) {
-    layers = layers.filter(l => l.name !== layer.name );
+    layers = layers.filter(l => l.name !== layer.name);
     layers.push(layer);
     return layers;
 }

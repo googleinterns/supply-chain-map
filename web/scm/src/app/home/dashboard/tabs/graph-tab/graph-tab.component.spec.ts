@@ -1,21 +1,23 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-import { provideMockStore, MockStore } from '@ngrx/store/testing';
-import { RouteLayerComponent } from './route-layer.component';
-import { MemoizedSelector } from '@ngrx/store';
-import { HomeState } from 'src/app/home/store/state';
-import { FormQueryResult } from 'src/app/home/home.models';
-import { selectHomeFormQueryResult } from 'src/app/home/store/selectors';
 
-describe('RouteLayerComponent', () => {
-  let component: RouteLayerComponent;
-  let fixture: ComponentFixture<RouteLayerComponent>;
+import { GraphTabComponent } from './graph-tab.component';
+import { provideMockStore, MockStore } from '@ngrx/store/testing';
+import { MemoizedSelector } from '@ngrx/store';
+import { FormQueryResult } from 'src/app/home/home.models';
+import { HomeState } from 'src/app/home/store/state';
+import { selectHomeFormQueryResult } from 'src/app/home/store/selectors';
+import { MatDialogModule } from '@angular/material/dialog';
+
+describe('GraphTabComponent', () => {
+  let component: GraphTabComponent;
+  let fixture: ComponentFixture<GraphTabComponent>;
   let mockStore: MockStore;
   let mockFormQuerySelector: MemoizedSelector<HomeState, FormQueryResult>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ RouteLayerComponent ],
-      imports: [],
+      imports: [ MatDialogModule ],
+      declarations: [ GraphTabComponent ],
       providers: [
         provideMockStore()
       ]
@@ -34,7 +36,7 @@ describe('RouteLayerComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(RouteLayerComponent);
+    fixture = TestBed.createComponent(GraphTabComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

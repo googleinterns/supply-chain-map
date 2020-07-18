@@ -30,6 +30,7 @@ export class TopResizableDirective implements OnInit {
                 el.nativeElement.classList.remove('hide-children');
             }
             el.nativeElement.style.height = (height) + 'px';
+            window.dispatchEvent(new Event('resize'));
         };
 
 

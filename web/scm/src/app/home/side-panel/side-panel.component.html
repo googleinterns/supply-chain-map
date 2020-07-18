@@ -4,7 +4,7 @@
     </div>
     <div class="body-container">
         <form *ngIf="(sidePanelData$ | async) as sidePanelData" [formGroup]="sidePanelFormGroup"
-            (submit)="sidePanelFormSubmit()" #sidePanelForm>
+            (submit)="sidePanelFormSubmit()">
             <mat-accordion multi togglePosition="before">
                 <mat-expansion-panel>
                     <mat-expansion-panel-header>
@@ -104,7 +104,7 @@
                             </div>
                             <div formGroupName="additionalFilterGroup">
 
-                                <h2>Additional Properties</h2>
+                                <h2>Lead Time</h2>
 
                                 <mat-form-field appearance="outline">
                                     <mat-label>Minimum Lead Time</mat-label>
@@ -163,7 +163,7 @@
                             </div>
                             <div formGroupName="additionalFilterGroup">
 
-                                <h2>Additional Properties</h2>
+                                <h2>Lead Time</h2>
 
                                 <mat-form-field appearance="outline">
                                     <mat-label>Minimum Lead Time</mat-label>

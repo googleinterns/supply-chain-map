@@ -4,7 +4,7 @@ import {
     MemoizedSelector
 } from '@ngrx/store';
 import { MapState } from './state';
-import { Layer } from '../map.models';
+import { Layer, FilterFunction } from '../map.models';
 
 const isLoading = (state: MapState) => state.isLoading;
 const getError = (state: MapState) => state.error;

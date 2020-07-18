@@ -1,8 +1,10 @@
 import { Injectable } from '@angular/core';
 import { FormQueryResult } from 'src/app/home/home.models';
-import { RouteLayerLine, RouteLayerMarker, Layer, HeatmapLayer, ShapeLayer } from '../../map.models';
+import { RouteLayerLine, RouteLayerMarker, Layer, HeatmapLayer, ShapeLayer, MFG_IDENTIFIER, CM_IDENTIFIER, GDC_IDENTIFIER } from '../../map.models';
 import { BigQueryService } from 'src/app/home/services/big-query/big-query.service';
 import { environment } from 'src/environments/environment';
+import { Colors } from 'src/assets/colors';
+import { createPolygonPath } from './geojson-converter';
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +17,7 @@ export class MapHelperService {
      * Map for the type of marker to the path
      * to its svg icon
      */
-    private static readonly ICON_MAP = {
+    public static readonly ICON_MAP = {
         GDC: 'assets/gdc.svg',
         MFG: 'assets/mfg.svg',
         CM: 'assets/cm.svg',
@@ -44,6 +46,11 @@ export class MapHelperService {
      * @param formQueryResult The resut obtained after running the form query
      */
     public createLines(formQueryResult: FormQueryResult): RouteLayerLine[] {
+
+        if (!formQueryResult) {
+            return [];
+        }
+
         const skuMap = this.createSkuMap(formQueryResult);
         const lines: RouteLayerLine[] = [];
         const UPSTREAM_COLS = environment.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
@@ -56,20 +63,20 @@ export class MapHelperService {
                 for (const cmRow of skuMap.get(sku).cm) {
                     lines.push({
                         from: {
-                            lat: parseFloat(upstreamRow[UPSTREAM_COLS.MFG_LAT]),
-                            long: parseFloat(upstreamRow[UPSTREAM_COLS.MFG_LONG]),
+                            latitude: parseFloat(upstreamRow[UPSTREAM_COLS.MFG_LAT]),
+                            longitude: parseFloat(upstreamRow[UPSTREAM_COLS.MFG_LONG]),
                             city: upstreamRow[UPSTREAM_COLS.MFG_CITY],
                             state: upstreamRow[UPSTREAM_COLS.MFG_STATE],
                             country: upstreamRow[UPSTREAM_COLS.MFG_COUNTRY]
                         },
                         to: {
-                            lat: parseFloat(cmRow[CM_COLS.CM_LAT]),
-                            long: parseFloat(cmRow[CM_COLS.CM_LONG]),
+                            latitude: parseFloat(cmRow[CM_COLS.CM_LAT]),
+                            longitude: parseFloat(cmRow[CM_COLS.CM_LONG]),
                             city: cmRow[CM_COLS.CM_CITY],
                             state: cmRow[CM_COLS.CM_STATE],
                             country: cmRow[CM_COLS.CM_COUNTRY]
                         },
-                        type: 'UPSTREAM',
+                        type: 'Upstream',
                         color: 'blue'
                     });
                 }
@@ -80,20 +87,20 @@ export class MapHelperService {
                 for (const downstreamRow of skuMap.get(sku).downstream) {
                     lines.push({
                         from: {
-                            lat: parseFloat(cmRow[CM_COLS.CM_LAT]),
-                            long: parseFloat(cmRow[CM_COLS.CM_LONG]),
+                            latitude: parseFloat(cmRow[CM_COLS.CM_LAT]),
+                            longitude: parseFloat(cmRow[CM_COLS.CM_LONG]),
                             city: cmRow[CM_COLS.CM_CITY],
                             state: cmRow[CM_COLS.CM_STATE],
                             country: cmRow[CM_COLS.CM_COUNTRY]
                         },
                         to: {
-                            lat: parseFloat(downstreamRow[DOWNSTREAM_COLS.GDC_LAT]),
-                            long: parseFloat(downstreamRow[DOWNSTREAM_COLS.GDC_LONG]),
+                            latitude: parseFloat(downstreamRow[DOWNSTREAM_COLS.GDC_LAT]),
+                            longitude: parseFloat(downstreamRow[DOWNSTREAM_COLS.GDC_LONG]),
                             city: downstreamRow[DOWNSTREAM_COLS.GDC_CITY],
                             state: downstreamRow[DOWNSTREAM_COLS.GDC_STATE],
                             country: downstreamRow[DOWNSTREAM_COLS.GDC_COUNTRY]
                         },
-                        type: 'DOWNSTREAM',
+                        type: 'Downstream',
                         color: 'red'
                     });
                 }
@@ -110,6 +117,10 @@ export class MapHelperService {
      */
     public createMarkerPoints(formQueryResult: FormQueryResult): RouteLayerMarker[] {
 
+        if (!formQueryResult) {
+            return [];
+        }
+
         const markers: RouteLayerMarker[] = [];
         const markerMap = this.createLocationToMarkerMap(formQueryResult);
         const UPSTREAM_COLS = environment.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
@@ -118,17 +129,20 @@ export class MapHelperService {
 
         for (const latLongId of markerMap.keys()) {
             const marker: RouteLayerMarker = {
-                lat: 0,
-                long: 0,
+                latitude: 0,
+                longitude: 0,
                 iconUrl: '',
                 type: [],
                 data: {
                     product: [],
                     sku: [],
+                    mpn: [],
                     description: [],
                     category: [],
                     name: [],
                     avgLeadTime: 0,
+                    totalQty: 0,
+                    unitCost: 0,
                     city: '',
                     state: '',
                     country: '',
@@ -136,23 +150,26 @@ export class MapHelperService {
             };
 
             for (const dataPoint of markerMap.get(latLongId)) {
-                if (dataPoint.type === 'MFG') {
-                    marker.type.push('MFG');
-                    marker.lat = dataPoint[UPSTREAM_COLS.MFG_LAT];
-                    marker.long = dataPoint[UPSTREAM_COLS.MFG_LONG];
+                if (dataPoint.type === MFG_IDENTIFIER) {
+                    marker.type.push(MFG_IDENTIFIER);
+                    marker.latitude = dataPoint[UPSTREAM_COLS.MFG_LAT];
+                    marker.longitude = dataPoint[UPSTREAM_COLS.MFG_LONG];
                     marker.data.city = dataPoint[UPSTREAM_COLS.MFG_CITY] ?? '';
                     marker.data.state = dataPoint[UPSTREAM_COLS.MFG_STATE] ?? '';
                     marker.data.country = dataPoint[UPSTREAM_COLS.MFG_COUNTRY] ?? '';
+                    marker.data.totalQty += parseFloat(dataPoint[UPSTREAM_COLS.TOTAL_QTY]);
+                    marker.data.unitCost += parseFloat(dataPoint[UPSTREAM_COLS.UNIT_COST]); // TODO(nirup): wrong, change this
                     marker.data.avgLeadTime += parseInt(dataPoint[UPSTREAM_COLS.LEAD_TIME], 10);
                     marker.data.product.push(dataPoint[UPSTREAM_COLS.PRODUCT]);
                     marker.data.sku.push(dataPoint[UPSTREAM_COLS.PARENT_SKU]);
+                    marker.data.mpn.push(dataPoint[UPSTREAM_COLS.MPN]);
                     marker.data.description.push(dataPoint[UPSTREAM_COLS.DESCRIPTION]);
                     marker.data.category.push(dataPoint[UPSTREAM_COLS.CATEGORY]);
-                    marker.data.name.push(dataPoint[UPSTREAM_COLS.SUPPLIER_NAME]); //Makes more sense than description
-                } else if (dataPoint.type === 'CM') {
-                    marker.type.push('CM');
-                    marker.lat = dataPoint[CM_COLS.CM_LAT];
-                    marker.long = dataPoint[CM_COLS.CM_LONG];
+                    marker.data.name.push(dataPoint[UPSTREAM_COLS.SUPPLIER_NAME]);
+                } else if (dataPoint.type === CM_IDENTIFIER) {
+                    marker.type.push(CM_IDENTIFIER);
+                    marker.latitude = dataPoint[CM_COLS.CM_LAT];
+                    marker.longitude = dataPoint[CM_COLS.CM_LONG];
                     marker.data.city = dataPoint[CM_COLS.CM_CITY] ?? '';
                     marker.data.state = dataPoint[CM_COLS.CM_STATE] ?? '';
                     marker.data.country = dataPoint[CM_COLS.CM_COUNTRY] ?? '';
@@ -161,10 +178,10 @@ export class MapHelperService {
                     marker.data.sku.push(dataPoint[CM_COLS.SKU]);
                     marker.data.description.push(dataPoint[CM_COLS.DESCRIPTION]);
                     marker.data.name.push(dataPoint[CM_COLS.CM_NAME]);
-                } else if (dataPoint.type === 'GDC') {
-                    marker.type.push('GDC');
-                    marker.lat = dataPoint[DOWNSTREAM_COLS.GDC_LAT];
-                    marker.long = dataPoint[DOWNSTREAM_COLS.GDC_LONG];
+                } else if (dataPoint.type === GDC_IDENTIFIER) {
+                    marker.type.push(GDC_IDENTIFIER);
+                    marker.latitude = dataPoint[DOWNSTREAM_COLS.GDC_LAT];
+                    marker.longitude = dataPoint[DOWNSTREAM_COLS.GDC_LONG];
                     marker.data.city = dataPoint[DOWNSTREAM_COLS.GDC_CITY] ?? '';
                     marker.data.state = dataPoint[DOWNSTREAM_COLS.GDC_STATE] ?? '';
                     marker.data.country = dataPoint[DOWNSTREAM_COLS.GDC_COUNTRY] ?? '';
@@ -183,23 +200,28 @@ export class MapHelperService {
             marker.data.description = [...new Set(marker.data.description)];
             marker.data.category = [...new Set(marker.data.category)];
             marker.data.sku = [...new Set(marker.data.sku)];
+            if (marker.data.mpn.length > 0) {
+                marker.data.sku = [...new Set(marker.data.mpn)];
+            } else {
+                delete marker.data.mpn;
+            }
 
             if (marker.type.length === 1) {
                 switch (marker.type[0]) {
-                    case 'MFG': {
+                    case MFG_IDENTIFIER: {
                         marker.iconUrl = MapHelperService.ICON_MAP.MFG;
                         break;
                     }
-                    case 'CM': {
+                    case CM_IDENTIFIER: {
                         marker.iconUrl = MapHelperService.ICON_MAP.CM;
                         break;
                     }
-                    case 'GDC': {
+                    case GDC_IDENTIFIER: {
                         marker.iconUrl = MapHelperService.ICON_MAP.GDC;
                         break;
                     }
                 }
-            } else if (marker.type.includes('GDC')) {
+            } else if (marker.type.includes(GDC_IDENTIFIER)) {
                 marker.iconUrl = MapHelperService.ICON_MAP.GDC;
             } else {
                 marker.iconUrl = MapHelperService.ICON_MAP.MFG_CM;
@@ -213,18 +235,40 @@ export class MapHelperService {
 
     private async getHeatmapLayer(layerName: string): Promise<HeatmapLayer> {
         const layerCols = environment.bigQuery.layerDatasets.heatmap.columns;
-        const SQL_FETCH_ADDITIONAL_LAYER = `
+        const SQL_FETCH_HEATMAP_LAYER = `
             SELECT ${layerCols.join(', ')}
             FROM ${environment.bigQuery.layerDatasets.heatmap.dataset}.${layerName}
         `;
+        const heatMapColors = [
+            'rgba(102, 255, 0, 0)',
+            'rgba(102, 255, 0, 1)',
+            'rgba(147, 255, 0, 1)',
+            'rgba(193, 255, 0, 1)',
+            'rgba(238, 255, 0, 1)',
+            'rgba(244, 227, 0, 1)',
+            'rgba(249, 198, 0, 1)',
+            'rgba(255, 170, 0, 1)',
+            'rgba(255, 113, 0, 1)',
+            'rgba(255, 57, 0, 1)',
+            'rgba(255, 0, 0, 1)'
+        ];
 
         try {
-            const response = await this.bigQueryService.runQuery(SQL_FETCH_ADDITIONAL_LAYER);
+            const response = await this.bigQueryService.runQuery(SQL_FETCH_HEATMAP_LAYER);
             const markers = this.bigQueryService.convertResult(response.result);
+            const magnitudes = markers.map(m => m.magnitude);
 
             return {
                 name: layerName,
-                hotspots: markers
+                hotspots: markers,
+                legend: [{
+                    name: markers[0].data.magnitude_desc ?? 'Magnitude',
+                    spectrum: {
+                        gradientColors: heatMapColors,
+                        startLabel: Math.min(...magnitudes),
+                        endLabel: Math.max(...magnitudes)
+                    }
+                }]
             };
         } catch (ex) {
             if (!environment.production) {
@@ -236,31 +280,86 @@ export class MapHelperService {
 
     private async getShapeLayer(layerName: string): Promise<ShapeLayer> {
         const layerCols = environment.bigQuery.layerDatasets.shape.columns;
-        const SQL_FETCH_ADDITIONAL_LAYER = `
+        const SQL_FETCH_SHAPE_LAYER = `
             SELECT ${layerCols.join(', ')}
             FROM ${environment.bigQuery.layerDatasets.shape.dataset}.${layerName}
         `;
 
 
         try {
-            const response = await this.bigQueryService.runQuery(SQL_FETCH_ADDITIONAL_LAYER);
+            const response = await this.bigQueryService.runQuery(SQL_FETCH_SHAPE_LAYER);
             const shapes = this.bigQueryService.convertResult(response.result);
-            const features = {
-                type: 'FeatureCollection',
-                features: []
-            };
+            const baseColor = Colors.randomColor();
+
+            let maxMagnitude = -1;
+            let minMagnitude = Infinity;
             for (const shape of shapes) {
-                features.features.push({
-                    type: 'Feature',
-                    properties: { ...shape.data, magnitude: shape.magnitude },
-                    geometry: JSON.parse(shape.shape)
-                });
+                maxMagnitude = Math.max(maxMagnitude, shape.magnitude);
+                minMagnitude = Math.min(minMagnitude, shape.magnitude);
+            }
+
+            const colorMap = [];
+            const shapeLayerShapes: {
+                shapeOpts: google.maps.PolygonOptions,
+                magnitude: number,
+                data: any
+            }[] = [];
+            for (const shape of shapes) {
+                if (typeof shape.shape !== 'string') {
+                    // Unknown countries with null shape. Do not display
+                    continue;
+                }
+                const shapeJSON = JSON.parse(shape.shape);
+                if (!(shape.magnitude in colorMap)) {
+                    colorMap[shape.magnitude] = Colors.lightenDarkenColor(
+                        baseColor,
+                        -100 * (parseFloat(shape.magnitude)) / (maxMagnitude),
+                        false
+                    );
+                }
+
+                if (shapeJSON.type === 'Polygon') {
+                    shapeLayerShapes.push({
+                        shapeOpts: {
+                            paths: createPolygonPath(shapeJSON.coordinates),
+                            clickable: true,
+                            fillColor: colorMap[shape.magnitude],
+                            fillOpacity: 1,
+                            strokeWeight: 0.5,
+                            strokeColor: colorMap[shape.magnitude]
+                        },
+                        magnitude: shape.magnitude,
+                        data: shape.data
+                    });
+                } else if (shapeJSON.type === 'MultiPolygon') {
+                    for (const coord of shapeJSON.coordinates) {
+                        shapeLayerShapes.push({
+                            shapeOpts: {
+                                paths: createPolygonPath(coord),
+                                clickable: true,
+                                fillColor: colorMap[shape.magnitude],
+                                fillOpacity: 1,
+                                strokeWeight: 0.5,
+                                strokeColor: colorMap[shape.magnitude]
+                            },
+                            magnitude: shape.magnitude,
+                            data: shape.data
+                        });
+                    }
+                }
             }
 
             return {
                 name: layerName,
-                shapes: shapes,
-                geoJSON: features
+                shapes: shapeLayerShapes,
+                legend: [{
+                    name: shapes[0].data.magnitude_desc ?? 'Magnitude',
+                    spectrum: {
+                        gradientColors: (Object.keys(colorMap).sort()).map(m => colorMap[m]),
+                        startLabel: minMagnitude,
+                        endLabel: maxMagnitude
+                    }
+                }]
             };
         } catch (ex) {
             if (!environment.production) {
@@ -276,7 +375,7 @@ export class MapHelperService {
 
         if ('upstream' in formQueryResult) {
             const UPSTREAM_COLS = environment.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
-            additionalProps = { type: 'MFG' };
+            additionalProps = { type: MFG_IDENTIFIER };
             for (const upstreamRow of formQueryResult.upstream) {
                 const id = upstreamRow[UPSTREAM_COLS.MFG_LAT] + ' ' + upstreamRow[UPSTREAM_COLS.MFG_LONG];
                 if (markerMap.has(id)) {
@@ -288,7 +387,7 @@ export class MapHelperService {
         }
 
         const CM_COLS = environment.bigQuery.layerDatasets.route.tables.CM.columns;
-        additionalProps = { type: 'CM' };
+        additionalProps = { type: CM_IDENTIFIER };
         for (const cmRow of formQueryResult.cm) {
             const id = cmRow[CM_COLS.CM_LAT] + ' ' + cmRow[CM_COLS.CM_LONG];
             if (markerMap.has(id)) {
@@ -300,7 +399,7 @@ export class MapHelperService {
 
         if ('downstream' in formQueryResult) {
             const DOWNSTREAM_COLS = environment.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
-            additionalProps = { type: 'GDC' };
+            additionalProps = { type: GDC_IDENTIFIER };
             for (const downstreamRow of formQueryResult.downstream) {
                 const id = downstreamRow[DOWNSTREAM_COLS.GDC_LAT] + ' ' + downstreamRow[DOWNSTREAM_COLS.GDC_LONG];
                 if (markerMap.has(id)) {

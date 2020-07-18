@@ -5,7 +5,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort, MatSortHeader, Sort } from '@angular/material/sort';
 import { Store } from '@ngrx/store';
-import { selectHomeFormQueryResult } from 'src/app/home/store/selectors';
+import { selectHomeFormQueryResult} from 'src/app/home/store/selectors';
 import { environment } from 'src/environments/environment';
 
 @Component({
