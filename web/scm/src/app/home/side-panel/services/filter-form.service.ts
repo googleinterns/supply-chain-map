@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { SidePanel } from '../side-panel.models';
 import { BigQueryService } from '../../services/big-query/big-query.service';
+import { constants } from 'src/constants';
 
 /**
  * The structure that a submitted form must follow
@@ -50,7 +51,7 @@ export interface FormStructure {
 })
 export class FilterFormService {
 
-  private static readonly environmentRouteTable = environment.bigQuery.layerDatasets.route.tables;
+  private static readonly environmentRouteTable = constants.bigQuery.layerDatasets.route.tables;
   /**
    * Query to get product, supplier, category details
    * from the BigQuery dataset.

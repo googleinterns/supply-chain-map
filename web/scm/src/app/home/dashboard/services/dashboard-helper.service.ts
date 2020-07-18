@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
 import { BigQueryService } from 'src/app/home/services/big-query/big-query.service';
+import { constants } from 'src/constants';
+import { environment } from 'src/environments/environment';
 import { FormQueryResult } from '../../home.models';
 
 @Injectable({
@@ -13,10 +14,10 @@ export class DashboardHelperService {
     private readonly SQL_LAYER_QUERY = `
     SELECT
         ARRAY(
-            SELECT TABLE_NAME FROM ${environment.bigQuery.layerDatasets.heatmap.dataset}.INFORMATION_SCHEMA.TABLES
+            SELECT TABLE_NAME FROM ${constants.bigQuery.layerDatasets.heatmap.dataset}.INFORMATION_SCHEMA.TABLES
         ) as heatmap_layers,
         ARRAY(
-            SELECT TABLE_NAME FROM ${environment.bigQuery.layerDatasets.shape.dataset}.INFORMATION_SCHEMA.TABLES
+            SELECT TABLE_NAME FROM ${constants.bigQuery.layerDatasets.shape.dataset}.INFORMATION_SCHEMA.TABLES
         ) as shape_layers
     `;
 
@@ -41,7 +42,7 @@ export class DashboardHelperService {
     }
 
     getChartOne(formQueryResult: FormQueryResult) {
-        const UPSTREAM_COLS = environment.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
+        const UPSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
         const result: {
             name: string,
             series: {

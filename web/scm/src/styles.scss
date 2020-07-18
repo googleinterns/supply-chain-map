@@ -33,3 +33,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
     height: auto !important;
     width: auto !important;
 }
+
+:root {
+    --primary: #{mat-color($scm-primary)};
+}

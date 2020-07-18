@@ -1,5 +1,3 @@
-@import "src/styles.scss";
-
 .code-container {
     padding: 10px;
 }
@@ -11,7 +9,7 @@
 .code-snippet {
     padding: 0 10px;
     border: 2px solid darkgray;
-    border-left: 8px solid mat-color($scm-primary);
+    border-left: 8px solid var(--primary);
 }
 
 .schema-row {

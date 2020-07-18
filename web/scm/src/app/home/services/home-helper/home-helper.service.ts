@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { environment } from 'src/environments/environment';
+import { constants } from 'src/constants';
 import { BigQueryService } from '../big-query/big-query.service';
 import { FormQueryResponse, FormQueryResultStats } from '../../home.models';
 
@@ -56,7 +56,7 @@ export class HomeHelperService {
        * Check if all properties exist
        */
       if (formattedResult.upstream.length > 0) {
-        for (const prop of Object.values(environment.bigQuery.layerDatasets.route.tables.UPSTREAM.columns)) {
+        for (const prop of Object.values(constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns)) {
           if (!(prop in formattedResult.upstream[0])) {
             return false;
           }
@@ -82,7 +82,7 @@ export class HomeHelperService {
      * Check if all properties exist
      */
     if (formattedResult.cm.length > 0) {
-      for (const prop of Object.values(environment.bigQuery.layerDatasets.route.tables.CM.columns)) {
+      for (const prop of Object.values(constants.bigQuery.layerDatasets.route.tables.CM.columns)) {
         if (!(prop in formattedResult.cm[0])) {
           return false;
         }
@@ -104,7 +104,7 @@ export class HomeHelperService {
        * Check if all properties exist
        */
       if (formattedResult.downstream.length > 0) {
-        for (const prop of Object.values(environment.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns)) {
+        for (const prop of Object.values(constants.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns)) {
           if (!(prop in formattedResult.downstream[0])) {
             return false;
           }

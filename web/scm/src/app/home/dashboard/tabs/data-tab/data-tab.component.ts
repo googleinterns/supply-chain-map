@@ -1,12 +1,12 @@
-import { Component, OnInit, ViewChildren, QueryList } from '@angular/core';
+import { Component, ViewChildren, QueryList } from '@angular/core';
 import { Observable } from 'rxjs';
 import { FormQueryResult } from 'src/app/home/home.models';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatSort, MatSortHeader, Sort } from '@angular/material/sort';
+import { MatSort } from '@angular/material/sort';
 import { Store } from '@ngrx/store';
-import { selectHomeFormQueryResult} from 'src/app/home/store/selectors';
-import { environment } from 'src/environments/environment';
+import { selectHomeFormQueryResult } from 'src/app/home/store/selectors';
+import { constants } from 'src/constants';
 
 @Component({
   selector: 'scm-data-tab',
@@ -58,9 +58,9 @@ export class DataTabComponent {
      * Set up column names by declaring empty objects
      * and retreiving the keys
      */
-    this.upstreamColumns = Object.values(environment.bigQuery.layerDatasets.route.tables.UPSTREAM.columns);
-    this.cmColumns = Object.values(environment.bigQuery.layerDatasets.route.tables.CM.columns);
-    this.downstreamColumns = Object.values(environment.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns);
+    this.upstreamColumns = Object.values(constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns);
+    this.cmColumns = Object.values(constants.bigQuery.layerDatasets.route.tables.CM.columns);
+    this.downstreamColumns = Object.values(constants.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns);
 
     /**
      * Using subscribe method instead of async pipe because we

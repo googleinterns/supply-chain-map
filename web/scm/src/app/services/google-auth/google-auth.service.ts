@@ -3,6 +3,7 @@ import GoogleAuth = gapi.auth2.GoogleAuth;
 import { Observable, Observer, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
+import { constants } from 'src/constants';
 
 /**
  * Singleton class that holds basic user information
@@ -40,7 +41,7 @@ export class GoogleAuthService {
             gapi.load('client:auth2', async () => {
                 await gapi.client.init({
                     clientId: environment.clientId,
-                    scope: environment.bigQuery.scope
+                    scope: constants.bigQuery.scope
                 });
                 this.googleAuth = gapi.auth2.getAuthInstance();
                 observer.next(this.googleAuth);

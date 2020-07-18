@@ -2,7 +2,7 @@ import { Input, Component, OnDestroy } from '@angular/core';
 import { HeatmapLayer } from '../../map.models';
 import { Store } from '@ngrx/store';
 import { addFilter, removeFilter } from 'src/app/home/store/actions';
-import { environment } from 'src/environments/environment';
+import { constants } from 'src/constants';
 
 @Component({
     selector: 'scm-heatmap-layer',
@@ -27,7 +27,7 @@ export class HeatmapLayerComponent implements OnDestroy {
             filter: (formQueryResult) => {
                 const filteredFormQueryResult: any = {};
                 if ('upstream' in formQueryResult) {
-                    const UPSTREAM_COLS = environment.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
+                    const UPSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
                     filteredFormQueryResult.upstream = formQueryResult.upstream.filter(upstream => {
                         for (const hotspot of this._layer.hotspots) {
                             const distance = google.maps.geometry.spherical.computeDistanceBetween(
@@ -42,7 +42,7 @@ export class HeatmapLayerComponent implements OnDestroy {
                     });
                 }
                 if ('cm' in formQueryResult) {
-                    const CM_COLS = environment.bigQuery.layerDatasets.route.tables.CM.columns;
+                    const CM_COLS = constants.bigQuery.layerDatasets.route.tables.CM.columns;
                     filteredFormQueryResult.cm = formQueryResult.cm.filter(cm => {
                         for (const hotspot of this._layer.hotspots) {
                             const distance = google.maps.geometry.spherical.computeDistanceBetween(
@@ -57,7 +57,7 @@ export class HeatmapLayerComponent implements OnDestroy {
                     });
                 }
                 if ('downstream' in formQueryResult) {
-                    const DOWNSTREAM_COLS = environment.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
+                    const DOWNSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
                     filteredFormQueryResult.downstream = formQueryResult.downstream.filter(downstream => {
                         for (const hotspot of this._layer.hotspots) {
                             const distance = google.maps.geometry.spherical.computeDistanceBetween(

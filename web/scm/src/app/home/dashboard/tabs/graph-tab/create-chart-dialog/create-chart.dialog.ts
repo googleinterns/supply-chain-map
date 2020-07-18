@@ -5,6 +5,7 @@ import { selectHomeFormQueryResult } from 'src/app/home/store/selectors';
 import { environment } from 'src/environments/environment';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { constants } from 'src/constants';
 
 @Component({
     selector: 'scm-create-chart-dialog',
@@ -45,10 +46,10 @@ export class CreateChartComponent {
                 formQueryResult => {
                     if (formQueryResult) {
                         if ('upstream' in formQueryResult) {
-                            this.tables['upstream'] = environment.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
+                            this.tables['upstream'] = constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
                         }
                         if ('downstream' in formQueryResult) {
-                            this.tables['downstream'] = environment.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
+                            this.tables['downstream'] = constants.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
                         }
                     }
                 }

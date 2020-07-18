@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Observer, of } from 'rxjs';
 import { environment } from 'src/environments/environment';
+import { constants } from 'src/constants';
 
 /**
  * This is a service that is used to communicate with BigQuery service in GCP
@@ -25,7 +26,7 @@ export class BigQueryService {
       gapi.load('client', async () => {
         await gapi.client.init({
           clientId: environment.clientId,
-          scope: environment.bigQuery.scope
+          scope: constants.bigQuery.scope
         });
         await gapi.client.load('bigquery', 'v2');
         observer.next();
@@ -51,7 +52,7 @@ export class BigQueryService {
           query: query,
           useLegacySql: false,
           defaultDataset: {
-            datasetId: environment.bigQuery.layerDatasets.route.dataset,
+            datasetId: constants.bigQuery.layerDatasets.route.dataset,
             projectId: environment.projectId
           }
         })

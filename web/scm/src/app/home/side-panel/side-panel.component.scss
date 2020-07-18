@@ -44,10 +44,8 @@ mat-radio-button {
     width: 100%;
 }
 
-@import "src/styles.scss";
-
 mat-expansion-panel {
-    border-left: 5px solid mat-color($scm-primary);
+    border-left: 5px solid var(--primary);
 }
 
 mat-form-field {

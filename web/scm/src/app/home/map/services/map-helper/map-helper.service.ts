@@ -3,6 +3,7 @@ import { FormQueryResult } from 'src/app/home/home.models';
 import { RouteLayerLine, RouteLayerMarker, Layer, HeatmapLayer, ShapeLayer, MFG_IDENTIFIER, CM_IDENTIFIER, GDC_IDENTIFIER } from '../../map.models';
 import { BigQueryService } from 'src/app/home/services/big-query/big-query.service';
 import { environment } from 'src/environments/environment';
+import { constants } from 'src/constants';
 import { Colors } from 'src/assets/colors';
 import { createPolygonPath } from './geojson-converter';
 
@@ -53,9 +54,9 @@ export class MapHelperService {
 
         const skuMap = this.createSkuMap(formQueryResult);
         const lines: RouteLayerLine[] = [];
-        const UPSTREAM_COLS = environment.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
-        const CM_COLS = environment.bigQuery.layerDatasets.route.tables.CM.columns;
-        const DOWNSTREAM_COLS = environment.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
+        const UPSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
+        const CM_COLS = constants.bigQuery.layerDatasets.route.tables.CM.columns;
+        const DOWNSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
 
         for (const sku of skuMap.keys()) {
             /** Upstream lines */
@@ -123,9 +124,9 @@ export class MapHelperService {
 
         const markers: RouteLayerMarker[] = [];
         const markerMap = this.createLocationToMarkerMap(formQueryResult);
-        const UPSTREAM_COLS = environment.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
-        const CM_COLS = environment.bigQuery.layerDatasets.route.tables.CM.columns;
-        const DOWNSTREAM_COLS = environment.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
+        const UPSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
+        const CM_COLS = constants.bigQuery.layerDatasets.route.tables.CM.columns;
+        const DOWNSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
 
         for (const latLongId of markerMap.keys()) {
             const marker: RouteLayerMarker = {
@@ -234,10 +235,10 @@ export class MapHelperService {
     }
 
     private async getHeatmapLayer(layerName: string): Promise<HeatmapLayer> {
-        const layerCols = environment.bigQuery.layerDatasets.heatmap.columns;
+        const layerCols = constants.bigQuery.layerDatasets.heatmap.columns;
         const SQL_FETCH_HEATMAP_LAYER = `
             SELECT ${layerCols.join(', ')}
-            FROM ${environment.bigQuery.layerDatasets.heatmap.dataset}.${layerName}
+            FROM ${constants.bigQuery.layerDatasets.heatmap.dataset}.${layerName}
         `;
         const heatMapColors = [
             'rgba(102, 255, 0, 0)',
@@ -279,10 +280,10 @@ export class MapHelperService {
     }
 
     private async getShapeLayer(layerName: string): Promise<ShapeLayer> {
-        const layerCols = environment.bigQuery.layerDatasets.shape.columns;
+        const layerCols = constants.bigQuery.layerDatasets.shape.columns;
         const SQL_FETCH_SHAPE_LAYER = `
             SELECT ${layerCols.join(', ')}
-            FROM ${environment.bigQuery.layerDatasets.shape.dataset}.${layerName}
+            FROM ${constants.bigQuery.layerDatasets.shape.dataset}.${layerName}
         `;
 
 
@@ -374,7 +375,7 @@ export class MapHelperService {
         let additionalProps;
 
         if ('upstream' in formQueryResult) {
-            const UPSTREAM_COLS = environment.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
+            const UPSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
             additionalProps = { type: MFG_IDENTIFIER };
             for (const upstreamRow of formQueryResult.upstream) {
                 const id = upstreamRow[UPSTREAM_COLS.MFG_LAT] + ' ' + upstreamRow[UPSTREAM_COLS.MFG_LONG];
@@ -386,7 +387,7 @@ export class MapHelperService {
             }
         }
 
-        const CM_COLS = environment.bigQuery.layerDatasets.route.tables.CM.columns;
+        const CM_COLS = constants.bigQuery.layerDatasets.route.tables.CM.columns;
         additionalProps = { type: CM_IDENTIFIER };
         for (const cmRow of formQueryResult.cm) {
             const id = cmRow[CM_COLS.CM_LAT] + ' ' + cmRow[CM_COLS.CM_LONG];
@@ -398,7 +399,7 @@ export class MapHelperService {
         }
 
         if ('downstream' in formQueryResult) {
-            const DOWNSTREAM_COLS = environment.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
+            const DOWNSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
             additionalProps = { type: GDC_IDENTIFIER };
             for (const downstreamRow of formQueryResult.downstream) {
                 const id = downstreamRow[DOWNSTREAM_COLS.GDC_LAT] + ' ' + downstreamRow[DOWNSTREAM_COLS.GDC_LONG];
@@ -417,7 +418,7 @@ export class MapHelperService {
         const skuMap = new Map<string, { upstream: any[], downstream: any[], cm: any[] }>();
 
         if ('upstream' in formQueryResult) {
-            const UPSTREAM_PARENT_SKU = environment.bigQuery.layerDatasets.route.tables.UPSTREAM.columns.PARENT_SKU;
+            const UPSTREAM_PARENT_SKU = constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns.PARENT_SKU;
             for (const upstreamRow of formQueryResult.upstream) {
                 if (skuMap.has(upstreamRow[UPSTREAM_PARENT_SKU])) {
                     skuMap.get(upstreamRow[UPSTREAM_PARENT_SKU]).upstream.push(upstreamRow);
@@ -427,7 +428,7 @@ export class MapHelperService {
             }
         }
 
-        const CM_SKU = environment.bigQuery.layerDatasets.route.tables.CM.columns.SKU;
+        const CM_SKU = constants.bigQuery.layerDatasets.route.tables.CM.columns.SKU;
         for (const cmRow of formQueryResult.cm) {
             if (skuMap.has(cmRow[CM_SKU])) {
                 skuMap.get(cmRow[CM_SKU]).cm.push(cmRow);
@@ -437,7 +438,7 @@ export class MapHelperService {
         }
 
         if ('downstream' in formQueryResult) {
-            const DOWNSTREAM_SKU = environment.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns.SKU;
+            const DOWNSTREAM_SKU = constants.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns.SKU;
             for (const downstreamRow of formQueryResult.downstream) {
                 if (skuMap.has(downstreamRow[DOWNSTREAM_SKU])) {
                     skuMap.get(downstreamRow[DOWNSTREAM_SKU]).downstream.push(downstreamRow);

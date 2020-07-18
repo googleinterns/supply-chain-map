@@ -4,10 +4,11 @@
   "scripts": {
     "ng": "ng",
     "start": "ng serve",
-    "build": "ng build",
+    "build": "npm run config && ng build --prod",
     "test": "ng test --watch=false",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "config": "ts-node -O '{\"module\": \"commonjs\"}' ./config.index.ts"
   },
   "private": true,
   "dependencies": {

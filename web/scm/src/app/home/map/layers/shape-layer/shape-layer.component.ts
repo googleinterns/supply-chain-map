@@ -4,6 +4,7 @@ import { Store } from '@ngrx/store';
 import { addFilter, removeFilter } from 'src/app/home/store/actions';
 import { environment } from 'src/environments/environment';
 import { FormQueryResult } from 'src/app/home/home.models';
+import { constants } from 'src/constants';
 
 @Component({
   selector: 'scm-shape-layer',
@@ -24,7 +25,7 @@ export class ShapeLayerComponent implements OnInit, OnDestroy {
       filter: (formQueryResult) => {
         const filteredFormQueryResult: any = {};
         if ('upstream' in formQueryResult) {
-          const UPSTREAM_COLS = environment.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
+          const UPSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
           filteredFormQueryResult.upstream = formQueryResult.upstream.filter(upstream => {
             for (const p of this.polygons) {
               if (google.maps.geometry.poly.containsLocation(
@@ -38,7 +39,7 @@ export class ShapeLayerComponent implements OnInit, OnDestroy {
           });
         }
 
-        const CM_COLS = environment.bigQuery.layerDatasets.route.tables.CM.columns;
+        const CM_COLS = constants.bigQuery.layerDatasets.route.tables.CM.columns;
         filteredFormQueryResult.cm = formQueryResult.cm.filter(cm => {
           for (const p of this.polygons) {
             if (google.maps.geometry.poly.containsLocation(
@@ -52,7 +53,7 @@ export class ShapeLayerComponent implements OnInit, OnDestroy {
         });
 
         if ('downstream' in formQueryResult) {
-          const DOWNSTREAM_COLS = environment.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
+          const DOWNSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
           filteredFormQueryResult.downstream = formQueryResult.downstream.filter(downstream => {
             for (const p of this.polygons) {
               if (google.maps.geometry.poly.containsLocation(
