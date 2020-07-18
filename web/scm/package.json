@@ -5,7 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "npm run config && ng build --prod",
-    "test": "ng test --watch=false",
+    "test": "npm run config && ng test --watch=false",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "config": "ts-node -O '{\"module\": \"commonjs\"}' ./config.index.ts"
