@@ -47,6 +47,7 @@ jobs:
       - name: set google auth
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
+          project_id: ${{ secrets.PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
           export_default_credentials: true
       - name: upload files
