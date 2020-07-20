@@ -40,12 +40,10 @@ jobs:
         run: npm run config
       - name: npm test
         working-directory: ./web/scm 
-        run: |
-          npm test
+        run: npm test
       - name: npm build
         working-directory: ./web/scm 
-        run: |
-          npm run-script build
+        run: npm run-script build
       - name: set google auth
         uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
         with:
@@ -56,3 +54,7 @@ jobs:
         with:
           path: ./web/scm/dist/scm
           destination: supply-chain-map
+      - name: sync storage
+        run: gsutil rsync -r gs://supply-chain-map ./
+      - name: deploy app
+        run: gcloud app deploy
