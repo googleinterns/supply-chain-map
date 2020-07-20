@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
 import { selectHomeFormQueryResult } from 'src/app/home/store/selectors';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CreateChartComponent } from './create-chart-dialog/create-chart.dialog';
 import { FormQueryResult } from 'src/app/home/home.models';
 
@@ -14,7 +14,13 @@ import { FormQueryResult } from 'src/app/home/home.models';
 export class GraphTabComponent implements OnInit {
 
   formQueryResult$: Observable<FormQueryResult>;
-  charts = [];
+  charts: {
+    chart: any,
+    data: any,
+    chartOptions: any,
+    identifier: any
+  }[] = [];
+  dialogRef: MatDialogRef<CreateChartComponent>;
 
   constructor(
     private store: Store,
@@ -27,12 +33,27 @@ export class GraphTabComponent implements OnInit {
   }
 
   openDialog() {
-    const dialogRef = this.matDialog.open(CreateChartComponent, { disableClose: true });
+    this.dialogRef = this.matDialog.open(CreateChartComponent, { disableClose: true });
 
-    dialogRef.afterClosed().subscribe(formValue => this.processData(formValue));
+    this.dialogRef.afterClosed().subscribe(formValue => {
+      this.dialogRef = undefined;
+      this.createChart(formValue);
+    });
   }
 
-  processData(formValue) {
+  /**
+   * The method creates a chart and adds it to the  @var charts array.
+   * Since the formQueryResult will keep changing, we subscribe to 
+   * @param formValue The value obtained after the user submitted the form
+   */
+  createChart(formValue: {
+        analyzeTableSelect: string,
+        groupBySelect: string,
+        nameSelect: string,
+        valueSelect: string,
+        chartTypeSelect: any,
+        chartOptions: any
+      }) {
     if (!formValue) {
       return;
     }

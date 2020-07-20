@@ -11,23 +11,28 @@ export class DashboardHelperService {
 
     constructor(private bigQueryService: BigQueryService) { }
 
-    private readonly SQL_LAYER_QUERY = `
-    SELECT
-        ARRAY(
-            SELECT TABLE_NAME FROM ${constants.bigQuery.layerDatasets.heatmap.dataset}.INFORMATION_SCHEMA.TABLES
-        ) as heatmap_layers,
-        ARRAY(
-            SELECT TABLE_NAME FROM ${constants.bigQuery.layerDatasets.shape.dataset}.INFORMATION_SCHEMA.TABLES
-        ) as shape_layers
-    `;
-
-    async getAdditionalLayers() {
+    /**
+     * Helper method that fetches a list
+     * of all the additional layers that are
+     * available by getting all the table names
+     * from the dataset.
+     */
+    async getAdditionalLayers(): Promise<{ heatmap: string[], shape: string[] }> {
+        const SQL_LAYER_QUERY = `
+            SELECT
+                ARRAY(
+                    SELECT TABLE_NAME FROM ${constants.bigQuery.layerDatasets.heatmap.dataset}.INFORMATION_SCHEMA.TABLES
+                ) as heatmap_layers,
+                ARRAY(
+                    SELECT TABLE_NAME FROM ${constants.bigQuery.layerDatasets.shape.dataset}.INFORMATION_SCHEMA.TABLES
+                ) as shape_layers
+            `;
         const layers = {
             heatmap: [],
             shape: []
         };
         try {
-            const response = await this.bigQueryService.runQuery(this.SQL_LAYER_QUERY);
+            const response = await this.bigQueryService.runQuery(SQL_LAYER_QUERY);
             const result = this.bigQueryService.convertResult(response.result);
             layers.heatmap = result[0].heatmap_layers;
             layers.shape = result[0].shape_layers;
@@ -41,6 +46,11 @@ export class DashboardHelperService {
         }
     }
 
+    /**
+     * Create a basic chart that maps the total amount of parts
+     * obtained from China and non-China sources.
+     * @param formQueryResult The result obtained from submitting the form
+     */
     getChartOne(formQueryResult: FormQueryResult) {
         const UPSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
         const result: {

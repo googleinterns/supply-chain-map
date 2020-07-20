@@ -7,6 +7,7 @@ import { FormQueryResult } from 'src/app/home/home.models';
 import { HomeState } from 'src/app/home/store/state';
 import { selectHomeFormQueryResult } from 'src/app/home/store/selectors';
 import { MatDialogModule } from '@angular/material/dialog';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('GraphTabComponent', () => {
   let component: GraphTabComponent;
@@ -16,13 +17,16 @@ describe('GraphTabComponent', () => {
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      imports: [ MatDialogModule ],
-      declarations: [ GraphTabComponent ],
+      imports: [
+        MatDialogModule,
+        BrowserAnimationsModule
+      ],
+      declarations: [GraphTabComponent],
       providers: [
         provideMockStore()
       ]
     })
-    .compileComponents();
+      .compileComponents();
 
     mockStore = TestBed.inject(MockStore);
     mockFormQuerySelector = mockStore.overrideSelector(
@@ -43,5 +47,22 @@ describe('GraphTabComponent', () => {
 
   it('should create', () => {
     expect(component).toBeTruthy();
+  });
+
+  it('should create/remove chart', () => {
+    const formValue = {
+      analyzeTableSelect: 'upstream',
+      groupBySelect: 'string',
+      nameSelect: 'string',
+      valueSelect: 'string',
+      chartTypeSelect: { name: 'chartType1' },
+      chartOptions: 'any'
+    };
+
+    component.createChart(formValue);
+    expect(component.charts.length).toEqual(1);
+    expect(component.charts[0].chart).toEqual({ name: 'chartType1' });
+    component.removeChart(component.charts[0]);
+    expect(component.charts.length).toEqual(0);
   });
 });
