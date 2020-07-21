@@ -28,7 +28,7 @@ export class RouteLayerComponent implements OnDestroy {
     this.store.select(selectHomeFormQueryResult).subscribe(
       formQueryResult => {
         this.markers = this.mapHelperService.createMarkerPoints(formQueryResult);
-        this.lines = this.mapHelperService.createLines(formQueryResult);
+        this.lines = this.mapHelperService.createLines(this.markers);
       }
     );
   }

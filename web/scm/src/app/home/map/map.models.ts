@@ -11,8 +11,9 @@ export interface RouteLayerMarker {
     latitude: number;
     longitude: number;
     iconUrl: string;
-    type: string[];
+    type: 'MFG' | 'CM' | 'GDC';
     data: {
+        partCount: number;
         product: string[];
         sku: string[];
         mpn?: string[];
@@ -20,6 +21,8 @@ export interface RouteLayerMarker {
         category: string[];
         name: string[];
         avgLeadTime: number;
+        maxLeadTime: number;
+        minLeadTime: number;
         totalQty?: number;
         unitCost?: number;
         city: string;

@@ -30,10 +30,6 @@ export class MapStoreEffects {
                             name: 'GDC',
                             icon: MapHelperService.ICON_MAP.GDC,
                             type: 'URL'
-                        }, {
-                            name: 'MFG & CM',
-                            icon: MapHelperService.ICON_MAP.MFG_CM,
-                            type: 'URL'
                         }]
                     };
                     return of(MapFeatureActions.layerLoadSuccess({ layer: routeLayer }));
