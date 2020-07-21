@@ -9,9 +9,11 @@
     <agm-info-window>
         <div><b>Name</b>: {{ marker.data.name.join(", ") }}</div>
         <div><b>Part Type</b>: {{ marker.data.category.join(", ") }}</div>
-        <div><b>SC Node</b>: {{ marker.type.join(", ") }}</div>
+        <div><b>SC Node</b>: {{ marker.type }}</div>
         <div><b>Product</b>: {{ marker.data.mpn ? marker.data.mpn.join(", ") : marker.data.sku.join(", ") }}</div>
-        <div *ngIf="marker.data.mpn"><b>Part Count</b>: {{ marker.data.mpn.length }}</div>
+        <div><b>Part Count</b>: {{ marker.data.partCount }}</div>
+        <div *ngIf="marker.data.partCount > 1"><b>LT Range</b>: {{ marker.data.minLeadTime }} - {{ marker.data.maxLeadTime }}</div>
+        <div *ngIf="marker.data.partCount === 1"><b>LT</b>: {{ marker.data.avgLeadTime }}</div>
         <div><b>City</b>: {{ marker.data.city }}</div>
         <div><b>Country</b>: {{ marker.data.country }}</div>
     </agm-info-window>

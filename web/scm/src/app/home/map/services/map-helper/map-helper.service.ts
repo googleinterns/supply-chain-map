@@ -12,6 +12,10 @@ import { createPolygonPath } from './geojson-converter';
 })
 export class MapHelperService {
 
+    static readonly UPSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
+    static readonly CM_COLS = constants.bigQuery.layerDatasets.route.tables.CM.columns;
+    static readonly DOWNSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
+
     constructor(private bigQueryService: BigQueryService) { }
 
     /**
@@ -21,8 +25,7 @@ export class MapHelperService {
     public static readonly ICON_MAP = {
         GDC: 'assets/gdc.svg',
         MFG: 'assets/mfg.svg',
-        CM: 'assets/cm.svg',
-        MFG_CM: 'assets/mfg_cm.svg'
+        CM: 'assets/cm.svg'
     };
 
     /**
@@ -42,198 +45,11 @@ export class MapHelperService {
     }
 
     /**
-     * Restructures the form query result to create representative
-     * polyline objects.
-     * @param formQueryResult The resut obtained after running the form query
+     * This method queries the dedicated heatmap dataset to get
+     * all the data required to populate the heatmap
+     * @param layerName Name of the heatmap layer
+     * @throws exception if layer not found
      */
-    public createLines(formQueryResult: FormQueryResult): RouteLayerLine[] {
-
-        if (!formQueryResult) {
-            return [];
-        }
-
-        const skuMap = this.createSkuMap(formQueryResult);
-        const lines: RouteLayerLine[] = [];
-        const UPSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
-        const CM_COLS = constants.bigQuery.layerDatasets.route.tables.CM.columns;
-        const DOWNSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
-
-        for (const sku of skuMap.keys()) {
-            /** Upstream lines */
-            for (const upstreamRow of skuMap.get(sku).upstream) {
-                for (const cmRow of skuMap.get(sku).cm) {
-                    lines.push({
-                        from: {
-                            latitude: parseFloat(upstreamRow[UPSTREAM_COLS.MFG_LAT]),
-                            longitude: parseFloat(upstreamRow[UPSTREAM_COLS.MFG_LONG]),
-                            city: upstreamRow[UPSTREAM_COLS.MFG_CITY],
-                            state: upstreamRow[UPSTREAM_COLS.MFG_STATE],
-                            country: upstreamRow[UPSTREAM_COLS.MFG_COUNTRY]
-                        },
-                        to: {
-                            latitude: parseFloat(cmRow[CM_COLS.CM_LAT]),
-                            longitude: parseFloat(cmRow[CM_COLS.CM_LONG]),
-                            city: cmRow[CM_COLS.CM_CITY],
-                            state: cmRow[CM_COLS.CM_STATE],
-                            country: cmRow[CM_COLS.CM_COUNTRY]
-                        },
-                        type: 'Upstream',
-                        color: 'blue'
-                    });
-                }
-            }
-
-            /** Downstream lines */
-            for (const cmRow of skuMap.get(sku).cm) {
-                for (const downstreamRow of skuMap.get(sku).downstream) {
-                    lines.push({
-                        from: {
-                            latitude: parseFloat(cmRow[CM_COLS.CM_LAT]),
-                            longitude: parseFloat(cmRow[CM_COLS.CM_LONG]),
-                            city: cmRow[CM_COLS.CM_CITY],
-                            state: cmRow[CM_COLS.CM_STATE],
-                            country: cmRow[CM_COLS.CM_COUNTRY]
-                        },
-                        to: {
-                            latitude: parseFloat(downstreamRow[DOWNSTREAM_COLS.GDC_LAT]),
-                            longitude: parseFloat(downstreamRow[DOWNSTREAM_COLS.GDC_LONG]),
-                            city: downstreamRow[DOWNSTREAM_COLS.GDC_CITY],
-                            state: downstreamRow[DOWNSTREAM_COLS.GDC_STATE],
-                            country: downstreamRow[DOWNSTREAM_COLS.GDC_COUNTRY]
-                        },
-                        type: 'Downstream',
-                        color: 'red'
-                    });
-                }
-            }
-        }
-
-        return lines;
-    }
-
-    /**
-     * Restructures the form query result to create representative
-     * marker objects.
-     * @param formQueryResult The resut obtained after running the form query
-     */
-    public createMarkerPoints(formQueryResult: FormQueryResult): RouteLayerMarker[] {
-
-        if (!formQueryResult) {
-            return [];
-        }
-
-        const markers: RouteLayerMarker[] = [];
-        const markerMap = this.createLocationToMarkerMap(formQueryResult);
-        const UPSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
-        const CM_COLS = constants.bigQuery.layerDatasets.route.tables.CM.columns;
-        const DOWNSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
-
-        for (const latLongId of markerMap.keys()) {
-            const marker: RouteLayerMarker = {
-                latitude: 0,
-                longitude: 0,
-                iconUrl: '',
-                type: [],
-                data: {
-                    product: [],
-                    sku: [],
-                    mpn: [],
-                    description: [],
-                    category: [],
-                    name: [],
-                    avgLeadTime: 0,
-                    totalQty: 0,
-                    unitCost: 0,
-                    city: '',
-                    state: '',
-                    country: '',
-                }
-            };
-
-            for (const dataPoint of markerMap.get(latLongId)) {
-                if (dataPoint.type === MFG_IDENTIFIER) {
-                    marker.type.push(MFG_IDENTIFIER);
-                    marker.latitude = dataPoint[UPSTREAM_COLS.MFG_LAT];
-                    marker.longitude = dataPoint[UPSTREAM_COLS.MFG_LONG];
-                    marker.data.city = dataPoint[UPSTREAM_COLS.MFG_CITY] ?? '';
-                    marker.data.state = dataPoint[UPSTREAM_COLS.MFG_STATE] ?? '';
-                    marker.data.country = dataPoint[UPSTREAM_COLS.MFG_COUNTRY] ?? '';
-                    marker.data.totalQty += parseFloat(dataPoint[UPSTREAM_COLS.TOTAL_QTY]);
-                    marker.data.unitCost += parseFloat(dataPoint[UPSTREAM_COLS.UNIT_COST]); // TODO(nirup): wrong, change this
-                    marker.data.avgLeadTime += parseInt(dataPoint[UPSTREAM_COLS.LEAD_TIME], 10);
-                    marker.data.product.push(dataPoint[UPSTREAM_COLS.PRODUCT]);
-                    marker.data.sku.push(dataPoint[UPSTREAM_COLS.PARENT_SKU]);
-                    marker.data.mpn.push(dataPoint[UPSTREAM_COLS.MPN]);
-                    marker.data.description.push(dataPoint[UPSTREAM_COLS.DESCRIPTION]);
-                    marker.data.category.push(dataPoint[UPSTREAM_COLS.CATEGORY]);
-                    marker.data.name.push(dataPoint[UPSTREAM_COLS.SUPPLIER_NAME]);
-                } else if (dataPoint.type === CM_IDENTIFIER) {
-                    marker.type.push(CM_IDENTIFIER);
-                    marker.latitude = dataPoint[CM_COLS.CM_LAT];
-                    marker.longitude = dataPoint[CM_COLS.CM_LONG];
-                    marker.data.city = dataPoint[CM_COLS.CM_CITY] ?? '';
-                    marker.data.state = dataPoint[CM_COLS.CM_STATE] ?? '';
-                    marker.data.country = dataPoint[CM_COLS.CM_COUNTRY] ?? '';
-                    marker.data.avgLeadTime += parseInt(dataPoint[CM_COLS.LEAD_TIME], 10);
-                    marker.data.product.push(dataPoint[CM_COLS.PRODUCT]);
-                    marker.data.sku.push(dataPoint[CM_COLS.SKU]);
-                    marker.data.description.push(dataPoint[CM_COLS.DESCRIPTION]);
-                    marker.data.name.push(dataPoint[CM_COLS.CM_NAME]);
-                } else if (dataPoint.type === GDC_IDENTIFIER) {
-                    marker.type.push(GDC_IDENTIFIER);
-                    marker.latitude = dataPoint[DOWNSTREAM_COLS.GDC_LAT];
-                    marker.longitude = dataPoint[DOWNSTREAM_COLS.GDC_LONG];
-                    marker.data.city = dataPoint[DOWNSTREAM_COLS.GDC_CITY] ?? '';
-                    marker.data.state = dataPoint[DOWNSTREAM_COLS.GDC_STATE] ?? '';
-                    marker.data.country = dataPoint[DOWNSTREAM_COLS.GDC_COUNTRY] ?? '';
-                    marker.data.avgLeadTime += parseInt(dataPoint[DOWNSTREAM_COLS.LEAD_TIME], 10);
-                    marker.data.product.push(dataPoint[DOWNSTREAM_COLS.PRODUCT]);
-                    marker.data.sku.push(dataPoint[DOWNSTREAM_COLS.SKU]);
-                    marker.data.name.push(dataPoint[DOWNSTREAM_COLS.GDC_CODE]);
-                }
-            }
-
-            marker.data.avgLeadTime /= markerMap.get(latLongId).length;
-
-            marker.type = [...new Set(marker.type)];
-            marker.data.product = [...new Set(marker.data.product)];
-            marker.data.name = [...new Set(marker.data.name)];
-            marker.data.description = [...new Set(marker.data.description)];
-            marker.data.category = [...new Set(marker.data.category)];
-            marker.data.sku = [...new Set(marker.data.sku)];
-            if (marker.data.mpn.length > 0) {
-                marker.data.sku = [...new Set(marker.data.mpn)];
-            } else {
-                delete marker.data.mpn;
-            }
-
-            if (marker.type.length === 1) {
-                switch (marker.type[0]) {
-                    case MFG_IDENTIFIER: {
-                        marker.iconUrl = MapHelperService.ICON_MAP.MFG;
-                        break;
-                    }
-                    case CM_IDENTIFIER: {
-                        marker.iconUrl = MapHelperService.ICON_MAP.CM;
-                        break;
-                    }
-                    case GDC_IDENTIFIER: {
-                        marker.iconUrl = MapHelperService.ICON_MAP.GDC;
-                        break;
-                    }
-                }
-            } else if (marker.type.includes(GDC_IDENTIFIER)) {
-                marker.iconUrl = MapHelperService.ICON_MAP.GDC;
-            } else {
-                marker.iconUrl = MapHelperService.ICON_MAP.MFG_CM;
-            }
-
-            markers.push(marker);
-        }
-
-        return markers;
-    }
-
     private async getHeatmapLayer(layerName: string): Promise<HeatmapLayer> {
         const layerCols = constants.bigQuery.layerDatasets.heatmap.columns;
         const SQL_FETCH_HEATMAP_LAYER = `
@@ -257,6 +73,9 @@ export class MapHelperService {
         try {
             const response = await this.bigQueryService.runQuery(SQL_FETCH_HEATMAP_LAYER);
             const markers = this.bigQueryService.convertResult(response.result);
+            if (markers.length === 0) {
+                throw new Error('Cannot find layer: '+layerName);
+            }
             const magnitudes = markers.map(m => m.magnitude);
 
             return {
@@ -279,6 +98,13 @@ export class MapHelperService {
         }
     }
 
+
+    /**
+     * This method queries the dedicated shape layer dataset to get
+     * all the data required to populate the layer
+     * @param layerName Name of the shape layer
+     * @throws exception if layer not found
+     */
     private async getShapeLayer(layerName: string): Promise<ShapeLayer> {
         const layerCols = constants.bigQuery.layerDatasets.shape.columns;
         const SQL_FETCH_SHAPE_LAYER = `
@@ -290,6 +116,9 @@ export class MapHelperService {
         try {
             const response = await this.bigQueryService.runQuery(SQL_FETCH_SHAPE_LAYER);
             const shapes = this.bigQueryService.convertResult(response.result);
+            if (shapes.length === 0) {
+                throw new Error('Cannot find layer: '+layerName);
+            }
             const baseColor = Colors.randomColor();
 
             let maxMagnitude = -1;
@@ -370,84 +199,321 @@ export class MapHelperService {
         }
     }
 
-    private createLocationToMarkerMap(formQueryResult: FormQueryResult): Map<string, Array<any>> {
-        const markerMap = new Map<string, Array<any>>();
-        let additionalProps;
+    /**
+     * Use the RouteLayerMarker array to create an SKU mapping of
+     * movement parts in the supply chain.
+     * @param markers The markers obtained from running @method createMarkerPoints
+     */
+    public createLines(markers: RouteLayerMarker[]) {
+        console.log(markers)
+        const skuMap = this.createSkuMapFromMarkers(markers);
+        const lines: RouteLayerLine[] = [];
 
-        if ('upstream' in formQueryResult) {
-            const UPSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
-            additionalProps = { type: MFG_IDENTIFIER };
-            for (const upstreamRow of formQueryResult.upstream) {
-                const id = upstreamRow[UPSTREAM_COLS.MFG_LAT] + ' ' + upstreamRow[UPSTREAM_COLS.MFG_LONG];
-                if (markerMap.has(id)) {
-                    markerMap.get(id).push({ ...upstreamRow, ...additionalProps });
-                } else {
-                    markerMap.set(id, [{ ...upstreamRow, ...additionalProps }]);
+        for (const sku of skuMap.keys()) {
+            /** Upstream lines */
+            for (const upstreamMarker of skuMap.get(sku).upstream) {
+                for (const cmMarker of skuMap.get(sku).cm) {
+                    lines.push({
+                        from: {
+                            latitude: upstreamMarker.latitude,
+                            longitude: upstreamMarker.longitude,
+                            city: upstreamMarker.data.city,
+                            state: upstreamMarker.data.state,
+                            country: upstreamMarker.data.country
+                        },
+                        to: {
+                            latitude: cmMarker.latitude,
+                            longitude: cmMarker.longitude,
+                            city: cmMarker.data.city,
+                            state: cmMarker.data.state,
+                            country: cmMarker.data.country
+                        },
+                        type: 'Upstream',
+                        color: 'blue'
+                    });
+                }
+            }
+
+            /** Downstream lines */
+            for (const cmMarker of skuMap.get(sku).cm) {
+                for (const downstreamMarker of skuMap.get(sku).downstream) {
+                    lines.push({
+                        from: {
+                            latitude: cmMarker.latitude,
+                            longitude: cmMarker.longitude,
+                            city: cmMarker.data.city,
+                            state: cmMarker.data.state,
+                            country: cmMarker.data.country
+                        },
+                        to: {
+                            latitude: downstreamMarker.latitude,
+                            longitude: downstreamMarker.longitude,
+                            city: downstreamMarker.data.city,
+                            state: downstreamMarker.data.state,
+                            country: downstreamMarker.data.country
+                        },
+                        type: 'Downstream',
+                        color: 'red'
+                    });
                 }
             }
         }
 
-        const CM_COLS = constants.bigQuery.layerDatasets.route.tables.CM.columns;
-        additionalProps = { type: CM_IDENTIFIER };
-        for (const cmRow of formQueryResult.cm) {
-            const id = cmRow[CM_COLS.CM_LAT] + ' ' + cmRow[CM_COLS.CM_LONG];
-            if (markerMap.has(id)) {
-                markerMap.get(id).push({ ...cmRow, ...additionalProps });
-            } else {
-                markerMap.set(id, [{ ...cmRow, ...additionalProps }]);
-            }
-        }
-
-        if ('downstream' in formQueryResult) {
-            const DOWNSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
-            additionalProps = { type: GDC_IDENTIFIER };
-            for (const downstreamRow of formQueryResult.downstream) {
-                const id = downstreamRow[DOWNSTREAM_COLS.GDC_LAT] + ' ' + downstreamRow[DOWNSTREAM_COLS.GDC_LONG];
-                if (markerMap.has(id)) {
-                    markerMap.get(id).push({ ...downstreamRow, ...additionalProps });
-                } else {
-                    markerMap.set(id, [{ ...downstreamRow, ...additionalProps }]);
-                }
-            }
-        }
-
-        return markerMap;
+        return lines;
     }
 
-    private createSkuMap(formQueryResult: FormQueryResult): Map<string, { upstream: any[], downstream: any[], cm: any[] }> {
-        const skuMap = new Map<string, { upstream: any[], downstream: any[], cm: any[] }>();
+    /**
+     * Helper method used by @method createLines to build
+     * a map that tracks the movement of a part by keeping track of
+     * its SKU.
+     */
+    private createSkuMapFromMarkers(markers: RouteLayerMarker[]): Map<string, { upstream: RouteLayerMarker[], cm: RouteLayerMarker[], downstream: RouteLayerMarker[] }> {
+        const skuMap = new Map<string, { upstream: RouteLayerMarker[], cm: RouteLayerMarker[], downstream: RouteLayerMarker[] }>();
 
-        if ('upstream' in formQueryResult) {
-            const UPSTREAM_PARENT_SKU = constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns.PARENT_SKU;
-            for (const upstreamRow of formQueryResult.upstream) {
-                if (skuMap.has(upstreamRow[UPSTREAM_PARENT_SKU])) {
-                    skuMap.get(upstreamRow[UPSTREAM_PARENT_SKU]).upstream.push(upstreamRow);
-                } else {
-                    skuMap.set(upstreamRow[UPSTREAM_PARENT_SKU], { upstream: [upstreamRow], downstream: [], cm: [] });
+        for (const marker of markers) {
+            for (const sku of marker.data.sku) {
+                if (!skuMap.has(sku)) {
+                    skuMap.set(sku, { upstream: [], cm: [], downstream: [] });
                 }
-            }
-        }
-
-        const CM_SKU = constants.bigQuery.layerDatasets.route.tables.CM.columns.SKU;
-        for (const cmRow of formQueryResult.cm) {
-            if (skuMap.has(cmRow[CM_SKU])) {
-                skuMap.get(cmRow[CM_SKU]).cm.push(cmRow);
-            } else {
-                skuMap.set(cmRow[CM_SKU], { upstream: [], downstream: [], cm: [cmRow] });
-            }
-        }
-
-        if ('downstream' in formQueryResult) {
-            const DOWNSTREAM_SKU = constants.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns.SKU;
-            for (const downstreamRow of formQueryResult.downstream) {
-                if (skuMap.has(downstreamRow[DOWNSTREAM_SKU])) {
-                    skuMap.get(downstreamRow[DOWNSTREAM_SKU]).downstream.push(downstreamRow);
-                } else {
-                    skuMap.set(downstreamRow[DOWNSTREAM_SKU], { upstream: [], downstream: [downstreamRow], cm: [] });
+                if (marker.type === MFG_IDENTIFIER) {
+                    skuMap.get(sku).upstream.push(marker);
+                } else if (marker.type === CM_IDENTIFIER) {
+                    skuMap.get(sku).cm.push(marker);
+                } else if (marker.type === GDC_IDENTIFIER) {
+                    skuMap.get(sku).downstream.push(marker);
                 }
             }
         }
 
         return skuMap;
+    }
+
+    /**
+     * Restructures the form query result to create representative
+     * marker objects.
+     * @param formQueryResult The resut obtained after running the form query
+     */
+    public createMarkerPoints(formQueryResult: FormQueryResult): RouteLayerMarker[] {
+
+        if (!formQueryResult) {
+            return [];
+        }
+
+        const markers: RouteLayerMarker[] = [];
+        const markerMap = this.createLocationToMarkerMap(formQueryResult);
+
+        for (const latLongId of markerMap.keys()) {
+            const marker: RouteLayerMarker = {
+                latitude: 0,
+                longitude: 0,
+                iconUrl: '',
+                type: MFG_IDENTIFIER,
+                data: {
+                    partCount: 0,
+                    product: [],
+                    sku: [],
+                    mpn: [],
+                    description: [],
+                    category: [],
+                    name: [],
+                    avgLeadTime: 0,
+                    minLeadTime: Infinity,
+                    maxLeadTime: -Infinity,
+                    totalQty: 0,
+                    unitCost: 0,
+                    city: '',
+                    state: '',
+                    country: '',
+                }
+            };
+
+            for (const dataPoint of markerMap.get(latLongId)) {
+                if (dataPoint.type === MFG_IDENTIFIER) {
+                    marker.type = MFG_IDENTIFIER;
+                    marker.latitude = dataPoint[MapHelperService.UPSTREAM_COLS.MFG_LAT];
+                    marker.longitude = dataPoint[MapHelperService.UPSTREAM_COLS.MFG_LONG];
+                    marker.data.city = dataPoint[MapHelperService.UPSTREAM_COLS.MFG_CITY] ?? '';
+                    marker.data.state = dataPoint[MapHelperService.UPSTREAM_COLS.MFG_STATE] ?? '';
+                    marker.data.country = dataPoint[MapHelperService.UPSTREAM_COLS.MFG_COUNTRY] ?? '';
+                    marker.data.totalQty += parseFloat(dataPoint[MapHelperService.UPSTREAM_COLS.TOTAL_QTY]);
+                    marker.data.unitCost += parseFloat(dataPoint[MapHelperService.UPSTREAM_COLS.UNIT_COST]); // TODO(nirup): wrong, change this
+                    marker.data.avgLeadTime += parseFloat(dataPoint[MapHelperService.UPSTREAM_COLS.LEAD_TIME]);
+                    marker.data.minLeadTime = Math.min(marker.data.minLeadTime, parseFloat(dataPoint[MapHelperService.UPSTREAM_COLS.LEAD_TIME]));
+                    marker.data.maxLeadTime = Math.max(marker.data.maxLeadTime, parseFloat(dataPoint[MapHelperService.UPSTREAM_COLS.LEAD_TIME]));
+                    marker.data.product.push(dataPoint[MapHelperService.UPSTREAM_COLS.PRODUCT]);
+                    marker.data.sku.push(dataPoint[MapHelperService.UPSTREAM_COLS.PARENT_SKU]);
+                    marker.data.mpn.push(dataPoint[MapHelperService.UPSTREAM_COLS.MPN]);
+                    marker.data.description.push(dataPoint[MapHelperService.UPSTREAM_COLS.DESCRIPTION]);
+                    marker.data.category.push(dataPoint[MapHelperService.UPSTREAM_COLS.CATEGORY]);
+                    marker.data.name.push(dataPoint[MapHelperService.UPSTREAM_COLS.SUPPLIER_NAME]);
+                } else if (dataPoint.type === CM_IDENTIFIER) {
+                    marker.type = CM_IDENTIFIER;
+                    marker.latitude = dataPoint[MapHelperService.CM_COLS.CM_LAT];
+                    marker.longitude = dataPoint[MapHelperService.CM_COLS.CM_LONG];
+                    marker.data.city = dataPoint[MapHelperService.CM_COLS.CM_CITY] ?? '';
+                    marker.data.state = dataPoint[MapHelperService.CM_COLS.CM_STATE] ?? '';
+                    marker.data.country = dataPoint[MapHelperService.CM_COLS.CM_COUNTRY] ?? '';
+                    marker.data.avgLeadTime += parseInt(dataPoint[MapHelperService.CM_COLS.LEAD_TIME], 10);
+                    marker.data.minLeadTime = Math.min(marker.data.minLeadTime, parseFloat(dataPoint[MapHelperService.CM_COLS.LEAD_TIME]));
+                    marker.data.maxLeadTime = Math.max(marker.data.maxLeadTime, parseFloat(dataPoint[MapHelperService.CM_COLS.LEAD_TIME]));
+                    marker.data.product.push(dataPoint[MapHelperService.CM_COLS.PRODUCT]);
+                    marker.data.sku.push(dataPoint[MapHelperService.CM_COLS.SKU]);
+                    marker.data.description.push(dataPoint[MapHelperService.CM_COLS.DESCRIPTION]);
+                    marker.data.name.push(dataPoint[MapHelperService.CM_COLS.CM_NAME]);
+                } else if (dataPoint.type === GDC_IDENTIFIER) {
+                    marker.type = GDC_IDENTIFIER;
+                    marker.latitude = dataPoint[MapHelperService.DOWNSTREAM_COLS.GDC_LAT];
+                    marker.longitude = dataPoint[MapHelperService.DOWNSTREAM_COLS.GDC_LONG];
+                    marker.data.city = dataPoint[MapHelperService.DOWNSTREAM_COLS.GDC_CITY] ?? '';
+                    marker.data.state = dataPoint[MapHelperService.DOWNSTREAM_COLS.GDC_STATE] ?? '';
+                    marker.data.country = dataPoint[MapHelperService.DOWNSTREAM_COLS.GDC_COUNTRY] ?? '';
+                    marker.data.avgLeadTime += parseInt(dataPoint[MapHelperService.DOWNSTREAM_COLS.LEAD_TIME], 10);
+                    marker.data.minLeadTime = Math.min(marker.data.minLeadTime, parseFloat(dataPoint[MapHelperService.DOWNSTREAM_COLS.LEAD_TIME]));
+                    marker.data.maxLeadTime = Math.max(marker.data.maxLeadTime, parseFloat(dataPoint[MapHelperService.DOWNSTREAM_COLS.LEAD_TIME]));
+                    marker.data.product.push(dataPoint[MapHelperService.DOWNSTREAM_COLS.PRODUCT]);
+                    marker.data.sku.push(dataPoint[MapHelperService.DOWNSTREAM_COLS.SKU]);
+                    marker.data.name.push(dataPoint[MapHelperService.DOWNSTREAM_COLS.GDC_CODE]);
+                }
+            }
+
+            marker.data.partCount = markerMap.get(latLongId).length;
+            marker.data.avgLeadTime /= markerMap.get(latLongId).length;
+
+            marker.data.product = [...new Set(marker.data.product)];
+            marker.data.name = [...new Set(marker.data.name)];
+            marker.data.description = [...new Set(marker.data.description)];
+            marker.data.category = [...new Set(marker.data.category)];
+            marker.data.sku = [...new Set(marker.data.sku)];
+            if (marker.data.mpn.length > 0) {
+                marker.data.mpn = [...new Set(marker.data.mpn)];
+            } else {
+                delete marker.data.mpn;
+            }
+
+            switch (marker.type) {
+                case MFG_IDENTIFIER: {
+                    marker.iconUrl = MapHelperService.ICON_MAP.MFG;
+                    break;
+                }
+                case CM_IDENTIFIER: {
+                    marker.iconUrl = MapHelperService.ICON_MAP.CM;
+                    break;
+                }
+                case GDC_IDENTIFIER: {
+                    marker.iconUrl = MapHelperService.ICON_MAP.GDC;
+                    break;
+                }
+            }
+
+            markers.push(marker);
+        }
+        return markers;
+    }
+
+    /**
+     * Maps each row in the form query result to its corresponding location.
+     * The returned map looks like this:
+     * "lat long" => [upstreamRow1, upstreamRow2, cmRow1, downStreamRow1]
+     * This means that all of those rows are present at that exact location.
+     * But this is a problem, because we cannot combine all of them in one marker.
+     * @method flattenMapWithDisplacement takes such arrays or rows and adds a small displacement.
+     * This way, we have unique rows for each node in the supply chain.
+     */
+    private createLocationToMarkerMap(formQueryResult: FormQueryResult): Map<string, Array<any>> {
+        const markerMap = new Map<string, Map<string, Array<any>>>();
+        let additionalProps;
+
+        if ('upstream' in formQueryResult) {
+            additionalProps = { type: MFG_IDENTIFIER };
+            for (const upstreamRow of formQueryResult.upstream) {
+                const id = upstreamRow[MapHelperService.UPSTREAM_COLS.MFG_LAT] + ' ' + upstreamRow[MapHelperService.UPSTREAM_COLS.MFG_LONG];
+                if (!markerMap.has(id)) {
+                    markerMap.set(id, new Map<string, Array<any>>());
+                }
+                if (!markerMap.get(id).has(upstreamRow[MapHelperService.UPSTREAM_COLS.SUPPLIER_NAME])) {
+                    markerMap.get(id).set(upstreamRow[MapHelperService.UPSTREAM_COLS.SUPPLIER_NAME], []);
+                }
+                markerMap.get(id).get(upstreamRow[MapHelperService.UPSTREAM_COLS.SUPPLIER_NAME]).push({ ...upstreamRow, ...additionalProps });
+            }
+        }
+
+        additionalProps = { type: CM_IDENTIFIER };
+        for (const cmRow of formQueryResult.cm) {
+            const id = cmRow[MapHelperService.CM_COLS.CM_LAT] + ' ' + cmRow[MapHelperService.CM_COLS.CM_LONG];
+            if (!markerMap.has(id)) {
+                markerMap.set(id, new Map<string, Array<any>>());
+            }
+            if (!markerMap.get(id).has(cmRow[MapHelperService.CM_COLS.CM_NAME])) {
+                markerMap.get(id).set(cmRow[MapHelperService.CM_COLS.CM_NAME], []);
+            }
+            markerMap.get(id).get(cmRow[MapHelperService.CM_COLS.CM_NAME]).push({ ...cmRow, ...additionalProps });
+        }
+
+        if ('downstream' in formQueryResult) {
+            additionalProps = { type: GDC_IDENTIFIER };
+            for (const downstreamRow of formQueryResult.downstream) {
+                const id = downstreamRow[MapHelperService.DOWNSTREAM_COLS.GDC_LAT] + ' ' + downstreamRow[MapHelperService.DOWNSTREAM_COLS.GDC_LONG];
+                if (!markerMap.has(id)) {
+                    markerMap.set(id, new Map<string, Array<any>>());
+                }
+                if (!markerMap.get(id).has(downstreamRow[MapHelperService.DOWNSTREAM_COLS.GDC_CODE])) {
+                    markerMap.get(id).set(downstreamRow[MapHelperService.DOWNSTREAM_COLS.GDC_CODE], []);
+                }
+                markerMap.get(id).get(downstreamRow[MapHelperService.DOWNSTREAM_COLS.GDC_CODE]).push({ ...downstreamRow, ...additionalProps });
+            }
+        }
+
+        return this.flattenMapWithDisplacement(markerMap);
+    }
+
+    /**
+     * this method takes the map that is passed to it, and flattens it to look
+     * like this
+     * {
+     * "lat long1" => [upstreamRow1, upstreamRow2]
+     * "lat long2" => [upstreamRow2, upstreamRow3]
+     * "lat long3" => [cmRow1, cmRow2]
+     * }
+     * It adds a small displacement to the latlong to make sure that
+     * each type of node gets a different marker.
+     * @param markerMap This is the map that looks like this
+     * "lat long" => {
+     *  upstream1: [upstreamRow1, upstreamRow2]
+     *  upstream1: [upstreamRow2, upstreamRow3]
+     *  cm1: [cmRow1, cmRow2]
+     * }
+     */
+    private flattenMapWithDisplacement(markerMap: Map<string, Map<string, Array<any>>>) {
+        const flatMap = new Map<string, Array<any>>();
+        const displace = (latLng: Array<number>, totalMarkers: number, curPos: number) => {
+            const a = 360.0 / totalMarkers;
+            return [
+                latLng[0] + -.00004 * Math.cos((+a * curPos) / 180 * Math.PI),
+                latLng[1] + -.00004 * Math.sin((+a * curPos) / 180 * Math.PI)
+            ];
+        };
+        for (const latLongId of markerMap.keys()) {
+            let i = 0;
+            for (const supplier of markerMap.get(latLongId).keys()) {
+                const newLatLong = displace(latLongId.split(' ').map(x => parseFloat(x)), markerMap.get(latLongId).size, i);
+                flatMap.set(newLatLong.join(' '), markerMap.get(latLongId).get(supplier).map(marker => {
+                    if (marker.type === MFG_IDENTIFIER) {
+                        marker[MapHelperService.UPSTREAM_COLS.MFG_LAT] = newLatLong[0];
+                        marker[MapHelperService.UPSTREAM_COLS.MFG_LONG] = newLatLong[1];
+                    } else if (marker.type === CM_IDENTIFIER) {
+                        marker[MapHelperService.CM_COLS.CM_LAT] = newLatLong[0];
+                        marker[MapHelperService.CM_COLS.CM_LONG] = newLatLong[1];
+                    } else if (marker.type === GDC_IDENTIFIER) {
+                        marker[MapHelperService.DOWNSTREAM_COLS.GDC_LAT] = newLatLong[0];
+                        marker[MapHelperService.DOWNSTREAM_COLS.GDC_LONG] = newLatLong[1];
+                    }
+
+                    return marker;
+                }));
+                i++;
+            }
+        }
+
+        return flatMap;
     }
 }
