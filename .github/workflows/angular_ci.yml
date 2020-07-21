@@ -55,7 +55,3 @@ jobs:
         with:
           path: ./web/scm/dist/scm
           destination: supply-chain-map
-      - name: sync storage
-        run: gsutil rsync -r gs://supply-chain-map ./
-      - name: deploy app
-        run: gcloud app deploy
