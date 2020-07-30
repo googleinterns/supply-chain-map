@@ -58,9 +58,9 @@ export class DataTabComponent {
      * Set up column names by declaring empty objects
      * and retreiving the keys
      */
-    this.upstreamColumns = Object.values(constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns);
-    this.cmColumns = Object.values(constants.bigQuery.layerDatasets.route.tables.CM.columns);
-    this.downstreamColumns = Object.values(constants.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns);
+    this.upstreamColumns = Object.values(constants.bigQuery.datasets.route.tables.UPSTREAM.columns);
+    this.cmColumns = Object.values(constants.bigQuery.datasets.route.tables.CM.columns);
+    this.downstreamColumns = Object.values(constants.bigQuery.datasets.route.tables.DOWNSTREAM.columns);
 
     /**
      * Using subscribe method instead of async pipe because we

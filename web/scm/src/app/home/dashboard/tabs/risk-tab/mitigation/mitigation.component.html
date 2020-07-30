@@ -1,0 +1,14 @@
+<div class="card-container">
+    <div class="card" *ngIf="mitigationTableData">
+        <div class="card-header">
+            <b>Priorities Definition</b>
+        </div>
+        <div class="chart-container">
+            <ngx-datatable class="material no-box fullscreen" [headerHeight]="50" [footerHeight]="50" [limit]="10" [columnMode]="ColumnMode.force"
+                rowHeight="auto" [rows]="mitigationTableData">
+                <ngx-datatable-column [name]="col.name" [prop]="col.prop" [cellClass]="getMitigationCellClass"
+                 *ngFor="let col of mitigationColumns"></ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+    </div>
+</div>

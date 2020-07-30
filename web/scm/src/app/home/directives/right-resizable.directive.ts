@@ -1,4 +1,7 @@
 import { Directive, ElementRef, OnInit, Input } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { setSidePanelWidth } from '../store/actions';
+import { selectSidePanelWidth } from '../store/selectors';
 
 @Directive({
     selector: '[scmRightResizable]'
@@ -12,7 +15,7 @@ export class RightResizableDirective implements OnInit {
 
     dragging = false;
 
-    constructor(private el: ElementRef) {
+    constructor(private el: ElementRef, private store: Store) {
 
         function preventGlobalMouseEvents() {
             document.body.style['pointer-events'] = 'none';
@@ -24,15 +27,17 @@ export class RightResizableDirective implements OnInit {
 
 
         const newWidth = (incomingWidth: number) => {
-            el.nativeElement.classList.remove('hide-children');
-            if (incomingWidth <= this.collapsibleMinWidth) {
+            const width = incomingWidth <= this.collapsibleMinWidth ? 0 : Math.min(this.resizableMinWidth, incomingWidth);
+            this.store.dispatch(setSidePanelWidth({ sidePanelWidth: width }));
+        };
+
+        const setWidth = (width: number) => {
+            if (width === 0) {
                 el.nativeElement.classList.add('hide-children');
-                el.nativeElement.style.width = '0px';
-            } else if (incomingWidth <= this.resizableMinWidth) {
-                el.nativeElement.style.width = (this.resizableMinWidth) + 'px';
             } else {
-                el.nativeElement.style.width = (Math.min(this.resizableMaxWidth, incomingWidth)) + 'px';
+                el.nativeElement.classList.remove('hide-children');
             }
+            el.nativeElement.style.width = width === Infinity ? '100%' : (width) + 'px';
             window.dispatchEvent(new Event('resize'));
         };
 
@@ -82,6 +87,9 @@ export class RightResizableDirective implements OnInit {
         styleSheet.type = 'text/css'
         styleSheet.innerText = '.hide-children>*{display:none;}';
         document.head.appendChild(styleSheet);
+        this.store.select(selectSidePanelWidth).subscribe(
+            setWidth
+        );
     }
 
     ngOnInit(): void {

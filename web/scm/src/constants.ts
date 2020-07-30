@@ -21,7 +21,7 @@ export const constants = {
         ].join(' '),
         apiUrl: 'https://bigquery.googleapis.com',
         discoveryDocument: 'https://bigquery.googleapis.com/discovery/v1/apis/bigquery/v2/rest',
-        layerDatasets: {
+        datasets: {
             route: {
                 dataset: 'scm_mock',
                 tables: {
@@ -93,6 +93,33 @@ export const constants = {
                     'magnitude',
                     'data'
                 ]
+            },
+            risk: {
+                dataset: 'scm_mock',
+                table: 'risk',
+                columns: {
+                    SUPPLIER_NAME: 'Supplier',
+                    FRISK_SCORE: 'Frisk_Score',
+                    DRI: 'DRI',
+                    COMMODITY: 'Commodity',
+                    SPEND_IN_MIL: '_2019_spend_in_mil',
+                    SPEND_IN_PERCENTAGE: '_2019_spend_percentage',
+                    OVERALL_RISK: 'Overall_Risk',
+                    SEGMENTATION: 'Segmentation',
+                    CONCENTRATION: 'Concentration',
+                    DEPENDENCE: 'Dependence',
+                    PRICE: 'Price',
+                    FINANCIAL_HEALTH: 'Financial_Health',
+                    CONTRACTUAL: 'Contractual',
+                    COMPLIANCE_WITH_SUSTAINABILITY: 'Compliance_with_Sustainability',
+                    GEOPOLITICAL: 'Geopolitical',
+                    CONFIDENTIALITY: 'Confidentiality',
+                    QUALITY: 'Quality',
+                    RISK_LEVEL: 'Risk_Level',
+                    IMPACT_LEVEL: 'Impact_level',
+                    TOTAL_SCORE: 'Total_Score',
+                    PRIORITY: 'Priority'
+                }
             }
         }
     }

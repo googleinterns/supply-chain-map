@@ -12,9 +12,9 @@ import { createPolygonPath } from './geojson-converter';
 })
 export class MapHelperService {
 
-    static readonly UPSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
-    static readonly CM_COLS = constants.bigQuery.layerDatasets.route.tables.CM.columns;
-    static readonly DOWNSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
+    static readonly UPSTREAM_COLS = constants.bigQuery.datasets.route.tables.UPSTREAM.columns;
+    static readonly CM_COLS = constants.bigQuery.datasets.route.tables.CM.columns;
+    static readonly DOWNSTREAM_COLS = constants.bigQuery.datasets.route.tables.DOWNSTREAM.columns;
 
     constructor(private bigQueryService: BigQueryService) { }
 
@@ -51,10 +51,10 @@ export class MapHelperService {
      * @throws exception if layer not found
      */
     private async getHeatmapLayer(layerName: string): Promise<HeatmapLayer> {
-        const layerCols = constants.bigQuery.layerDatasets.heatmap.columns;
+        const layerCols = constants.bigQuery.datasets.heatmap.columns;
         const SQL_FETCH_HEATMAP_LAYER = `
             SELECT ${layerCols.join(', ')}
-            FROM ${constants.bigQuery.layerDatasets.heatmap.dataset}.${layerName}
+            FROM ${constants.bigQuery.datasets.heatmap.dataset}.${layerName}
         `;
         const heatMapColors = [
             'rgba(102, 255, 0, 0)',
@@ -106,10 +106,10 @@ export class MapHelperService {
      * @throws exception if layer not found
      */
     private async getShapeLayer(layerName: string): Promise<ShapeLayer> {
-        const layerCols = constants.bigQuery.layerDatasets.shape.columns;
+        const layerCols = constants.bigQuery.datasets.shape.columns;
         const SQL_FETCH_SHAPE_LAYER = `
             SELECT ${layerCols.join(', ')}
-            FROM ${constants.bigQuery.layerDatasets.shape.dataset}.${layerName}
+            FROM ${constants.bigQuery.datasets.shape.dataset}.${layerName}
         `;
 
 
@@ -205,7 +205,6 @@ export class MapHelperService {
      * @param markers The markers obtained from running @method createMarkerPoints
      */
     public createLines(markers: RouteLayerMarker[]) {
-        console.log(markers)
         const skuMap = this.createSkuMapFromMarkers(markers);
         const lines: RouteLayerLine[] = [];
 

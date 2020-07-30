@@ -25,6 +25,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CreateChartComponent } from './tabs/graph-tab/create-chart-dialog/create-chart.dialog';
+import { RiskTabModule } from './tabs/risk-tab/risk-tab.module';
 
 @NgModule({
   declarations: [
@@ -52,6 +53,7 @@ import { CreateChartComponent } from './tabs/graph-tab/create-chart-dialog/creat
     MatTabsModule,
     MatSelectModule,
     NgxChartsModule,
+    RiskTabModule,
     ReactiveFormsModule,
     StoreModule.forFeature('dashboard', fromDashboard.reducer),
     EffectsModule.forFeature([DashboardStoreEffects])

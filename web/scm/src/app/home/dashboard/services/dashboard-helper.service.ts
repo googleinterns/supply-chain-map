@@ -21,10 +21,10 @@ export class DashboardHelperService {
         const SQL_LAYER_QUERY = `
             SELECT
                 ARRAY(
-                    SELECT TABLE_NAME FROM ${constants.bigQuery.layerDatasets.heatmap.dataset}.INFORMATION_SCHEMA.TABLES
+                    SELECT TABLE_NAME FROM ${constants.bigQuery.datasets.heatmap.dataset}.INFORMATION_SCHEMA.TABLES
                 ) as heatmap_layers,
                 ARRAY(
-                    SELECT TABLE_NAME FROM ${constants.bigQuery.layerDatasets.shape.dataset}.INFORMATION_SCHEMA.TABLES
+                    SELECT TABLE_NAME FROM ${constants.bigQuery.datasets.shape.dataset}.INFORMATION_SCHEMA.TABLES
                 ) as shape_layers
             `;
         const layers = {
@@ -52,7 +52,7 @@ export class DashboardHelperService {
      * @param formQueryResult The result obtained from submitting the form
      */
     getChartOne(formQueryResult: FormQueryResult) {
-        const UPSTREAM_COLS = constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
+        const UPSTREAM_COLS = constants.bigQuery.datasets.route.tables.UPSTREAM.columns;
         const result: {
             name: string,
             series: {

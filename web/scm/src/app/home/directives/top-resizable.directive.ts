@@ -1,4 +1,7 @@
 import { Directive, ElementRef, OnInit, Input } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { setDashboardHeight } from '../store/actions';
+import { selectDashboardHeight } from '../store/selectors';
 
 @Directive({
     selector: '[scmTopResizable]'
@@ -11,7 +14,7 @@ export class TopResizableDirective implements OnInit {
 
     dragging = false;
 
-    constructor(private el: ElementRef) {
+    constructor(private el: ElementRef, private store: Store) {
 
         function preventGlobalMouseEvents() {
             document.body.style['pointer-events'] = 'none';
@@ -24,15 +27,18 @@ export class TopResizableDirective implements OnInit {
 
         const newHeight = (incomingHeight: number) => {
             const height = incomingHeight <= this.collapsibleMinHeight ? 0 : Math.max(this.resizableMinHeight, incomingHeight);
+            store.dispatch(setDashboardHeight({ dashboardHeight: height }));
+        };
+
+        const setHeight = (height: number) => {
             if (height === 0) {
                 el.nativeElement.classList.add('hide-children');
             } else {
                 el.nativeElement.classList.remove('hide-children');
             }
-            el.nativeElement.style.height = (height) + 'px';
+            el.nativeElement.style.height = height === Infinity ? '100%' : (height) + 'px';
             window.dispatchEvent(new Event('resize'));
         };
-
 
         const mouseMoveG = (evt: MouseEvent) => {
             if (!this.dragging) {
@@ -82,6 +88,9 @@ export class TopResizableDirective implements OnInit {
         styleSheet.type = 'text/css'
         styleSheet.innerText = '.hide-children>*{display:none;}';
         document.head.appendChild(styleSheet);
+        this.store.select(selectDashboardHeight).subscribe(
+            setHeight
+        );
     }
 
     ngOnInit(): void {

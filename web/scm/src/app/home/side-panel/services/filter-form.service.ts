@@ -51,7 +51,7 @@ export interface FormStructure {
 })
 export class FilterFormService {
 
-  private static readonly environmentRouteTable = constants.bigQuery.layerDatasets.route.tables;
+  private static readonly environmentRouteTable = constants.bigQuery.datasets.route.tables;
   /**
    * Query to get product, supplier, category details
    * from the BigQuery dataset.
