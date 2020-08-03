@@ -46,4 +46,8 @@ export class RiskTabHelperService {
         return dimensions;
     }
 
+    public roundNumber(num: number) {
+        return Math.round(num);
+    }
+
 }

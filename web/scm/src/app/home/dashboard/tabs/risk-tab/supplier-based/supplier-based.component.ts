@@ -46,7 +46,9 @@ export class SupplierBasedComponent {
         count['High'] = 0;
 
         for (const dimension of Object.keys(this.dimensions)) {
-            count[this.selectedSupplier[dimension]] += 1;
+            if (this.selectedSupplier[dimension]) {
+                count[this.selectedSupplier[dimension]] += 1;
+            }
         }
 
         this.supplierStackedRisk = [{
@@ -56,10 +58,10 @@ export class SupplierBasedComponent {
 
         this.supplierRiskHeatmap = Object.keys(this.dimensions).map(dimension => ({
             risk: this.dimensions[dimension],
-            low: 1,
-            medium: 2,
-            significant: 3,
-            high: 4,
+            low: '',
+            medium: '',
+            significant: '',
+            high: '',
             riskColName: dimension,
             val: this.selectedSupplier[dimension]
         }));

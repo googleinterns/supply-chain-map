@@ -52,12 +52,12 @@
 }
 
 .Low {
-    background-color: #FBEFEF;
-    color: #980000 !important;
+    background-color: #EFEFEF;
+    color: #898989 !important;
 }
 
 .Medium {
-    background-color: #F2C1C1;
+    background-color: #B7B7B7;
     color: #FFFFFF !important;
 }
 
@@ -127,4 +127,34 @@ td {
 
 th {
     background-color: #B7B7B7;
+}
+
+.supplier-risk-header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 20px 0 20px;
+}
+
+.supplier-risk-legend {
+    display: flex;
+}
+
+.legend-icon {
+    height: 1.6rem;
+    width: 1.6rem;
+    border-radius: 2px;
+}
+
+::ng-deep .mat-form-field-wrapper {
+    margin: 0;
+    padding: 0;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+}
+
+.legend-title {
+    padding: 0 10px 0 4px;
 }

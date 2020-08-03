@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, ChangeDetectionStrategy } from '@angular/core';
 import { constants } from 'src/constants';
 import { ColumnMode } from '@swimlane/ngx-datatable';
 import { MatSort } from '@angular/material/sort';
@@ -9,7 +9,8 @@ import { RiskTabHelperService } from '../services/risk-tab-helper.service';
 @Component({
     selector: 'scm-high-level',
     templateUrl: './high-level.component.html',
-    styleUrls: ['./high-level.component.scss']
+    styleUrls: ['./high-level.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class HighLevelComponent {
 
@@ -18,7 +19,10 @@ export class HighLevelComponent {
     ColumnMode = ColumnMode;
     pieChartColorScheme = {
         domain: ['#eff7ff', '#cfe2f3', '#3d85c6', '#073763']
-      };
+    };
+    heatmapColorScheme = {
+        domain: ['#EFEFEF', '#F2C1C1', '#E68484', '#C95B5B']
+    };
     heatmapColumns = [
         { name: '', prop: 'dimension', sortable: false },
         { name: 'High', prop: 'High', sortable: false },
@@ -39,13 +43,14 @@ export class HighLevelComponent {
         { name: 'Quality', prop: this.RISK_COLS.QUALITY, sortable: true },
     ];
     riskQueryResult: any[];
+    supplierRiskData: any[];
     pieChartCountData: { name: string, value: number }[];
     pieChartSpendData: { name: string, value: number }[];
     heatMapData: { name: string, series: { name: string, value: number }[] }[];
 
     @ViewChild(MatSort, { static: true }) sort: MatSort;
 
-    public constructor(private store: Store, private riskTabHelper: RiskTabHelperService) {
+    public constructor(private store: Store, public riskTabHelper: RiskTabHelperService) {
         this.store.select(selectRiskQueryResult).subscribe(
             riskQueryResult => {
                 const t = riskQueryResult.slice();
@@ -62,8 +67,17 @@ export class HighLevelComponent {
                 this.pieChartCountData = this.toCountPieChart(riskQueryResult);
                 this.pieChartSpendData = this.toSpendPieChart(riskQueryResult);
                 this.heatMapData = this.toHeatMap(riskQueryResult);
+                this.supplierRiskData = t;
             }
         );
+    }
+
+    selectSupplier(supplierName) {
+        if (supplierName) {
+            this.supplierRiskData = [this.riskQueryResult.find(row => row[this.RISK_COLS.SUPPLIER_NAME] === supplierName)];
+        } else {
+            this.supplierRiskData = this.riskQueryResult;
+        }
     }
 
     getSuppplierRiskCellClass({ row, column, value }): any {
@@ -117,31 +131,18 @@ export class HighLevelComponent {
     private toHeatMap(riskQueryResult: any[]): { name: string, series: { name: string, value: number }[] }[] {
         const dimensions = this.riskTabHelper.getDimensions();
         const arrayMap = [];
-        for (const dimension of Object.values(dimensions)) {
+        for (const col of ['High', 'Significant', 'Medium', 'Low']) {
+
             arrayMap.push({
-                dimension: dimension,
-                High: 0,
-                Significant: 0,
-                Medium: 0,
-                Low: 0
+                name: col,
+                series: Object.keys(dimensions).map(dimension => {
+                    const count = riskQueryResult.reduce((acc, row) => row[dimension] === col ? acc + 1 : acc, 0);
+                    return {
+                        name: dimensions[dimension],
+                        value: count
+                    };
+                })
             });
-        }
-
-        let total = 0;
-        for (const row of riskQueryResult) {
-            let i = 0;
-            for (const key of Object.keys(dimensions)) {
-                arrayMap[i][row[key]] += 1;
-                i++;
-                total++;
-            }
-        }
-
-        for (let i = 0; i < arrayMap.length; i++) {
-            for (const key of ['High', 'Significant', 'Medium', 'Low']) {
-                const num = Math.round((arrayMap[i][key] * 100 / total) * 10) / 10;
-                arrayMap[i][key] = arrayMap[i][key] + ' (' + num + '%)';
-            }
         }
 
         return arrayMap;
