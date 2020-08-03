@@ -19,11 +19,7 @@
                 </thead>
                 <tbody>
                     <tr>
-<<<<<<< HEAD
-                        <td>Stratergic</td>
-=======
                         <td>Strategic</td>
->>>>>>> d4dd9bf69d82724ba7637fb4b9e5da1da6ff9d03
                         <td class="P0">P0</td>
                         <td class="P1">P1</td>
                         <td class="P2">P2</td>
@@ -66,13 +62,10 @@
         <div class="chart-container">
             <ngx-charts-pie-chart [results]="pieChartCountData" [scheme]="pieChartColorScheme" [labels]="true"
                 [legend]="true">
-<<<<<<< HEAD
-=======
                 <ng-template #tooltipTemplate let-model="model">
                     <div>{{model.name}}</div>
                     {{model.value}} ({{riskTabHelper.roundNumber(model.value * 100 / riskQueryResult.length)}}%)
                 </ng-template>
->>>>>>> d4dd9bf69d82724ba7637fb4b9e5da1da6ff9d03
             </ngx-charts-pie-chart>
         </div>
     </div>
