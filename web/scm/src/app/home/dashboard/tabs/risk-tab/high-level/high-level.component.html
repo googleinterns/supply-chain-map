@@ -1,0 +1,151 @@
+<div class="card-container">
+    <div class="card" *ngIf="heatMapData">
+        <div class="card-header">
+            <b>Priorities Definition</b>
+        </div>
+        <div class="chart-container">
+
+            <table style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th rowspan="2" style="width: 30%;">Supplier Segmentation</th>
+                        <th colspan="3">Overall Risk</th>
+                    </tr>
+                    <tr>
+                        <th style="width: 23%;">High</th>
+                        <th style="width: 23%;">Medium</th>
+                        <th style="width: 23%;">Low</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Strategic</td>
+                        <td class="P0">P0</td>
+                        <td class="P1">P1</td>
+                        <td class="P2">P2</td>
+                    </tr>
+                    <tr>
+                        <td>Preferred</td>
+                        <td class="P1">
+                            <div>P1</div>
+                        </td>
+                        <td class="P2">
+                            <div>P2</div>
+                        </td>
+                        <td class="P3">
+                            <div>P3</div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>Transactional</td>
+                        <td class="P2">
+                            <div>P2</div>
+                        </td>
+                        <td class="P3">
+                            <div>P3</div>
+                        </td>
+                        <td class="P3">
+                            <div>P3</div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+</div>
+<div class="card-container">
+    <div class="card" *ngIf="pieChartCountData">
+        <div class="card-header">
+            <b>Supplier Count (%)</b>
+        </div>
+        <div class="chart-container">
+            <ngx-charts-pie-chart [results]="pieChartCountData" [scheme]="pieChartColorScheme" [labels]="true"
+                [legend]="true">
+                <ng-template #tooltipTemplate let-model="model">
+                    <div>{{model.name}}</div>
+                    {{model.value}} ({{riskTabHelper.roundNumber(model.value * 100 / riskQueryResult.length)}}%)
+                </ng-template>
+            </ngx-charts-pie-chart>
+        </div>
+    </div>
+    <div class="card" *ngIf="pieChartSpendData">
+        <div class="card-header">
+            <b>Overall Spend (in millions)</b>
+        </div>
+        <div class="chart-container">
+            <ngx-charts-pie-chart [results]="pieChartSpendData" [scheme]="pieChartColorScheme" [labels]="true"
+                [legend]="true">
+                <ng-template #tooltipTemplate let-model="model">
+                    <div>{{model.name}}</div>
+                    {{model.value}} million
+                </ng-template>
+            </ngx-charts-pie-chart>
+        </div>
+    </div>
+</div>
+<div class="card-container">
+    <div class="card" *ngIf="heatMapData">
+        <div class="card-header">
+            <b>Risk Distribution</b>
+        </div>
+        <div class="chart-container">
+            <ngx-charts-heat-map [results]="heatMapData" [showXAxisLabel]="true" [showYAxisLabel]="true" [legend]="true"
+                [xAxis]="true" [yAxis]="true" [scheme]="heatmapColorScheme">
+                <ng-template #tooltipTemplate let-model="model">
+                    <div>{{model.name}}</div>
+                    {{model.value}} ({{riskTabHelper.roundNumber(model.value * 100 / riskQueryResult.length)}}%)
+                </ng-template>
+            </ngx-charts-heat-map>
+        </div>
+    </div>
+</div>
+<div class="card-container">
+    <div class="card" *ngIf="heatMapData">
+        <div class="card-header">
+            <b>Supplier Risk</b>
+        </div>
+        <div class="chart-container">
+
+            <div class="supplier-risk-header">
+                <div>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Supplier</mat-label>
+                        <mat-select (selectionChange)="selectSupplier($event.value)" #supplierSelect>
+                            <mat-option *ngFor="let row of riskQueryResult" [value]="row[RISK_COLS.SUPPLIER_NAME]">
+                                {{ row[RISK_COLS.SUPPLIER_NAME] }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button mat-buttonmatSuffix mat-flat-button aria-label="Clear" [disableRipple]="true"
+                        (click)="supplierSelect.writeValue(null);selectSupplier(null);$event.stopPropagation()">
+                        Clear
+                    </button>
+                </div>
+                <div class="supplier-risk-legend">
+                    <div class="legend-item">
+                        <div class="P0 legend-icon"></div>
+                        <span class="legend-title">P0</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="P1 legend-icon"></div>
+                        <span class="legend-title">P1</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="P2 legend-icon"></div>
+                        <span class="legend-title">P2</span>
+                    </div>
+                    <div class="legend-item">
+                        <div class="P3 legend-icon"></div>
+                        <span class="legend-title">P3</span>
+                    </div>
+                </div>
+            </div>
+            <ngx-datatable class="material no-box" [limit]="10" [columnMode]="ColumnMode.force" [headerHeight]="50"
+                [footerHeight]="50" rowHeight="auto" [rows]="supplierRiskData">
+                <ngx-datatable-column [name]="col.name" [prop]="col.prop" [cellClass]="getSuppplierRiskCellClass"
+                    [sortable]="col.sortable" *ngFor="let col of supplierRiskColumns"></ngx-datatable-column>
+            </ngx-datatable>
+        </div>
+
+    </div>
+</div>

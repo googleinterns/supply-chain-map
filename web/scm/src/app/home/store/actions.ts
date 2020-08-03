@@ -23,21 +23,31 @@ export const invalidServiceAccount = createAction(
 );
 
 export const addFilter = createAction(
-  '[Map] Add Filter',
+  '[Home] Add Filter',
   props<{ filterIdentifier: string, filter: FilterFunction, isActive: boolean }>()
 );
 
 export const removeFilter = createAction(
-  '[Map] Remove Filter',
+  '[Home] Remove Filter',
   props<{ filterIdentifier: string }>()
 );
 
 export const activateFilter = createAction(
-  '[Map] Activate Filter',
+  '[Home] Activate Filter',
   props<{ filterIdentifier: string }>()
 );
 
 export const deactivateFilter = createAction(
-  '[Map] Deactivate Filter',
+  '[Home] Deactivate Filter',
   props<{ filterIdentifier: string }>()
+);
+
+export const setSidePanelWidth = createAction(
+  '[Home] Set Side Panel Width',
+  props<{ sidePanelWidth: number }>()
+);
+
+export const setDashboardHeight = createAction(
+  '[Home] Set Dashboard Height',
+  props<{ dashboardHeight: number }>()
 );

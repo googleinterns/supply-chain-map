@@ -11,6 +11,8 @@ export interface HomeState {
         isActive: boolean,
         filter: FilterFunction
     }[];
+    sidePanelWidth: number;
+    dashboardHeight: number;
     error: Error;
     isLoading: boolean;
 }
@@ -21,6 +23,8 @@ export const initialState: HomeState = {
     formQueryResult: null,
     formQueryResultStats: null,
     filters: [],
+    sidePanelWidth: 300,
+    dashboardHeight: 200,
     isLoading: false,
     error: null
 };

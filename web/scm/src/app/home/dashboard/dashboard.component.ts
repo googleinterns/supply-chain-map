@@ -4,6 +4,7 @@ import { FormQueryResult } from '../home.models';
 import { Store } from '@ngrx/store';
 import { selectHomeFormQueryResult } from '../store/selectors';
 import { selectDashboardIsLoading, selectDashboardError } from './store/selectors';
+import { setDashboardHeight, setSidePanelWidth } from '../store/actions';
 
 @Component({
   selector: 'scm-dashboard',
@@ -31,5 +32,10 @@ export class DashboardComponent {
         }
       }
     );
+  }
+
+  goFullScreen() {
+    this.store.dispatch(setDashboardHeight({ dashboardHeight: Infinity }));
+    this.store.dispatch(setSidePanelWidth({ sidePanelWidth: 0 }));
   }
 }

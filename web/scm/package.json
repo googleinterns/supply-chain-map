@@ -26,6 +26,7 @@
     "@ngrx/effects": "^9.2.0",
     "@ngrx/store": "^9.2.0",
     "@swimlane/ngx-charts": "^14.0.0",
+    "@swimlane/ngx-datatable": "^17.1.0",
     "@types/gapi": "^0.0.39",
     "@types/gapi.auth2": "^0.0.51",
     "@types/gapi.client.bigquery": "^2.0.1",

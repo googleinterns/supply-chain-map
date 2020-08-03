@@ -46,10 +46,10 @@ export class CreateChartComponent {
                 formQueryResult => {
                     if (formQueryResult) {
                         if ('upstream' in formQueryResult) {
-                            this.tables['upstream'] = constants.bigQuery.layerDatasets.route.tables.UPSTREAM.columns;
+                            this.tables['upstream'] = constants.bigQuery.datasets.route.tables.UPSTREAM.columns;
                         }
                         if ('downstream' in formQueryResult) {
-                            this.tables['downstream'] = constants.bigQuery.layerDatasets.route.tables.DOWNSTREAM.columns;
+                            this.tables['downstream'] = constants.bigQuery.datasets.route.tables.DOWNSTREAM.columns;
                         }
                     }
                 }

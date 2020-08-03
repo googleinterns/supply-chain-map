@@ -1,5 +1,8 @@
 <div class="header-container">
     <h1 class="dashboard-header">Dashboard</h1>
+    <button mat-icon-button (click)="goFullScreen()">
+        <mat-icon>fullscreen</mat-icon>
+    </button>
 </div>
 <div class="body-container">
     <mat-tab-group mat-align-tabs="start">
@@ -16,6 +19,11 @@
         <mat-tab label="Graphs" *ngIf="receivedData">
             <div class="tab-container">
                 <scm-graph-tab></scm-graph-tab>
+            </div>
+        </mat-tab>
+        <mat-tab label="Risk" *ngIf="receivedData">
+            <div class="tab-container">
+                <scm-risk-tab></scm-risk-tab>
             </div>
         </mat-tab>
         <mat-tab label="Stats" *ngIf="receivedData">

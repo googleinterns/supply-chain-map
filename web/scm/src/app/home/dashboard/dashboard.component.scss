@@ -11,6 +11,8 @@
 .header-container {
     border-bottom: 1px solid lightgray;
     padding: 10px;
+    display: flex;
+    justify-content: space-between;
 }
 
 .tab-container {

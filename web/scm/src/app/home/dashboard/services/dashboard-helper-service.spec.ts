@@ -48,8 +48,7 @@ describe('DashboardHelperService', () => {
         service.getAdditionalLayers()
         .then(
             layers => flag = layers
-        )
-        .catch(console.log);
+        );
         flushMicrotasks();
         expect(flag.heatmap).toEqual(['heatmap_layer']);
         expect(flag.shape).toEqual(['shape_layer']);

@@ -52,7 +52,7 @@ export class BigQueryService {
           query: query,
           useLegacySql: false,
           defaultDataset: {
-            datasetId: constants.bigQuery.layerDatasets.route.dataset,
+            datasetId: constants.bigQuery.datasets.route.dataset,
             projectId: environment.projectId
           }
         })

@@ -9,6 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DashboardComponent } from './dashboard.component';
 import { DataTabComponent } from './tabs/data-tab/data-tab.component';
 import { StatsTabComponent } from './tabs/stats-tab/stats-tab.component';
@@ -25,6 +26,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatOptionModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { CreateChartComponent } from './tabs/graph-tab/create-chart-dialog/create-chart.dialog';
+import { RiskTabModule } from './tabs/risk-tab/risk-tab.module';
 
 @NgModule({
   declarations: [
@@ -52,6 +54,8 @@ import { CreateChartComponent } from './tabs/graph-tab/create-chart-dialog/creat
     MatTabsModule,
     MatSelectModule,
     NgxChartsModule,
+    NgxDatatableModule,
+    RiskTabModule,
     ReactiveFormsModule,
     StoreModule.forFeature('dashboard', fromDashboard.reducer),
     EffectsModule.forFeature([DashboardStoreEffects])

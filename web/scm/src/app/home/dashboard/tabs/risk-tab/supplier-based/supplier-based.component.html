@@ -1,0 +1,36 @@
+<div *ngIf="riskQueryResult">
+    <mat-form-field appearance="outline">
+        <mat-label>Supplier</mat-label>
+        <mat-select (selectionChange)="selectSupplier($event.value)">
+            <mat-option *ngFor="let row of riskQueryResult" [value]="row[RISK_COLS.SUPPLIER_NAME]">
+                {{ row[RISK_COLS.SUPPLIER_NAME] }}</mat-option>
+        </mat-select>
+    </mat-form-field>
+    <div class="card-container" *ngIf="selectedSupplier">
+        <div class="card" *ngIf="supplierStackedRisk">
+            <div class="card-header">
+                <b>Risk Distribution - {{ selectedSupplier[RISK_COLS.SUPPLIER_NAME] }}</b>
+            </div>
+            <div class="chart-container">
+                <ngx-charts-bar-vertical-stacked [results]="supplierStackedRisk" [xAxis]="true" [yAxis]="true"
+                    [xAxisLabel]="'Supplier'" [yAxisLabel]="'Risk count'" [legend]="true"
+                    [showXAxisLabel]="true"
+                    [showYAxisLabel]="true"
+                    [showGridLines]="true">
+                </ngx-charts-bar-vertical-stacked>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <b>Risk Distribution</b>
+            </div>
+            <div class="chart-container">
+                <ngx-datatable class="material no-box fullscreen" [columnMode]="ColumnMode.force" [headerHeight]="50"
+                    rowHeight="auto" [rows]="supplierRiskHeatmap">
+                    <ngx-datatable-column [name]="col.name" [prop]="col.prop" [cellClass]="heatmapCellClass"
+                        [sortable]="col.sortable" *ngFor="let col of heatmapColumns"></ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+        </div>
+    </div>
+</div>

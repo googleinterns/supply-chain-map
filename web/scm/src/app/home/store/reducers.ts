@@ -60,6 +60,14 @@ const homeReducer = createReducer(
             formQueryResult: filterFormQueryResult(filters, state.originalFormQueryResult)
         };
     }),
+    on(HomeActions.setSidePanelWidth, (state, { sidePanelWidth }) => ({
+        ...state,
+        sidePanelWidth: sidePanelWidth
+    })),
+    on(HomeActions.setDashboardHeight, (state, { dashboardHeight }) => ({
+        ...state,
+        dashboardHeight: dashboardHeight
+    }))
 );
 
 function setFilterActiveStatus(
