@@ -1,57 +1,44 @@
-<!-- Upstream -->
-<div class="table-container" *ngIf="this.shouldDisplayUpstream">
-    <h2>Upstream</h2>
-    <div class="mat-elevation-z8">
-        <table mat-table [dataSource]="upstreamDataSource" matSort>
-
-            <ng-container *ngFor="let column of upstreamColumns" [matColumnDef]="column">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ column | titlecase }} </th>
-                <td mat-cell *matCellDef="let row"> {{row[column]}} </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="upstreamColumns; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: upstreamColumns;">
-            </tr>
-        </table>
-
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+<div *ngIf="this.formQueryResult$ | async as formQueryResult">
+    <div class="card-container">
+        <div class="card" *ngIf="formQueryResult.upstream">
+            <div class="card-header">
+                <b>Upstream</b>
+            </div>
+            <div class="chart-container">
+                <ngx-datatable class="material no-box fullscreen" [columnMode]="ColumnMode.force" [limit]="10"
+                    [footerHeight]="50" [headerHeight]="50" rowHeight="auto" [rows]="formQueryResult.upstream">
+                    <ngx-datatable-column [name]="col.name" [prop]="col.prop" *ngFor="let col of upstreamColumns">
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+        </div>
     </div>
-</div>
-<!-- CM -->
-<div class="table-container">
-    <h2>CM</h2>
-    <div class="mat-elevation-z8">
-        <table mat-table [dataSource]="cmDataSource" matSort>
-
-            <ng-container *ngFor="let column of cmColumns" [matColumnDef]="column">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ column | titlecase }} </th>
-                <td mat-cell *matCellDef="let row"> {{row[column]}} </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="cmColumns; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: cmColumns;">
-            </tr>
-        </table>
-
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    <div class="card-container">
+        <div class="card">
+            <div class="card-header">
+                <b>CM</b>
+            </div>
+            <div class="chart-container">
+                <ngx-datatable class="material no-box fullscreen" [columnMode]="ColumnMode.force" [limit]="10"
+                    [footerHeight]="50" [headerHeight]="50" rowHeight="auto" [rows]="formQueryResult.cm">
+                    <ngx-datatable-column [name]="col.name" [prop]="col.prop" *ngFor="let col of cmColumns">
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+        </div>
     </div>
-</div>
-<!-- Downstream -->
-<div class="table-container" *ngIf="this.shouldDisplayDownstream">
-    <h2>Downstream</h2>
-    <div class="mat-elevation-z8">
-        <table mat-table [dataSource]="downstreamDataSource" matSort>
-
-            <ng-container *ngFor="let column of downstreamColumns" [matColumnDef]="column">
-                <th mat-header-cell *matHeaderCellDef mat-sort-header> {{ column | titlecase }} </th>
-                <td mat-cell *matCellDef="let row"> {{row[column]}} </td>
-            </ng-container>
-
-            <tr mat-header-row *matHeaderRowDef="downstreamColumns; sticky: true"></tr>
-            <tr mat-row *matRowDef="let row; columns: downstreamColumns;">
-            </tr>
-        </table>
-
-        <mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator>
+    <div class="card-container">
+        <div class="card" *ngIf="formQueryResult.downstream">
+            <div class="card-header">
+                <b>Downstream</b>
+            </div>
+            <div class="chart-container">
+                <ngx-datatable class="material no-box fullscreen" [columnMode]="ColumnMode.force" [limit]="10"
+                    [footerHeight]="50" [headerHeight]="50" rowHeight="auto" [rows]="formQueryResult.downstream">
+                    <ngx-datatable-column [name]="col.name" [prop]="col.prop" *ngFor="let col of downstreamColumns">
+                    </ngx-datatable-column>
+                </ngx-datatable>
+            </div>
+        </div>
     </div>
 </div>

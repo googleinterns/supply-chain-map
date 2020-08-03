@@ -4,10 +4,26 @@
             <b>Priorities Definition</b>
         </div>
         <div class="chart-container">
-            <ngx-datatable class="material no-box fullscreen" [headerHeight]="50" [footerHeight]="50" [limit]="10" [columnMode]="ColumnMode.force"
-                rowHeight="auto" [rows]="mitigationTableData">
+
+            <div class="supplier-risk-header">
+                <div>
+                    <mat-form-field appearance="outline">
+                        <mat-label>Supplier</mat-label>
+                        <mat-select (selectionChange)="selectSupplier($event.value)" #supplierSelect>
+                            <mat-option *ngFor="let row of riskQueryResult" [value]="row[RISK_COLS.SUPPLIER_NAME]">
+                                {{ row[RISK_COLS.SUPPLIER_NAME] }}</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <button mat-buttonmatSuffix mat-flat-button aria-label="Clear" [disableRipple]="true"
+                        (click)="supplierSelect.writeValue(null);selectSupplier(null);$event.stopPropagation()">
+                        Clear
+                    </button>
+                </div>
+            </div>
+            <ngx-datatable class="material no-box fullscreen" [headerHeight]="50" [footerHeight]="50" [limit]="10"
+                [columnMode]="ColumnMode.force" rowHeight="auto" [rows]="mitigationTableData">
                 <ngx-datatable-column [name]="col.name" [prop]="col.prop" [cellClass]="getMitigationCellClass"
-                 *ngFor="let col of mitigationColumns"></ngx-datatable-column>
+                    *ngFor="let col of mitigationColumns"></ngx-datatable-column>
             </ngx-datatable>
         </div>
     </div>

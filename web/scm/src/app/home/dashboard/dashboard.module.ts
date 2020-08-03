@@ -9,6 +9,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
 import { MatTabsModule } from '@angular/material/tabs';
 import { NgxChartsModule } from '@swimlane/ngx-charts';
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { DashboardComponent } from './dashboard.component';
 import { DataTabComponent } from './tabs/data-tab/data-tab.component';
 import { StatsTabComponent } from './tabs/stats-tab/stats-tab.component';
@@ -53,6 +54,7 @@ import { RiskTabModule } from './tabs/risk-tab/risk-tab.module';
     MatTabsModule,
     MatSelectModule,
     NgxChartsModule,
+    NgxDatatableModule,
     RiskTabModule,
     ReactiveFormsModule,
     StoreModule.forFeature('dashboard', fromDashboard.reducer),

@@ -16,6 +16,8 @@ export class MitigationComponent {
     readonly dimensions = this.riskTabHelper.getDimensions();
 
     ColumnMode = ColumnMode;
+    riskQueryResult: any[];
+    mitigationTableDataOriginal: any[];
     mitigationTableData: any[];
     mitigationColumns = [
         { name: 'Suppliers', prop: this.RISK_COLS.SUPPLIER_NAME },
@@ -29,7 +31,9 @@ export class MitigationComponent {
     public constructor(private store: Store, private riskTabHelper: RiskTabHelperService) {
         this.store.select(selectRiskQueryResult).subscribe(
             riskQueryResult => {
-                this.mitigationTableData = this.getMitigationTable(riskQueryResult);
+                this.riskQueryResult = riskQueryResult;
+                this.mitigationTableDataOriginal = this.getMitigationTable(riskQueryResult);
+                this.mitigationTableData = this.mitigationTableDataOriginal;
             }
         );
     }
@@ -53,6 +57,14 @@ export class MitigationComponent {
         }
 
         return rows;
+    }
+
+    selectSupplier(supplierName) {
+        if (supplierName) {
+            this.mitigationTableData = this.mitigationTableDataOriginal.filter(row => row[this.RISK_COLS.SUPPLIER_NAME] === supplierName);
+        } else {
+            this.mitigationTableData = this.mitigationTableDataOriginal;
+        }
     }
 
     getMitigationCellClass({ row, column, value }): any {
