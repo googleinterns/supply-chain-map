@@ -1,0 +1,6 @@
+<div class="risk-legend">
+    <div class="legend-item" *ngFor="let item of this.data">
+        <div class="legend-icon" [ngStyle]="{ 'background-color': item.iconColor }"></div>
+        <span class="legend-title">{{ item.title }}</span>
+    </div>
+</div>

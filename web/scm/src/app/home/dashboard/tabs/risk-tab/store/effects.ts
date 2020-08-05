@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Actions, ofType, createEffect } from '@ngrx/effects';
-import { formQueryFetchSuccess } from 'src/app/home/store/actions';
+import { formQueryFetchSuccess, homeInitialized } from 'src/app/home/store/actions';
 import { switchMap, catchError, map } from 'rxjs/operators';
 import { from, of, pipe } from 'rxjs';
 import { RiskTabHelperService } from '../services/risk-tab-helper.service';
@@ -12,7 +12,7 @@ export class RiskStoreEffects {
 
     fetchRiskData$ = createEffect(
         () => this.actions$.pipe(
-            ofType(formQueryFetchSuccess),
+            ofType(homeInitialized),
             switchMap(
                 () => {
                     return from(this.riskTabHelperService.getRiskData())

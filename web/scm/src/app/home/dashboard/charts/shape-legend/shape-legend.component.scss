@@ -1,0 +1,21 @@
+.risk-legend {
+    display: flex;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+}
+
+.legend-icon {
+    height: 1.6rem;
+    width: 1.6rem;
+    border-radius: 2px;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+}
+
+.legend-title {
+    padding: 0 10px 0 4px;
+}

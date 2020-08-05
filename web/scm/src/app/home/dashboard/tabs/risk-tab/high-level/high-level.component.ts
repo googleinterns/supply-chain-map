@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { Store } from '@ngrx/store';
 import { selectRiskQueryResult } from '../store/selectors';
 import { RiskTabHelperService } from '../services/risk-tab-helper.service';
+import * as d3 from 'd3';
 
 @Component({
     selector: 'scm-high-level',
@@ -17,9 +18,12 @@ export class HighLevelComponent {
     readonly RISK_COLS = constants.bigQuery.datasets.risk.columns;
 
     ColumnMode = ColumnMode;
-    pieChartColorScheme = {
-        domain: ['#eff7ff', '#cfe2f3', '#3d85c6', '#073763']
-    };
+    priorityLegend = [
+        { title: 'P0', iconColor: '#073763' },
+        { title: 'P1', iconColor: '#3d85c6' },
+        { title: 'P2', iconColor: '#cfe2f3' },
+        { title: 'P3', iconColor: '#eff7ff' }
+    ];
     heatmapColorScheme = {
         domain: ['#EFEFEF', '#F2C1C1', '#E68484', '#C95B5B']
     };
@@ -44,7 +48,7 @@ export class HighLevelComponent {
     ];
     riskQueryResult: any[];
     supplierRiskData: any[];
-    pieChartCountData: { name: string, value: number }[];
+    pieChartCountData: { name: string, value: number, valueOf: () => number }[];
     pieChartSpendData: { name: string, value: number }[];
     heatMapData: { name: string, series: { name: string, value: number }[] }[];
 
@@ -104,8 +108,8 @@ export class HighLevelComponent {
         return classes;
     }
 
-    private toCountPieChart(riskQueryResult: any[]): { name: string, value: number }[] {
-        const arrayMap = [];
+    private toCountPieChart(riskQueryResult: any[]): { name: string, value: number, valueOf: () => number }[] {
+        const arrayMap: { [key: string]: number } = {};
 
         for (const row of riskQueryResult) {
             if (!(row[this.RISK_COLS.PRIORITY] in arrayMap)) {
@@ -113,7 +117,14 @@ export class HighLevelComponent {
             }
             arrayMap[row[this.RISK_COLS.PRIORITY]]++;
         }
-        return Object.entries(arrayMap).map(([key, value]) => ({ name: key, value: value }));
+
+        function ValueObject(name: string, value: number) {
+            this.name = name;
+            this.value = value;
+            this.valueOf = () => value;
+        }
+
+        return Object.entries(arrayMap).map(([key, value]) => new ValueObject(key, value));
     }
 
     private toSpendPieChart(riskQueryResult: any[]): { name: string, value: number }[] {
@@ -125,7 +136,14 @@ export class HighLevelComponent {
             }
             arrayMap[row[this.RISK_COLS.PRIORITY]] += parseFloat(row[this.RISK_COLS.SPEND_IN_MIL]);
         }
-        return Object.entries(arrayMap).map(([key, value]) => ({ name: key, value: value }));
+
+        function ValueObject(name: string, value: number) {
+            this.name = name;
+            this.value = value;
+            this.valueOf = () => value;
+        }
+
+        return Object.entries(arrayMap).map(([key, value]) => new ValueObject(key, value));
     }
 
     private toHeatMap(riskQueryResult: any[]): { name: string, series: { name: string, value: number }[] }[] {

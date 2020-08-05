@@ -52,27 +52,27 @@
 }
 
 .Low {
-    background-color: #EFEFEF;
+    background-color: #efefef;
     color: #898989 !important;
 }
 
 .Medium {
-    background-color: #B7B7B7;
-    color: #FFFFFF !important;
+    background-color: #b7b7b7;
+    color: #ffffff !important;
 }
 
 .Significant {
-    background-color: #E68484;
-    color: #FFFFFF !important;
+    background-color: #e68484;
+    color: #ffffff !important;
 }
 
 .High {
-    background-color: #C95B5B;
-    color: #FFFFFF !important;
+    background-color: #c95b5b;
+    color: #ffffff !important;
 }
 
 .Disabled {
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     color: #808080 !important;
 }
 
@@ -109,6 +109,11 @@
     text-overflow: ellipsis;
 }
 
+.centerLabel {
+    display: flex !important;
+    align-items: center !important;
+}
+
 mat-expansion-panel {
     border-left: 5px solid var(--primary);
 }
@@ -126,7 +131,7 @@ td {
 }
 
 th {
-    background-color: #B7B7B7;
+    background-color: #b7b7b7;
 }
 
 .supplier-risk-header {
@@ -135,26 +140,14 @@ th {
     padding: 10px 20px 0 20px;
 }
 
-.supplier-risk-legend {
-    display: flex;
-}
-
-.legend-icon {
-    height: 1.6rem;
-    width: 1.6rem;
-    border-radius: 2px;
-}
-
 ::ng-deep .mat-form-field-wrapper {
     margin: 0;
     padding: 0;
 }
 
-.legend-item {
+.d3-chart {
     display: flex;
+    flex-direction: column;
     align-items: center;
-}
-
-.legend-title {
-    padding: 0 10px 0 4px;
+    margin: 20px;
 }

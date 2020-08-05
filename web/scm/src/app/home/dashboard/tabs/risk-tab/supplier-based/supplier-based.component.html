@@ -9,24 +9,19 @@
     <div class="card-container" *ngIf="selectedSupplier">
         <div class="card" *ngIf="supplierStackedRisk">
             <div class="card-header">
-                <b>Risk Distribution - {{ selectedSupplier[RISK_COLS.SUPPLIER_NAME] }}</b>
+                <b>Risk Count - {{ selectedSupplier[RISK_COLS.SUPPLIER_NAME] }}</b>
             </div>
-            <div class="chart-container">
-                <ngx-charts-bar-vertical-stacked [results]="supplierStackedRisk" [xAxis]="true" [yAxis]="true"
-                    [xAxisLabel]="'Supplier'" [yAxisLabel]="'Risk count'" [legend]="true"
-                    [showXAxisLabel]="true"
-                    [showYAxisLabel]="true"
-                    [showGridLines]="true">
-                </ngx-charts-bar-vertical-stacked>
+            <div class="chart-container d3-chart">
+                <scm-bar-chart [data]="supplierStackedRisk" [legend]="supplierStackLegend"></scm-bar-chart>
             </div>
         </div>
         <div class="card">
             <div class="card-header">
-                <b>Risk Distribution</b>
+                <b>Risk Distribution - {{ selectedSupplier[RISK_COLS.SUPPLIER_NAME] }}</b>
             </div>
             <div class="chart-container">
                 <ngx-datatable class="material no-box fullscreen" [columnMode]="ColumnMode.force" [headerHeight]="50"
-                    rowHeight="auto" [rows]="supplierRiskHeatmap">
+                    rowHeight="35" [rows]="supplierRiskHeatmap">
                     <ngx-datatable-column [name]="col.name" [prop]="col.prop" [cellClass]="heatmapCellClass"
                         [sortable]="col.sortable" *ngFor="let col of heatmapColumns"></ngx-datatable-column>
                 </ngx-datatable>

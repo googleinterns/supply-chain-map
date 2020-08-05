@@ -27,6 +27,12 @@ export class SupplierBasedComponent {
     riskQueryResult: any[];
     selectedSupplier: any;
     supplierStackedRisk: { name: string, series: { name: string, value: number }[] }[];
+    supplierStackLegend = [
+        { title: 'High', iconColor: '#C95B5B' },
+        { title: 'Significant', iconColor: '#E68484' },
+        { title: 'Medium', iconColor: '#B7B7B7' },
+        { title: 'Low', iconColor: '#EFEFEF' }
+    ];
 
     public constructor(private store: Store, private riskTabHelper: RiskTabHelperService) {
         this.store.select(selectRiskQueryResult).subscribe(
@@ -69,7 +75,8 @@ export class SupplierBasedComponent {
 
     heatmapCellClass({ row, column, value }): any {
         const classes = {
-            cell: true
+            cell: true,
+            centerLabel: true
         };
         if (column.name === row.val) {
             classes[column.name] = true;

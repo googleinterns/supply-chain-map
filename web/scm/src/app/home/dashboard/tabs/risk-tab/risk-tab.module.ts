@@ -16,6 +16,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MitigationComponent } from './mitigation/mitigation.component';
 import { MatButtonModule } from '@angular/material/button';
+import { ChartsModule } from '../../charts/charts.module';
 
 @NgModule({
     declarations: [
@@ -25,6 +26,7 @@ import { MatButtonModule } from '@angular/material/button';
         MitigationComponent
     ],
     imports: [
+        ChartsModule,
         CommonModule,
         MatButtonModule,
         MatExpansionModule,

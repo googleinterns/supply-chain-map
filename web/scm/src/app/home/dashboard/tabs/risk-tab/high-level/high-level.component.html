@@ -59,28 +59,16 @@
         <div class="card-header">
             <b>Supplier Count (%)</b>
         </div>
-        <div class="chart-container">
-            <ngx-charts-pie-chart [results]="pieChartCountData" [scheme]="pieChartColorScheme" [labels]="true"
-                [legend]="true">
-                <ng-template #tooltipTemplate let-model="model">
-                    <div>{{model.name}}</div>
-                    {{model.value}} ({{riskTabHelper.roundNumber(model.value * 100 / riskQueryResult.length)}}%)
-                </ng-template>
-            </ngx-charts-pie-chart>
+        <div class="chart-container d3-chart">
+            <scm-pie-chart #riskCountPieChart [legend]="priorityLegend" [data]="pieChartCountData"></scm-pie-chart>
         </div>
     </div>
     <div class="card" *ngIf="pieChartSpendData">
         <div class="card-header">
             <b>Overall Spend (in millions)</b>
         </div>
-        <div class="chart-container">
-            <ngx-charts-pie-chart [results]="pieChartSpendData" [scheme]="pieChartColorScheme" [labels]="true"
-                [legend]="true">
-                <ng-template #tooltipTemplate let-model="model">
-                    <div>{{model.name}}</div>
-                    {{model.value}} million
-                </ng-template>
-            </ngx-charts-pie-chart>
+        <div class="chart-container d3-chart">
+            <scm-pie-chart #riskCountPieChart [legend]="priorityLegend" [data]="pieChartSpendData"></scm-pie-chart>
         </div>
     </div>
 </div>
@@ -121,24 +109,7 @@
                         Clear
                     </button>
                 </div>
-                <div class="supplier-risk-legend">
-                    <div class="legend-item">
-                        <div class="P0 legend-icon"></div>
-                        <span class="legend-title">P0</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="P1 legend-icon"></div>
-                        <span class="legend-title">P1</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="P2 legend-icon"></div>
-                        <span class="legend-title">P2</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="P3 legend-icon"></div>
-                        <span class="legend-title">P3</span>
-                    </div>
-                </div>
+                <scm-shape-legend [data]="this.priorityLegend"></scm-shape-legend>
             </div>
             <ngx-datatable class="material no-box" [limit]="10" [columnMode]="ColumnMode.force" [headerHeight]="50"
                 [footerHeight]="50" rowHeight="auto" [rows]="supplierRiskData">

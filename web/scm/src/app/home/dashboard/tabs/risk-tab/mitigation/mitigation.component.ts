@@ -48,7 +48,7 @@ export class MitigationComponent {
             for (const dimension of Object.keys(this.dimensions)) {
                 rows.push({
                     ...line,
-                    dimension: dimension,
+                    dimension: this.dimensions[dimension],
                     rating: row[dimension],
                     description: '',
                     status: ''

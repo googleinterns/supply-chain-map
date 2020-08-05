@@ -2,6 +2,10 @@ import { createAction, props } from '@ngrx/store';
 import { FormQueryResponse, FormQueryResult } from '../home.models';
 import { FilterFunction } from '../map/map.models';
 
+export const homeInitialized = createAction(
+  '[Home] Home is initialized'
+);
+
 export const formQueryGenerated = createAction(
   '[Home] Form Query Generated',
   props<{ formQuery: string }>()
