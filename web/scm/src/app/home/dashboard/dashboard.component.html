@@ -21,7 +21,7 @@
                 <scm-graph-tab></scm-graph-tab>
             </div>
         </mat-tab>
-        <mat-tab label="Risk">
+        <mat-tab label="Risk" *ngIf="this.hasRiskAccess">
             <div class="tab-container">
                 <scm-risk-tab></scm-risk-tab>
             </div>

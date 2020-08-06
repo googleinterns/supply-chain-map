@@ -95,4 +95,25 @@ export class DashboardHelperService {
 
         return result;
     }
+
+    hasAccessToRiskDashboard(email: string): boolean {
+        const allowedEmails = [
+            'aaggrim@google.com',
+            'burkebai@google.com',
+            'daniton@google.com',
+            'kerstinteng@google.com',
+            'kmalfred@google.com',
+            'reganjin@google.com',
+            'xuehua@google.com',
+            'mstonich@google.com',
+            'vandas@google.com',
+            'daniton@google.com',
+            'darrenward@google.com',
+            'liemj@google.com',
+            'aqn@google.com',
+            'nirup@google.com'
+        ];
+
+        return allowedEmails.includes(email);
+    }
 }

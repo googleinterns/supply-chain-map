@@ -5,6 +5,8 @@ import { Store } from '@ngrx/store';
 import { selectHomeFormQueryResult } from '../store/selectors';
 import { selectDashboardIsLoading, selectDashboardError } from './store/selectors';
 import { setDashboardHeight, setSidePanelWidth } from '../store/actions';
+import { DashboardHelperService } from './services/dashboard-helper.service';
+import { GoogleAuthService } from 'src/app/services/google-auth/google-auth.service';
 
 @Component({
   selector: 'scm-dashboard',
@@ -17,8 +19,9 @@ export class DashboardComponent {
   formQueryResult$: Observable<FormQueryResult>;
   isLoading$: Observable<boolean>;
   error$: Observable<Error>;
+  hasRiskAccess: boolean;
 
-  constructor(private store: Store) {
+  constructor(private store: Store, public dashboardHelperService: DashboardHelperService, private googleAuthService: GoogleAuthService) {
     this.formQueryResult$ = this.store.select(selectHomeFormQueryResult);
     this.isLoading$ = this.store.select(selectDashboardIsLoading);
     this.error$ = this.store.select(selectDashboardError);
@@ -32,6 +35,11 @@ export class DashboardComponent {
         }
       }
     );
+
+    this.googleAuthService.getProfileData()
+    .then(user => {
+      this.hasRiskAccess = dashboardHelperService.hasAccessToRiskDashboard(user.email);
+    })
   }
 
   goFullScreen() {
