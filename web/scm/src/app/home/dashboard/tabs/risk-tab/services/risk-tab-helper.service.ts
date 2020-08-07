@@ -40,7 +40,7 @@ export class RiskTabHelperService {
         dimensions[RISK_COLS.FINANCIAL_HEALTH] = 'Financial Health';
         dimensions[RISK_COLS.CONTRACTUAL] = 'Contractual';
         dimensions[RISK_COLS.COMPLIANCE_WITH_SUSTAINABILITY] = 'Compliance with Sustainability';
-        dimensions[RISK_COLS.GEOPOLITICAL] = 'Geopolitcal';
+        dimensions[RISK_COLS.GEOPOLITICAL] = 'Geopolitical';
         dimensions[RISK_COLS.CONFIDENTIALITY] = 'Confidentiality';
         dimensions[RISK_COLS.QUALITY] = 'Quality';
         return dimensions;

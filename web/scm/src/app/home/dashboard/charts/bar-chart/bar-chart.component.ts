@@ -15,11 +15,10 @@ export class BarChartComponent implements OnInit, OnChanges {
     colorScale;
     x;
     y;
-    total;
 
     margin = { top: 5, right: 15, bottom: 10, left: 75 };
-    width = 300 - this.margin.left - this.margin.right;
-    height = 260 - this.margin.top - this.margin.bottom;
+    @Input() width = 300 - this.margin.left - this.margin.right;
+    @Input() height = 260 - this.margin.top - this.margin.bottom;
 
     barData;
     rawData;
@@ -58,15 +57,18 @@ export class BarChartComponent implements OnInit, OnChanges {
     private processBarData(data: { name: string, series: { name: string, value: number }[] }[], initial = true) {
         this.rawData = data;
         this.barData = [];
+        let maxY = -1;
         for (const row of data) {
             const t = {
                 name: row.name
             };
-            this.total = 0;
+            let total = 0;
             for (const innerRow of row.series) {
                 t[innerRow.name] = innerRow.value;
-                this.total += innerRow.value;
+                total += innerRow.value;
             }
+            t['total'] = total;
+            maxY = Math.max(maxY, total);
             this.barData.push(t);
         }
 
@@ -93,7 +95,7 @@ export class BarChartComponent implements OnInit, OnChanges {
 
         // Add Y axis
         this.y = d3.scaleLinear()
-            .domain([0, 9])
+            .domain([0, maxY])
             .range([this.height, 0]);
         this.svg.append('g')
             .call(d3.axisLeft(this.y))
@@ -136,14 +138,16 @@ export class BarChartComponent implements OnInit, OnChanges {
             .enter().append('text')
             .text(d => {
                 const cnt = d[1] - d[0];
-                if (cnt === 0) {
+                const height = this.y(d[0]) - this.y(d[1]);
+                if (cnt === 0 || height < 15) {
                     return '';
                 }
-                const pntg = Math.floor(cnt * 100 / this.total);
+                const pntg = Math.floor(cnt * 100 / d.data.total);
                 return cnt + ' (' + pntg + '%)';
             })
             .attr('transform', (datum, index) => {
-                return 'translate(' + (this.width / 2) + ')';
+                console.log(datum)
+                return 'translate(' + (this.x(datum.data.name) + this.x.bandwidth() / 2) + ')';
             })
             .attr('y', d => this.y(d[1]) + ((this.y(d[0]) - this.y(d[1])) / 2))
             .style('stroke', '#000000')

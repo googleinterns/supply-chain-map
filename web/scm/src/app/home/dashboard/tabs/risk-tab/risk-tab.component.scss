@@ -7,7 +7,7 @@
     display: grid;
     box-sizing: border-box;
     max-width: 100%;
-    grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(600px, 1fr));
     grid-template-rows: repeat(auto-fit, minmax(min-content, 1fr));
     grid-auto-rows: auto;
     grid-gap: 1rem;
@@ -122,6 +122,10 @@ mat-panel-title {
     font-size: 1.3rem;
 }
 
+mat-form-field {
+    margin-left: 10px;
+}
+
 table,
 th,
 td {
@@ -150,4 +154,12 @@ th {
     flex-direction: column;
     align-items: center;
     margin: 20px;
+}
+
+.filter-container {
+    padding: 10px;
+    width: 100%;    
+    justify-content: center;
+    display: flex;
+    align-items: baseline;
 }

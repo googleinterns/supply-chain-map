@@ -8,14 +8,27 @@
             <div class="supplier-risk-header">
                 <div>
                     <mat-form-field appearance="outline">
+                        <mat-label>Segmentation</mat-label>
+                        <mat-select (selectionChange)="mitigationFilter($event, mitigationSupplierSelect.selected)"
+                            #mitigationSegmentationSelect>
+                            <mat-option value="Strategic">Strategic</mat-option>
+                            <mat-option value="Preferred">Preferred</mat-option>
+                            <mat-option value="Transactional">Transactional</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline">
                         <mat-label>Supplier</mat-label>
-                        <mat-select (selectionChange)="selectSupplier($event.value)" #supplierSelect>
+                        <mat-select (selectionChange)="mitigationFilter(mitigationSegmentationSelect.selected, $event)" #mitigationSupplierSelect>
                             <mat-option *ngFor="let row of riskQueryResult" [value]="row[RISK_COLS.SUPPLIER_NAME]">
                                 {{ row[RISK_COLS.SUPPLIER_NAME] }}</mat-option>
                         </mat-select>
                     </mat-form-field>
                     <button mat-buttonmatSuffix mat-flat-button aria-label="Clear" [disableRipple]="true"
-                        (click)="supplierSelect.writeValue(null);selectSupplier(null);$event.stopPropagation()">
+                        (click)="
+                        mitigationSegmentationSelect.writeValue(null);
+                        mitigationSupplierSelect.writeValue(null);
+                        mitigationFilter(null, null);
+                        $event.stopPropagation()">
                         Clear
                     </button>
                 </div>

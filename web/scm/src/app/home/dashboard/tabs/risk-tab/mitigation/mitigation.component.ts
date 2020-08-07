@@ -17,14 +17,14 @@ export class MitigationComponent {
 
     ColumnMode = ColumnMode;
     riskQueryResult: any[];
-    mitigationTableDataOriginal: any[];
     mitigationTableData: any[];
     mitigationColumns = [
         { name: 'Suppliers', prop: this.RISK_COLS.SUPPLIER_NAME },
         { name: 'DRI', prop: this.RISK_COLS.DRI },
         { name: 'Risk Category', prop: 'dimension' },
         { name: 'Risk Rating', prop: 'rating' },
-        { name: 'Risk Description', prop: 'description' },
+        { name: 'Mitigation Plan', prop: 'mitigationPlan' },
+        { name: 'Timeline/ETA', prop: 'timeline' },
         { name: 'Status', prop: 'status' }
     ]
 
@@ -32,8 +32,7 @@ export class MitigationComponent {
         this.store.select(selectRiskQueryResult).subscribe(
             riskQueryResult => {
                 this.riskQueryResult = riskQueryResult;
-                this.mitigationTableDataOriginal = this.getMitigationTable(riskQueryResult);
-                this.mitigationTableData = this.mitigationTableDataOriginal;
+                this.mitigationTableData = this.getMitigationTable(riskQueryResult);;
             }
         );
     }
@@ -50,7 +49,8 @@ export class MitigationComponent {
                     ...line,
                     dimension: this.dimensions[dimension],
                     rating: row[dimension],
-                    description: '',
+                    mitigationPlan: '',
+                    timeline: '',
                     status: ''
                 });
             }
@@ -59,12 +59,14 @@ export class MitigationComponent {
         return rows;
     }
 
-    selectSupplier(supplierName) {
-        if (supplierName) {
-            this.mitigationTableData = this.mitigationTableDataOriginal.filter(row => row[this.RISK_COLS.SUPPLIER_NAME] === supplierName);
-        } else {
-            this.mitigationTableData = this.mitigationTableDataOriginal;
-        }
+    mitigationFilter(segmentationEl, supplierNameEl) {
+        this.mitigationTableData = this.getMitigationTable(this.riskQueryResult.filter(
+            row => {
+                const segmentFilter = segmentationEl && segmentationEl.value ? row[this.RISK_COLS.SEGMENTATION] === segmentationEl.value : true;
+                const supplierFilter = supplierNameEl && supplierNameEl.value ? row[this.RISK_COLS.SUPPLIER_NAME] === supplierNameEl.value : true;
+                return segmentFilter && supplierFilter;
+            }
+        ));
     }
 
     getMitigationCellClass({ row, column, value }): any {

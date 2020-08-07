@@ -24,15 +24,11 @@ export class HighLevelComponent {
         { title: 'P2', iconColor: '#cfe2f3' },
         { title: 'P3', iconColor: '#eff7ff' }
     ];
-    heatmapColorScheme = {
-        domain: ['#EFEFEF', '#F2C1C1', '#E68484', '#C95B5B']
-    };
-    heatmapColumns = [
-        { name: '', prop: 'dimension', sortable: false },
-        { name: 'High', prop: 'High', sortable: false },
-        { name: 'Significant', prop: 'Significant', sortable: false },
-        { name: 'Medium', prop: 'Medium', sortable: false },
-        { name: 'Low', prop: 'Low', sortable: false }
+    riskLegend = [
+        { title: 'High', iconColor: '#C95B5B' },
+        { title: 'Significant', iconColor: '#E68484' },
+        { title: 'Medium', iconColor: '#B7B7B7' },
+        { title: 'Low', iconColor: '#EFEFEF' }
     ];
     supplierRiskColumns = [
         { name: 'Supplier', prop: this.RISK_COLS.SUPPLIER_NAME, sortable: true },
@@ -50,7 +46,7 @@ export class HighLevelComponent {
     supplierRiskData: any[];
     pieChartCountData: { name: string, value: number, valueOf: () => number }[];
     pieChartSpendData: { name: string, value: number }[];
-    heatMapData: { name: string, series: { name: string, value: number }[] }[];
+    segmentationStackedRisk: { name: string, series: { name: string, value: number }[] }[];
 
     @ViewChild(MatSort, { static: true }) sort: MatSort;
 
@@ -70,18 +66,10 @@ export class HighLevelComponent {
                 this.riskQueryResult = t;
                 this.pieChartCountData = this.toCountPieChart(riskQueryResult);
                 this.pieChartSpendData = this.toSpendPieChart(riskQueryResult);
-                this.heatMapData = this.toHeatMap(riskQueryResult);
                 this.supplierRiskData = t;
+                this.segmentationStackedRisk = this.toSegmentationStackedRisk(riskQueryResult);
             }
         );
-    }
-
-    selectSupplier(supplierName) {
-        if (supplierName) {
-            this.supplierRiskData = [this.riskQueryResult.find(row => row[this.RISK_COLS.SUPPLIER_NAME] === supplierName)];
-        } else {
-            this.supplierRiskData = this.riskQueryResult;
-        }
     }
 
     getSuppplierRiskCellClass({ row, column, value }): any {
@@ -96,16 +84,50 @@ export class HighLevelComponent {
         return classes;
     }
 
-    getHeatmapCellClass({ column, value }): any {
-        const classes = {
-            cell: true
-        };
-        if ((column.name === 'High' || column.name === 'Significant') && parseInt(value, 10) > 0) {
-            classes[column.name] = true;
-        } else if (column.prop !== 'dimension') {
-            classes['Disabled'] = true;
+    selectSupplierCountSegmentation(segmentation) {
+        this.pieChartCountData = this.toCountPieChart(
+            this.riskQueryResult.filter(row => segmentation ? row[this.RISK_COLS.SEGMENTATION] === segmentation : true)
+        );
+    }
+
+    selectSupplierSpendSegmentation(segmentation) {
+        this.pieChartSpendData = this.toSpendPieChart(
+            this.riskQueryResult.filter(row => segmentation ? row[this.RISK_COLS.SEGMENTATION] === segmentation : true)
+        );
+    }
+
+    supplierRiskFilter(segmentationEl, supplierNameEl) {
+        this.supplierRiskData = this.riskQueryResult.filter(
+            row => {
+                const segmentFilter = segmentationEl && segmentationEl.value ? row[this.RISK_COLS.SEGMENTATION] === segmentationEl.value : true;
+                const supplierFilter = supplierNameEl && supplierNameEl.value ? row[this.RISK_COLS.SUPPLIER_NAME] === supplierNameEl.value : true;
+                return segmentFilter && supplierFilter;
+            }
+        );
+    }
+
+    private toSegmentationStackedRisk(riskQueryResult: any[]): { name: string, series: { name: string, value: number }[] }[] {
+
+        const arrayMap = {};
+        for (const row of riskQueryResult) {
+            if (!(row[this.RISK_COLS.SEGMENTATION] in arrayMap)) {
+                arrayMap[row[this.RISK_COLS.SEGMENTATION]] = {
+                    Low: 0,
+                    Medium: 0,
+                    Significant: 0,
+                    High: 0
+                };
+            }
+            arrayMap[row[this.RISK_COLS.SEGMENTATION]][row[this.RISK_COLS.OVERALL_RISK]] += 1;
         }
-        return classes;
+
+        return Object.keys(arrayMap).map(segmentation => ({
+            name: segmentation,
+            series: Object.keys(arrayMap[segmentation]).map(risk => ({
+                name: risk,
+                value: arrayMap[segmentation][risk]
+            }))
+        }));
     }
 
     private toCountPieChart(riskQueryResult: any[]): { name: string, value: number, valueOf: () => number }[] {
@@ -144,25 +166,5 @@ export class HighLevelComponent {
         }
 
         return Object.entries(arrayMap).map(([key, value]) => new ValueObject(key, value));
-    }
-
-    private toHeatMap(riskQueryResult: any[]): { name: string, series: { name: string, value: number }[] }[] {
-        const dimensions = this.riskTabHelper.getDimensions();
-        const arrayMap = [];
-        for (const col of ['High', 'Significant', 'Medium', 'Low']) {
-
-            arrayMap.push({
-                name: col,
-                series: Object.keys(dimensions).map(dimension => {
-                    const count = riskQueryResult.reduce((acc, row) => row[dimension] === col ? acc + 1 : acc, 0);
-                    return {
-                        name: dimensions[dimension],
-                        value: count
-                    };
-                })
-            });
-        }
-
-        return arrayMap;
     }
 }
