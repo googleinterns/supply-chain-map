@@ -21,7 +21,7 @@
         <b class="chart-title">MPNs by Country</b>
       </div>
       <div class="chart-container">
-        <ngx-charts-pie-chart [results]="pieChartData" [legend]="true"></ngx-charts-pie-chart>
+        <ngx-charts-pie-chart [results]="pieChartData" [labels]="true" [animations]="true" [legend]="true"></ngx-charts-pie-chart>
       </div>
     </div>
     <div class="card">
@@ -29,7 +29,7 @@
         <b class="chart-title">China sourced MPNs by Part Type</b>
       </div>
       <div class="chart-container">
-        <ngx-charts-pie-chart [results]="donutChartData" [doughnut]="true" [legend]="true"></ngx-charts-pie-chart>
+        <ngx-charts-pie-chart [results]="donutChartData" [labels]="true" [animations]="true" [doughnut]="true" [legend]="true"></ngx-charts-pie-chart>
       </div>
     </div>
     <div *ngFor="let chart of charts" class="card">

@@ -7,36 +7,48 @@
 This project is to enable end-to-end interactive geographical visualization and
 customized dashboards for risk analysis of the given supply chain entities.
 
-TBD for details.
+## Overview
 
-## To start Application
+Supply Chain Map is a customized analytical dashboard that enables end-to-end product risk analysis using interactive geographical visualization by leveraging a centralized data warehouse.
 
-You need to create 2 files 
+Currently, the most of supply chaindata is dispersed across disparate systems and no systematic process to identify and mitigate risk. The goal of this project is to experiment the feasability of leveraging the available data to render a risk heat map and thereby identify, assess and mitigate any potential risk to the supply chain.
 
-```
-web/scm/src/environment.prod.ts
-```
-```typescript
-export const environment = {
-  production: true,
-  googleMapApi: AND_PUT_GOOGLE_API_KEY_HERE
-};
-```
+## Setup
 
-```
-web/scm/src/environment.prod.ts
-```
+### Prerequisites
 
-```typescript
-export const environment = {
-  production: false,
-  googleMapApi: AND_PUT_GOOGLE_API_KEY_HERE
-};
-```
+- Node.js and npm
+- Bigquery: Should
 
+### Installation
+
+1. Clone the project
 ```
-npm install
-ng serve
+git clone https://github.com/googleinterns/supply-chain-map.git
+```
+2. Change directory to the source code directory
+```
+cd supply-chain-map/web/scm
+```
+3. Install all necessary dependencies
+```
+npm i
+```
+4. Duplicate the sample environment file
+```
+cp src/environments/environment.sample.ts src/environments/environment.ts
+```
+5. Edit the environment file with necessary credentials
+```
+vi  src/environments/environment.ts
+```
+6. (Optional) Edit the constants file with actual datasets/table/column names
+```
+vi  constants.ts
+```
+7. Run the application
+```
+npm start
 ```
 
 ## Source Code Headers
