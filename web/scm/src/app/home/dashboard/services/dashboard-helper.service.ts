@@ -2,12 +2,16 @@ import { Injectable } from '@angular/core';
 import { BigQueryService } from 'src/app/home/services/big-query/big-query.service';
 import { constants } from 'src/constants';
 import { environment } from 'src/environments/environment';
-import { FormQueryResult } from '../../home.models';
+import { FormQueryResult, FormQueryResultStats, FormQueryResponse } from '../../home.models';
 
 @Injectable({
     providedIn: 'root'
 })
 export class DashboardHelperService {
+
+    UPSTREAM_COLS = constants.bigQuery.datasets.route.tables.UPSTREAM.columns;
+    DOWNSTREAM_COLS = constants.bigQuery.datasets.route.tables.DOWNSTREAM.columns;
+    CM_COLS = constants.bigQuery.datasets.route.tables.CM.columns;
 
     constructor(private bigQueryService: BigQueryService) { }
 
@@ -47,11 +51,57 @@ export class DashboardHelperService {
     }
 
     /**
+     * Get data to populat dashboard tabs
+     */
+    async getDashboardData(): Promise<FormQueryResponse> {
+        const UPSTREAM_COLUMNS = Object.values(constants.bigQuery.datasets.route.tables.UPSTREAM.columns);
+        const DOWNSTREAM_COLUMNS = Object.values(constants.bigQuery.datasets.route.tables.DOWNSTREAM.columns);
+        const CM_COLUMNS = Object.values(constants.bigQuery.datasets.route.tables.CM.columns);
+        const query = `
+        SELECT ARRAY(
+            SELECT AS STRUCT
+                ${UPSTREAM_COLUMNS.join(', ')}
+            FROM
+                ${constants.bigQuery.datasets.route.tables.UPSTREAM.tableName}
+        ) AS upstream ,
+        ARRAY(
+            SELECT AS STRUCT
+                ${DOWNSTREAM_COLUMNS.join(', ')}
+            FROM
+                ${constants.bigQuery.datasets.route.tables.DOWNSTREAM.tableName}
+        ) AS downstream ,
+        ARRAY(
+            SELECT AS STRUCT
+                ${CM_COLUMNS.join(', ')}
+            FROM
+                ${constants.bigQuery.datasets.route.tables.CM.tableName}
+        ) AS cm `;
+        const request = await this.bigQueryService.runQuery(query);
+        const formattedResult = this.bigQueryService.convertResult(request.result)[0];
+
+        /**
+         * Get other stats from response
+         */
+        const formQueryResultStats: FormQueryResultStats = {
+            projectId: request.result.jobReference.projectId,
+            jobId: request.result.jobReference.jobId,
+            totalBytesProcessed: request.result.totalBytesProcessed,
+            jobComplete: request.result.jobComplete,
+            cacheHit: request.result.cacheHit
+
+        };
+        return {
+            formQueryResult: formattedResult,
+            formQueryResultStats: formQueryResultStats
+        };
+    }
+
+    /**
      * Create a basic chart that maps the total amount of parts
      * obtained from China and non-China sources.
      * @param formQueryResult The result obtained from submitting the form
      */
-    getChartOne(formQueryResult: FormQueryResult) {
+    getChartOne(formQueryResult: FormQueryResult): { name: string, series: { name: string, value: number }[] }[] {
         const UPSTREAM_COLS = constants.bigQuery.datasets.route.tables.UPSTREAM.columns;
         const result: {
             name: string,
@@ -84,16 +134,57 @@ export class DashboardHelperService {
             result.push({
                 name: product,
                 series: [{
-                    name: 'chinaCost',
-                    value: value.chinaCost / value.totalCost
+                    name: '% of BOM sourced from China (Cost)',
+                    value: value.chinaCost * 100 / value.totalCost
                 }, {
-                    name: 'chinaUnits',
-                    value: value.chinaUnits / value.totalUnits
+                    name: '% of BOM sourced from China (Count)',
+                    value: value.chinaUnits * 100 / value.totalUnits
                 }]
             });
         }
 
         return result;
+    }
+
+    getPieChart(formQueryResult: FormQueryResult): { name: string, value: number }[] {
+        const arrayMap: { [key: string]: number } = {};
+
+        for (const row of formQueryResult.upstream) {
+            if (!(row[this.UPSTREAM_COLS.COUNTRY_OF_ORIGIN] in arrayMap)) {
+                arrayMap[row[this.UPSTREAM_COLS.COUNTRY_OF_ORIGIN]] = 0;
+            }
+            arrayMap[row[this.UPSTREAM_COLS.COUNTRY_OF_ORIGIN]]++;
+        }
+
+        function ValueObject(name: string, value: number) {
+            this.name = name;
+            this.value = value;
+            this.valueOf = () => value;
+        }
+
+        return Object.entries(arrayMap).map(([key, value]) => new ValueObject(key, value));
+    }
+
+    getDonutChart(formQueryResult: FormQueryResult): { name: string, value: number }[] {
+        const arrayMap: { [key: string]: number } = {};
+
+        for (const row of formQueryResult.upstream) {
+            if (row[this.UPSTREAM_COLS.COUNTRY_OF_ORIGIN] !== 'China') {
+                continue;
+            }
+            if (!(row[this.UPSTREAM_COLS.CATEGORY] in arrayMap)) {
+                arrayMap[row[this.UPSTREAM_COLS.CATEGORY]] = 0;
+            }
+            arrayMap[row[this.UPSTREAM_COLS.CATEGORY]]++;
+        }
+
+        function ValueObject(name: string, value: number) {
+            this.name = name;
+            this.value = value;
+            this.valueOf = () => value;
+        }
+
+        return Object.entries(arrayMap).map(([key, value]) => new ValueObject(key, value));
     }
 
     hasAccessToRiskDashboard(email: string): boolean {

@@ -11,12 +11,12 @@
                 <scm-map-tab></scm-map-tab>
             </div>
         </mat-tab>
-        <mat-tab label="Data" *ngIf="receivedData">
+        <mat-tab label="Data">
             <div class="tab-container">
                 <scm-data-tab></scm-data-tab>
             </div>
         </mat-tab>
-        <mat-tab label="Graphs" *ngIf="receivedData">
+        <mat-tab label="Graphs">
             <div class="tab-container">
                 <scm-graph-tab></scm-graph-tab>
             </div>
@@ -26,7 +26,7 @@
                 <scm-risk-tab></scm-risk-tab>
             </div>
         </mat-tab>
-        <mat-tab label="Stats" *ngIf="receivedData">
+        <mat-tab label="Stats" *ngIf="formQueryResult$ | async as formQueryResult">
             <div class="tab-container">
                 <scm-stats-tab></scm-stats-tab>
             </div>

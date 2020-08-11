@@ -7,6 +7,7 @@ import { selectDashboardIsLoading, selectDashboardError } from './store/selector
 import { setDashboardHeight, setSidePanelWidth } from '../store/actions';
 import { DashboardHelperService } from './services/dashboard-helper.service';
 import { GoogleAuthService } from 'src/app/services/google-auth/google-auth.service';
+import { dashboardFetchSuccess, fetchDashboardResult } from './store/actions';
 
 @Component({
   selector: 'scm-dashboard',
@@ -15,31 +16,21 @@ import { GoogleAuthService } from 'src/app/services/google-auth/google-auth.serv
 })
 export class DashboardComponent {
 
-  receivedData = false;
   formQueryResult$: Observable<FormQueryResult>;
   isLoading$: Observable<boolean>;
   error$: Observable<Error>;
   hasRiskAccess: boolean;
 
   constructor(private store: Store, public dashboardHelperService: DashboardHelperService, private googleAuthService: GoogleAuthService) {
-    this.formQueryResult$ = this.store.select(selectHomeFormQueryResult);
+    this.store.dispatch(fetchDashboardResult());
     this.isLoading$ = this.store.select(selectDashboardIsLoading);
     this.error$ = this.store.select(selectDashboardError);
 
-    this.formQueryResult$.subscribe(
-      formQueryResult => {
-        if (formQueryResult) {
-          this.receivedData = true;
-        } else {
-          this.receivedData = false;
-        }
-      }
-    );
-
     this.googleAuthService.getProfileData()
-    .then(user => {
-      this.hasRiskAccess = dashboardHelperService.hasAccessToRiskDashboard(user.email);
-    })
+      .then(user => {
+        this.hasRiskAccess = dashboardHelperService.hasAccessToRiskDashboard(user.email);
+      });
+    this.formQueryResult$ = this.store.select(selectHomeFormQueryResult);
   }
 
   goFullScreen() {

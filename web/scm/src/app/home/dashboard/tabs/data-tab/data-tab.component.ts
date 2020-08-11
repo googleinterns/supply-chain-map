@@ -8,6 +8,7 @@ import { Store } from '@ngrx/store';
 import { selectHomeFormQueryResult } from 'src/app/home/store/selectors';
 import { constants } from 'src/constants';
 import { ColumnMode } from '@swimlane/ngx-datatable';
+import { selectDashboardData } from '../../store/selectors';
 
 @Component({
   selector: 'scm-data-tab',
@@ -17,7 +18,7 @@ import { ColumnMode } from '@swimlane/ngx-datatable';
 export class DataTabComponent {
 
   ColumnMode = ColumnMode;
-  formQueryResult$: Observable<FormQueryResult>;
+  formQueryResult: FormQueryResult;
 
   /**
    * Set up column names by declaring empty objects
@@ -43,7 +44,12 @@ export class DataTabComponent {
   );
 
   constructor(private store: Store) {
-    this.formQueryResult$ = this.store.select(selectHomeFormQueryResult);
+    this.store.select(selectHomeFormQueryResult).subscribe(
+      data => this.formQueryResult = data ? data : this.formQueryResult
+    ); 
+    this.store.select(selectDashboardData).subscribe(
+      data => this.formQueryResult = data ? data : this.formQueryResult
+    );
   }
 
 }

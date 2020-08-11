@@ -18,7 +18,18 @@ const dashboardReducer = createReducer(
         ...state,
         error: error,
         isLoading: false
-    }))
+    })),
+    on(DashboardActions.dashboardFetchSuccess, (state, { dashboardResponse }) => ({
+        ...state,
+        dashboardData: dashboardResponse.formQueryResult,
+        dashboardStats: dashboardResponse.formQueryResultStats,
+        isLoading: false
+    })),
+    on(DashboardActions.dashboardFetchFailure, (state, { error }) => ({
+        ...state,
+        error: error,
+        isLoading: false
+    })),
 );
 
 export function reducer(state: DashboardState | undefined, action: Action) {

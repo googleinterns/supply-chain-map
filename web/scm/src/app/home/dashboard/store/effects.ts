@@ -29,4 +29,21 @@ export class DashboardStoreEffects {
         )
     );
 
+    fetchDashboardResult$ = createEffect(
+        () => this.actions$.pipe(
+            ofType(DashboardFeatureActions.fetchDashboardResult),
+            switchMap(
+                () => {
+                    return from(this.dashboardHelperService.getDashboardData())
+                        .pipe(
+                            map(
+                                dashboardResponse => DashboardFeatureActions.dashboardFetchSuccess({ dashboardResponse: dashboardResponse })
+                            ),
+                            catchError(error => of(DashboardFeatureActions.dashboardFetchFailure({ error: error })))
+                        );
+                }
+            )
+        )
+    )
+
 }

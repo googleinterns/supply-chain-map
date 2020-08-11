@@ -6,9 +6,35 @@
     </button>
   </div>
   <div class="card-container">
+    <div class="card">
+      <div class="card-header">
+        <b class="chart-title">BOM sourced from China</b>
+      </div>
+      <div class="chart-container">
+        <ngx-charts-bar-vertical-2d [results]="chinaOnlyChartData" [xAxis]="true" [yAxis]="true"
+          [legend]="true" [showXAxisLabel]="true" [showYAxisLabel]="true" [showGridLines]="true">
+        </ngx-charts-bar-vertical-2d>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <b class="chart-title">MPNs by Country</b>
+      </div>
+      <div class="chart-container">
+        <ngx-charts-pie-chart [results]="pieChartData" [legend]="true"></ngx-charts-pie-chart>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <b class="chart-title">China sourced MPNs by Part Type</b>
+      </div>
+      <div class="chart-container">
+        <ngx-charts-pie-chart [results]="donutChartData" [doughnut]="true" [legend]="true"></ngx-charts-pie-chart>
+      </div>
+    </div>
     <div *ngFor="let chart of charts" class="card">
       <div class="card-header">
-        <button mat-icon-button color="warn" (click)="removeChart(chart)">
+        <button style="height: 20px;" mat-icon-button color="warn" (click)="removeChart(chart)">
           <mat-icon>remove</mat-icon>
         </button>
       </div>

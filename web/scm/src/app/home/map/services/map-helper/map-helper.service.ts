@@ -119,7 +119,7 @@ export class MapHelperService {
             if (shapes.length === 0) {
                 throw new Error('Cannot find layer: '+layerName);
             }
-            const baseColor = Colors.randomColor();
+            const baseColor = '#aa0000';
 
             let maxMagnitude = -1;
             let minMagnitude = Infinity;

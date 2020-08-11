@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { Observable } from 'rxjs';
-import { selectHomeFormQueryResult } from 'src/app/home/store/selectors';
 import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { CreateChartComponent } from './create-chart-dialog/create-chart.dialog';
 import { FormQueryResult } from 'src/app/home/home.models';
+import { DashboardHelperService } from '../../services/dashboard-helper.service';
+import { selectDashboardData } from '../../store/selectors';
 
 @Component({
   selector: 'scm-graph-tab',
@@ -13,7 +14,7 @@ import { FormQueryResult } from 'src/app/home/home.models';
 })
 export class GraphTabComponent implements OnInit {
 
-  formQueryResult$: Observable<FormQueryResult>;
+  dashboardResult$: Observable<FormQueryResult>;
   charts: {
     chart: any,
     data: any,
@@ -21,12 +22,26 @@ export class GraphTabComponent implements OnInit {
     identifier: any
   }[] = [];
   dialogRef: MatDialogRef<CreateChartComponent>;
+  chinaOnlyChartData: { name: string, series: { name: string, value: number }[] }[];
+  pieChartData: { name: string, value: number }[];
+  donutChartData: { name: string, value: number }[];
 
   constructor(
     private store: Store,
-    private matDialog: MatDialog
+    private matDialog: MatDialog,
+    dashboardHelperService: DashboardHelperService
   ) {
-    this.formQueryResult$ = this.store.select(selectHomeFormQueryResult);
+    this.dashboardResult$ = this.store.select(selectDashboardData);
+    this.dashboardResult$.subscribe(
+      formQueryResult => {
+        if (!formQueryResult) {
+          return;
+        }
+        this.chinaOnlyChartData = dashboardHelperService.getChartOne(formQueryResult);
+        this.pieChartData = dashboardHelperService.getPieChart(formQueryResult);
+        this.donutChartData = dashboardHelperService.getDonutChart(formQueryResult);
+      }
+    );
   }
 
   ngOnInit(): void {
@@ -58,13 +73,13 @@ export class GraphTabComponent implements OnInit {
       return;
     }
 
-    const key$ = d => d[formValue.groupBySelect];
+    const key$ = d => d[formValue.groupBySelect ? formValue.groupBySelect : formValue.nameSelect];
     const name$ = d => d[formValue.nameSelect];
     const value$ = d => d[formValue.valueSelect];
 
     const chartsInsertLoc = this.charts.length;
 
-    this.formQueryResult$.subscribe(
+    this.dashboardResult$.subscribe(
       formQueryResult => {
         const nestedData = nest(formQueryResult);
         this.charts[chartsInsertLoc] = {

@@ -146,7 +146,6 @@ export class BarChartComponent implements OnInit, OnChanges {
                 return cnt + ' (' + pntg + '%)';
             })
             .attr('transform', (datum, index) => {
-                console.log(datum)
                 return 'translate(' + (this.x(datum.data.name) + this.x.bandwidth() / 2) + ')';
             })
             .attr('y', d => this.y(d[1]) + ((this.y(d[0]) - this.y(d[1])) / 2))

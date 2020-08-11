@@ -5,15 +5,16 @@ import { provideMockStore, MockStore } from '@ngrx/store/testing';
 import { MemoizedSelector } from '@ngrx/store';
 import { FormQueryResult } from 'src/app/home/home.models';
 import { HomeState } from 'src/app/home/store/state';
-import { selectHomeFormQueryResult } from 'src/app/home/store/selectors';
 import { MatDialogModule } from '@angular/material/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { selectDashboardData } from '../../store/selectors';
+import { DashboardState } from '../../store/state';
 
 describe('GraphTabComponent', () => {
   let component: GraphTabComponent;
   let fixture: ComponentFixture<GraphTabComponent>;
   let mockStore: MockStore;
-  let mockFormQuerySelector: MemoizedSelector<HomeState, FormQueryResult>;
+  let mockFormQuerySelector: MemoizedSelector<DashboardState, FormQueryResult>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
@@ -30,7 +31,7 @@ describe('GraphTabComponent', () => {
 
     mockStore = TestBed.inject(MockStore);
     mockFormQuerySelector = mockStore.overrideSelector(
-      selectHomeFormQueryResult,
+      selectDashboardData,
       {
         upstream: [],
         cm: [],

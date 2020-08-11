@@ -29,8 +29,8 @@
             <div *ngIf="selectedTable">
                 <mat-form-field appearance="outline">
                     <mat-label>Group By</mat-label>
-                    <mat-select formControlName="groupBySelect" required>
-                        <mat-option *ngFor="let col of tables[selectedTable] | keyvalue" [value]="col.value"> {{ col.value }}
+                    <mat-select formControlName="groupBySelect">
+                        <mat-option *ngFor="let col of tables[selectedTable] | keyvalue" [value]="col.value"> {{ col.key.replaceAll('_', ' ') }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -38,7 +38,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Name</mat-label>
                     <mat-select formControlName="nameSelect" required>
-                        <mat-option *ngFor="let col of tables[selectedTable] | keyvalue" [value]="col.value"> {{ col.value }}
+                        <mat-option *ngFor="let col of tables[selectedTable] | keyvalue" [value]="col.value"> {{ col.key.replaceAll('_', ' ') }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>
@@ -46,7 +46,7 @@
                 <mat-form-field appearance="outline">
                     <mat-label>Value</mat-label>
                     <mat-select formControlName="valueSelect" required>
-                        <mat-option *ngFor="let col of tables[selectedTable] | keyvalue" [value]="col.value"> {{ col.value }}
+                        <mat-option *ngFor="let col of tables[selectedTable] | keyvalue" [value]="col.value"> {{ col.key.replaceAll('_', ' ') }}
                         </mat-option>
                     </mat-select>
                 </mat-form-field>

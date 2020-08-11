@@ -42,7 +42,8 @@ export const constants = {
                             MFG_STATE: 'Mfg_State',
                             MFG_CITY: 'Mfg_City',
                             MFG_LAT: 'Mfg_LAT',
-                            MFG_LONG: 'Mfg_LONG'
+                            MFG_LONG: 'Mfg_LONG',
+                            COUNTRY_OF_ORIGIN: 'Country_Of_Origin'
                         }
                     },
                     CM: {

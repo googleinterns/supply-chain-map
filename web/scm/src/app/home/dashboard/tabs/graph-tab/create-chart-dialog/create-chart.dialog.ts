@@ -6,6 +6,7 @@ import { environment } from 'src/environments/environment';
 import { FormGroup, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
 import { constants } from 'src/constants';
+import { selectDashboardData } from '../../../store/selectors';
 
 @Component({
     selector: 'scm-create-chart-dialog',
@@ -36,12 +37,12 @@ export class CreateChartComponent {
         this.createChartFormGroup = new FormGroup({
             chartTypeSelect: new FormControl('', Validators.required),
             analyzeTableSelect: new FormControl('', Validators.required),
-            groupBySelect: new FormControl('', Validators.required),
+            groupBySelect: new FormControl(''),
             nameSelect: new FormControl('', Validators.required),
             valueSelect: new FormControl('', Validators.required)
         });
 
-        this.store.select(selectHomeFormQueryResult)
+        this.store.select(selectDashboardData)
             .subscribe(
                 formQueryResult => {
                     if (formQueryResult) {
