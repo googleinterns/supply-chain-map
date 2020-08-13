@@ -2,3 +2,10 @@
     margin-bottom: 20px;
     width: 100%;
 }
+
+.container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}

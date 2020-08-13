@@ -75,7 +75,9 @@
                     Clear
                 </button>
             </div>
-            <scm-pie-chart #riskCountPieChart [legend]="priorityLegend" [data]="pieChartCountData"></scm-pie-chart>
+            <div class="chart-container d3-chart">
+                <scm-pie-chart #riskCountPieChart [legend]="priorityLegend" [data]="pieChartCountData"></scm-pie-chart>
+            </div>
         </div>
     </div>
     <div class="card" *ngIf="pieChartSpendData">
@@ -98,7 +100,9 @@
                     Clear
                 </button>
             </div>
-            <scm-pie-chart #riskCountPieChart [legend]="priorityLegend" [data]="pieChartSpendData"></scm-pie-chart>
+            <div class="chart-container d3-chart">
+                <scm-pie-chart #riskCountPieChart [labelPrefix]="'$'" [legend]="priorityLegend" [data]="pieChartSpendData"></scm-pie-chart>
+            </div>
         </div>
     </div>
 
@@ -107,7 +111,8 @@
             <b>Segmentation Risk</b>
         </div>
         <div class="chart-container d3-chart">
-            <scm-bar-chart [data]="segmentationStackedRisk" [legend]="riskLegend" [width]="500" [height]="550"></scm-bar-chart>
+            <scm-bar-chart [data]="segmentationStackedRisk" [legend]="riskLegend">
+            </scm-bar-chart>
         </div>
     </div>
 </div>

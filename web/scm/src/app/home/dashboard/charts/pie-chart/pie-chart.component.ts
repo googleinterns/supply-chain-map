@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, ElementRef, SimpleChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, ElementRef, SimpleChanges, ViewChild } from '@angular/core';
 import * as d3 from 'd3';
 
 @Component({
@@ -10,7 +10,7 @@ export class PieChartComponent implements OnInit, OnChanges {
 
     @Input() data: { name: string, value: number, valueOf: () => number }[];
     @Input() legend: { title: string, iconColor: string }[];
-    hostElement; // Native element hosting the SVG container
+    @Input() labelPrefix = '';
     svg; // Top level SVG element
     g; // SVG Group element
     arc; // D3 Arc generator
@@ -30,14 +30,15 @@ export class PieChartComponent implements OnInit, OnChanges {
         .sort(null)
         .value((d: { name: string, value: number, valueOf: () => number }) => d.valueOf());
 
-    constructor(private elRef: ElementRef) {
-        this.hostElement = this.elRef.nativeElement;
+    @ViewChild('container') hostElement: ElementRef<HTMLElement>;
+
+    constructor() {
     }
 
     ngOnInit() { }
 
     ngOnChanges(changes: SimpleChanges) {
-        if (changes.data) {
+        if (changes.data && this.hostElement) {
             this.createChart(changes.data.currentValue);
         }
     }
@@ -65,10 +66,8 @@ export class PieChartComponent implements OnInit, OnChanges {
     private setChartDimensions() {
         const viewBoxHeight = 200;
         const viewBoxWidth = 200;
-        this.svg = d3.select(this.hostElement).append('svg')
-            .attr('viewBox', '0 0 ' + viewBoxWidth + ' ' + viewBoxHeight)
-            .style('max-width', '500px')
-            .style('max-height', '500px');
+        this.svg = d3.select(this.hostElement.nativeElement).append('svg')
+            .attr('viewBox', '0 0 ' + viewBoxWidth + ' ' + viewBoxHeight);
     }
 
     private addGraphicsElement() {
@@ -165,7 +164,7 @@ export class PieChartComponent implements OnInit, OnChanges {
         // Make sure not to do;
         //     d3.select('svg').remove();
         // That will clear all other SVG elements in the DOM
-        d3.select(this.hostElement).select('svg').remove();
+        d3.select(this.hostElement.nativeElement).select('svg').remove();
     }
 
     private addLabelsToTheDonut() {
@@ -184,6 +183,6 @@ export class PieChartComponent implements OnInit, OnChanges {
     }
 
     private labelValueGetter = (datum, index) => {
-        return `${this.data[index].value} (${Math.floor(this.data[index].value * 100 / this.total)}%)`;
+        return this.data[index].value === 0 ? '' : `${this.labelPrefix}${this.data[index].value} (${Math.floor(this.data[index].value * 100 / this.total)}%)`;
     }
 }

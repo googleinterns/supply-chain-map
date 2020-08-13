@@ -1,4 +1,4 @@
-import { Component, OnInit, OnChanges, Input, ElementRef, SimpleChanges } from '@angular/core';
+import { Component, OnInit, OnChanges, Input, ElementRef, SimpleChanges, ViewChild, AfterViewInit } from '@angular/core';
 import * as d3 from 'd3';
 
 @Component({
@@ -6,68 +6,77 @@ import * as d3 from 'd3';
     templateUrl: './bar-chart.component.html',
     styleUrls: ['./bar-chart.component.scss']
 })
-export class BarChartComponent implements OnInit, OnChanges {
+export class BarChartComponent implements OnInit, OnChanges, AfterViewInit {
 
     @Input() data: { name: string, series: { name: string, value: number }[] }[];
     @Input() legend: { title: string, iconColor: string }[];
-    hostElement; // Native element hosting the SVG container
+    @Input() fontSize: string;
     svg; // Top level SVG element
     colorScale;
     x;
     y;
 
-    margin = { top: 5, right: 15, bottom: 10, left: 75 };
-    @Input() width = 300 - this.margin.left - this.margin.right;
-    @Input() height = 260 - this.margin.top - this.margin.bottom;
+    margin = { top: 10, right: 15, bottom: 60, left: 50 };
 
     barData;
     rawData;
 
+    width = 450;
+    height = 400;
+    viewBoxHeight = this.height - this.margin.top - this.margin.bottom;
+    viewBoxWidth = this.width - this.margin.left - this.margin.right;
 
-    constructor(private elRef: ElementRef) {
-        this.hostElement = this.elRef.nativeElement;
+    @ViewChild('container') hostElement: ElementRef<HTMLElement>;
+
+    constructor() {
+    }
+    ngAfterViewInit(): void {
+        this.createChart();
     }
 
     ngOnInit() { }
 
     ngOnChanges(changes: SimpleChanges) {
         if (changes.data) {
-            this.createChart(changes.data.currentValue);
+            this.rawData = changes.data.currentValue;
+            this.createChart();
         }
     }
 
-    private createChart(data: { name: string, series: { name: string, value: number }[] }[]) {
+    private createChart() {
+        if (this.rawData && this.hostElement) {
 
-        this.removeExistingChartFromParent();
+            this.removeExistingChartFromParent();
 
-        this.setChartDimensions();
+            this.setChartDimensions();
 
-        this.processBarData(data);
+            this.processBarData();
+
+        }
     }
 
 
     private setChartDimensions() {
-        this.svg = d3.select(this.hostElement).append('svg')
-            .attr('width', this.width + this.margin.left + this.margin.right)
-            .attr('height', this.height + this.margin.top + this.margin.bottom + 50)
+        this.svg = d3.select(this.hostElement.nativeElement).append('svg')
+            .attr('viewBox', '0 0 ' + this.width + ' ' + this.height)
             .append('g')
             .attr('transform', 'translate(' + this.margin.left + ',' + this.margin.top + ')');
     }
 
-    private processBarData(data: { name: string, series: { name: string, value: number }[] }[], initial = true) {
-        this.rawData = data;
+    private processBarData(initial = true) {
         this.barData = [];
         let maxY = -1;
-        for (const row of data) {
+        for (const row of this.rawData) {
             const t = {
-                name: row.name
+                name: row.name,
+                total: 0
             };
             let total = 0;
             for (const innerRow of row.series) {
                 t[innerRow.name] = innerRow.value;
                 total += innerRow.value;
             }
-            t['total'] = total;
+            t.total = total;
             maxY = Math.max(maxY, total);
             this.barData.push(t);
         }
@@ -77,37 +86,44 @@ export class BarChartComponent implements OnInit, OnChanges {
 
         this.x = d3.scaleBand()
             .domain(groups)
-            .range([0, this.width])
+            .range([0, this.viewBoxWidth])
             .padding(0.2);
         this.svg.append('g')
-            .attr('transform', 'translate(0,' + this.height + ')')
-            .call(d3.axisBottom(this.x).tickSizeOuter(0))
+            .attr('transform', 'translate(0,' + this.viewBoxHeight + ')')
+            .call(d3.axisBottom(this.x))
             .append('text')
             .text('Supplier')
             .attr('y', 50)
             .attr('transform', (datum, index) => {
-                return 'translate(' + (this.width / 2) + ')';
+                return 'translate(' + (this.viewBoxWidth / 2) + ')';
             })
             .attr('stroke', 'black')
             .attr('fill', 'black')
-            .style('font-size', '1rem')
-            .style('text-anchor', 'middle');
+            .style('text-anchor', 'middle')
+            .style('font-size', this.fontSize ? this.fontSize : '0.8rem');
 
         // Add Y axis
         this.y = d3.scaleLinear()
             .domain([0, maxY])
-            .range([this.height, 0]);
+            .range([this.viewBoxHeight, 0]);
         this.svg.append('g')
             .call(d3.axisLeft(this.y))
             .append('text')
             .text('Count')
             .attr('transform', 'rotate(-90)')
-            .attr('x', -(this.height / 2))
-            .attr('y', -30)
+            .attr('x', -(this.viewBoxHeight / 2))
+            .attr('y', -35)
             .attr('stroke', 'black')
             .attr('fill', 'black')
-            .style('font-size', '1rem')
-            .style('text-anchor', 'middle');
+            .style('text-anchor', 'middle')
+            .style('font-size', this.fontSize ? this.fontSize : '0.8rem');
+
+
+        if (this.fontSize) {
+            this.svg.selectAll('.tick')
+                .selectAll("text")
+                .style('font-size', this.fontSize);
+        }
 
         this.colorScale = d3.scaleOrdinal().domain(subgroups).range(this.legend.map(l => l.iconColor));
 
@@ -152,7 +168,8 @@ export class BarChartComponent implements OnInit, OnChanges {
             .style('stroke', '#000000')
             .style('fill', '#000000')
             .style('text-anchor', 'middle')
-            .style('dominant-baseline', 'central');
+            .style('dominant-baseline', 'central')
+            .style('font-size', this.fontSize ? this.fontSize : '0.8rem');
     }
 
     private removeExistingChartFromParent() {
@@ -160,6 +177,6 @@ export class BarChartComponent implements OnInit, OnChanges {
         // Make sure not to do;
         //     d3.select('svg').remove();
         // That will clear all other SVG elements in the DOM
-        d3.select(this.hostElement).select('svg').remove();
+        d3.select(this.hostElement.nativeElement).select('svg').remove();
     }
 }

@@ -28,10 +28,10 @@ export class SupplierBasedComponent {
     selectedSupplier: any;
     supplierStackedRisk: { name: string, series: { name: string, value: number }[] }[];
     supplierStackLegend = [
-        { title: 'High', iconColor: '#C95B5B' },
-        { title: 'Significant', iconColor: '#E68484' },
+        { title: 'Low', iconColor: '#EFEFEF' },
         { title: 'Medium', iconColor: '#B7B7B7' },
-        { title: 'Low', iconColor: '#EFEFEF' }
+        { title: 'Significant', iconColor: '#E68484' },
+        { title: 'High', iconColor: '#C95B5B' }
     ];
 
     public constructor(private store: Store, private riskTabHelper: RiskTabHelperService) {

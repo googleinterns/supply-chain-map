@@ -25,10 +25,10 @@ export class HighLevelComponent {
         { title: 'P3', iconColor: '#eff7ff' }
     ];
     riskLegend = [
-        { title: 'High', iconColor: '#C95B5B' },
-        { title: 'Significant', iconColor: '#E68484' },
+        { title: 'Low', iconColor: '#EFEFEF' },
         { title: 'Medium', iconColor: '#B7B7B7' },
-        { title: 'Low', iconColor: '#EFEFEF' }
+        { title: 'Significant', iconColor: '#E68484' },
+        { title: 'High', iconColor: '#C95B5B' }
     ];
     supplierRiskColumns = [
         { name: 'Supplier', prop: this.RISK_COLS.SUPPLIER_NAME, sortable: true },
@@ -131,12 +131,14 @@ export class HighLevelComponent {
     }
 
     private toCountPieChart(riskQueryResult: any[]): { name: string, value: number, valueOf: () => number }[] {
-        const arrayMap: { [key: string]: number } = {};
+        const arrayMap: { [key: string]: number } = {
+            P3: 0,
+            P2: 0,
+            P1: 0,
+            P0: 0
+        };
 
         for (const row of riskQueryResult) {
-            if (!(row[this.RISK_COLS.PRIORITY] in arrayMap)) {
-                arrayMap[row[this.RISK_COLS.PRIORITY]] = 0;
-            }
             arrayMap[row[this.RISK_COLS.PRIORITY]]++;
         }
 
@@ -150,12 +152,14 @@ export class HighLevelComponent {
     }
 
     private toSpendPieChart(riskQueryResult: any[]): { name: string, value: number }[] {
-        const arrayMap = [];
+        const arrayMap: { [key: string]: number } = {
+            P3: 0,
+            P2: 0,
+            P1: 0,
+            P0: 0
+        };
 
         for (const row of riskQueryResult) {
-            if (!(row[this.RISK_COLS.PRIORITY] in arrayMap)) {
-                arrayMap[row[this.RISK_COLS.PRIORITY]] = 0;
-            }
             arrayMap[row[this.RISK_COLS.PRIORITY]] += parseFloat(row[this.RISK_COLS.SPEND_IN_MIL]);
         }
 
